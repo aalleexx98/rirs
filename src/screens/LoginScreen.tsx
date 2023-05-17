@@ -1,6 +1,8 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { Button } from '@rneui/themed';
+import { Input } from "@rneui/base";
 
 export const LoginScreen = () => {
     return (
