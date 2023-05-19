@@ -11,9 +11,7 @@ const App = () => {
 
   return (
     <AppState>
-      <NavigationContainer theme={ theme }>
-        <Navigator />
-      </NavigationContainer>
+      <Navigator />
     </AppState>
   )
 }
