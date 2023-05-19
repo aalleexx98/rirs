@@ -1,13 +1,28 @@
-import 'react-native-gesture-handler'
 import React from 'react'
+import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
+import { useContext } from 'react';
 import { Navigator } from './src/routes/Navigator'
+import { ThemeContext, ThemeProvider } from './src/context/themeContext/ThemeContext';
 
-export const App = () => {
+const App = () => {
+
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <NavigationContainer>
-      <Navigator />
-    </NavigationContainer>
+    <AppState>
+      <NavigationContainer theme={ theme }>
+        <Navigator />
+      </NavigationContainer>
+    </AppState>
+  )
+}
+
+const AppState = ({ children }: any) => {
+  return (
+    <ThemeProvider>
+      { children }
+    </ThemeProvider>
   )
 }
 
