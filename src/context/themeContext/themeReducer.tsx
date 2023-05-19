@@ -7,7 +7,7 @@ type ThemeAction =
 export interface ThemeState extends Theme {
     currentTheme: 'light' | 'dark',
     dividerColor: string;
-
+    textSecondary: string;
 }
 
 //EN EL RETURN DEL themeReducer,se podria poner return { ...lightTheme }, pero es mala practica
@@ -15,6 +15,7 @@ export const lightTheme: ThemeState = {
     currentTheme: 'light',
     dark: false,
     dividerColor: '#243A73',
+    textSecondary: '#FFFFFF',
     colors: {
         primary: '#8C03FC',
         background: '#FFFFFF',
@@ -29,6 +30,7 @@ export const darkTheme: ThemeState = {
     currentTheme: 'dark',
     dark: true,
     dividerColor: '#243A73',
+    textSecondary: '#FFFFFF',
     colors: {
         primary: '#8C03FC',
         background: '#000000',
@@ -47,6 +49,7 @@ export const themeReducer = (state: ThemeState, action: ThemeAction): ThemeState
                 currentTheme: 'dark',
                 dark: true,
                 dividerColor: '#DCD7C9',
+                textSecondary: '#FFFFFF',
                 colors: {
                     primary: '#8C03FC',
                     background: '#000000',
@@ -61,6 +64,7 @@ export const themeReducer = (state: ThemeState, action: ThemeAction): ThemeState
                 currentTheme: 'light',
                 dark: false,
                 dividerColor: '#243A73',
+                textSecondary: '#FFFFFF',
                 colors: {
                     primary: '#8C03FC',
                     background: '#FFFFFF',
