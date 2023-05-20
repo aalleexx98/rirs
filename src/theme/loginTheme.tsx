@@ -47,4 +47,11 @@ export const loginStyles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 30
     },
+    buttonReturn: {
+        position: 'absolute',
+        top: 20,
+        left: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+    }
 });

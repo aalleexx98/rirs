@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { TouchableOpacity, Text, TextInput, View } from 'react-native'
+import { TouchableOpacity, Text, TextInput, View, Keyboard } from 'react-native'
 import { Background } from '../../components/home/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { loginStyles } from '../../theme/loginTheme';
@@ -23,6 +23,8 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const onLogin = async () => {
         console.log({ email, password });
+        Keyboard.dismiss();
+
         try {
             await auth()
                 .signInWithEmailAndPassword(email, password)
