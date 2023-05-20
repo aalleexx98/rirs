@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { TouchableOpacity, Text, TextInput, View } from 'react-native'
-import { ThemeContext } from '../../context/themeContext/ThemeContext';
 import { Background } from '../../components/home/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { loginStyles } from '../../theme/loginTheme';
@@ -8,18 +7,37 @@ import { LogginLogo } from '../../components/home/Logo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useForm } from '../../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 interface Props extends StackScreenProps<any, any> { }
 
 export const LoginScreen = ({ navigation }: Props) => {
+
+    const [isFocused, setIsFocused] = useState(false);
+    const [isFocusedPassword, setIsFocusedPassword] = useState(false);
 
     const { email, password, onChange } = useForm({
         email: '',
         password: ''
     });
 
-    const [isFocused, setIsFocused] = useState(false);
-    const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+    const onLogin = async () => {
+        console.log({ email, password });
+        try {
+            await auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const user = userCredential.user;
+
+                    if (user) {
+                        console.log(user);
+                        //setIsLogin(true);
+                    }
+                });
+        } catch (error) {
+            console.log('can not login: ', error);
+        }
+    }
 
     return (
         <>
@@ -55,7 +73,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
                             onChangeText={ (value) => onChange(value, 'email') }
                             // value={ email }
-                            //onSubmitEditing={ onLogin } //Para cuando se clicke en enter estando en este input
+                            onSubmitEditing={ onLogin }
 
                             autoCapitalize="none"
                             autoCorrect={ false }
@@ -82,9 +100,9 @@ export const LoginScreen = ({ navigation }: Props) => {
                             onFocus={ () => setIsFocusedPassword(true) }
                             onBlur={ () => setIsFocusedPassword(false) }
 
-                            onChangeText={ (value) => onChange(value, 'email') }
+                            onChangeText={ (value) => onChange(value, 'password') }
                             // value={ email }
-                            //onSubmitEditing={ onLogin } //Para cuando se clicke en enter estando en este input
+                            onSubmitEditing={ onLogin }
 
                             autoCapitalize="none"
                             autoCorrect={ false }
@@ -96,7 +114,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         <TouchableOpacity
                             activeOpacity={ 0.8 }
                             style={ loginStyles.button }
-                        //onPress={ onLogin }
+                            onPress={ onLogin }
                         >
                             <Text style={ loginStyles.buttonText } >Login</Text>
                         </TouchableOpacity>

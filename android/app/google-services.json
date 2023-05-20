@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "534566629524",
+    "project_id": "rirs-83dc6",
+    "storage_bucket": "rirs-83dc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534566629524:android:7fb06721d375ac1b6cc481",
+        "android_client_info": {
+          "package_name": "com.rirs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534566629524-g949s0l08u36345vpembi97ngdmlebq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcoJSI3feGM2cVRFyy2ACoJOY_35aQXBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534566629524-g949s0l08u36345vpembi97ngdmlebq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
