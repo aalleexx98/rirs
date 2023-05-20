@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { useContext } from 'react';
 import { Navigator } from './src/routes/Navigator'
 import { ThemeContext, ThemeProvider } from './src/context/themeContext/ThemeContext';
+import { AuthProvider } from './src/context/authContext/authContext';
 
 const App = () => {
 
@@ -19,7 +20,9 @@ const App = () => {
 const AppState = ({ children }: any) => {
   return (
     <ThemeProvider>
-      { children }
+      <AuthProvider>
+        { children }
+      </AuthProvider>
     </ThemeProvider>
   )
 }

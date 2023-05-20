@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { Alert, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { loginStyles } from '../../theme/loginTheme'
 import { LogginLogo } from '../../components/home/Logo'
 import { useForm } from '../../hooks/useForm'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StackScreenProps } from '@react-navigation/stack'
+import { AuthContext } from '../../context/authContext/authContext'
 
 interface Props extends StackScreenProps<any, any> { }
 
@@ -14,20 +15,32 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [isFocusedEmail, setIsFocusedEmail] = useState(false);
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
 
+    const { signUp, errorMessage, removeError } = useContext(AuthContext);
+
     const { email, password, name, onChange } = useForm({
         name: '',
         email: '',
         password: ''
     });
 
+    useEffect(() => {
+        if (errorMessage.length === 0) return;
+
+        Alert.alert('Registro incorrecto', errorMessage, [{
+            text: 'Ok',
+            onPress: removeError
+        }]);
+
+    }, [errorMessage])
+
     const onRegister = () => {
         console.log({ email, password, name });
         Keyboard.dismiss();
-        // signUp({
-        //     nombre: name,
-        //     correo: email,
-        //     password
-        // });
+        signUp({
+            name,
+            email,
+            password
+        });
     }
 
     return (
@@ -121,7 +134,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                             onBlur={ () => setIsFocusedPassword(false) }
 
                             onChangeText={ (value) => onChange(value, 'password') }
-                            value={ email }
+                            value={ password }
                             onSubmitEditing={ onRegister }
 
                             autoCapitalize="none"
