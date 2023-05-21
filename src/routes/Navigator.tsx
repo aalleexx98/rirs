@@ -5,16 +5,22 @@ import SplashScreen from 'react-native-splash-screen'
 import { useContext, useEffect } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { AuthContext } from '../context/authContext/authContext';
+import { LoadingScreen } from '../screens/HomeScreens/LoadingScreen';
+import { HomeScreen } from '../screens/HomeScreens/HomeScreen';
 
 const Stack = createStackNavigator();
 
 export const Navigator = () => {
 
     const { theme } = useContext(ThemeContext);
+    const { status } = useContext(AuthContext);
 
     useEffect(() => {
         SplashScreen.hide();
     }, [])
+
+    if (status === 'checking') return <LoadingScreen />
 
     return (
         <NavigationContainer theme={ theme }>
@@ -23,8 +29,20 @@ export const Navigator = () => {
                     headerShown: false,
                 } }
             >
-                <Stack.Screen name="LoginScreen" component={ LoginScreen } />
-                <Stack.Screen name="RegisterScreen" component={ RegisterScreen } />
+                {
+                    (status !== 'authenticated')
+                        ? (
+                            <>
+                                <Stack.Screen name="LoginScreen" component={ LoginScreen } />
+                                <Stack.Screen name="RegisterScreen" component={ RegisterScreen } />
+                            </>
+                        )
+                        : (
+                            <>
+                                <Stack.Screen name="HomeScreen" component={ HomeScreen } />
+                            </>
+                        )
+                }
             </Stack.Navigator>
         </NavigationContainer>
     );

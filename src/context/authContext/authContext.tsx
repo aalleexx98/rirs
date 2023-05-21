@@ -53,36 +53,6 @@ export const AuthProvider = ({ children }: any) => {
         return () => unsubscribe();
     }, []);
 
-    // useEffect(() => {
-    //     checkUid();
-    // }, [])
-
-    //Esto habria que cambiarlo para la data de firebase
-    // const checkUid = async () => {
-    //     const uid = getItemStorage('uid');
-
-    //     // No token, no autenticado
-    //     if (!uid) return dispatch({ type: 'notAuthenticated' });
-
-    //     const userRecord = await auth().getUser(uid);
-    //     //AQUI COMPROBAR SI EXISTE USUARIO EN FIREBASE CON ESE UID
-    //     // // 
-    //     // const resp = await cafeApi.get('/auth'); //Esto comprueba si el token existe
-    //     // if (resp.status !== 200) { //SI hay token registrado (getItemStorage) pero no existe
-    //     //     return dispatch({ type: 'notAuthenticated' });
-    //     // }
-
-    //     //Si esta lo guardamos y hacemos singUp
-    //     setItemStorage('token', resp.data.token);
-    //     dispatch({
-    //         type: 'signUp',
-    //         payload: {
-    //             token: resp.data.token,
-    //             user: resp.data.usuario
-    //         }
-    //     });
-    // }
-
     const signUp = async ({ name, email, password }: RegisterData) => {
 
         if (await checkUsername(name) && checkPassword(password)) {

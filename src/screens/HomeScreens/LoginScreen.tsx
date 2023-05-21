@@ -7,7 +7,6 @@ import { LogginLogo } from '../../components/home/Logo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useForm } from '../../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthContext } from '../../context/authContext/authContext';
 
 interface Props extends StackScreenProps<any, any> { }
