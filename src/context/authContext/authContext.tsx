@@ -1,10 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
-//import { LoginData, LoginResponse, RegisterData, Usuario } from "../interfaces/appInterface";
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthState, authReducer } from "./authReducer";
-//import cafeApi from "../api/cafeApi";
 import { getItemStorage, removeItem, setItemStorage } from "../../helpers/helperStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginData, RegisterData } from "../../interfaces/loginInterficie";
 import firestore from '@react-native-firebase/firestore';
 
@@ -90,7 +87,7 @@ export const AuthProvider = ({ children }: any) => {
                     if (error.code === 'auth/invalid-email') {
                         dispatch({
                             type: 'addError',
-                            payload: 'El email es invalido'
+                            payload: 'El email no es valido'
                         });
                     }
                 });

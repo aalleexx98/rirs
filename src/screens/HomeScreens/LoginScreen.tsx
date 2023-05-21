@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert } from 'react-native'
+import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert, Button, Modal, StyleSheet } from 'react-native'
 import { Background } from '../../components/home/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { loginStyles } from '../../theme/loginTheme';
@@ -8,6 +8,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useForm } from '../../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthContext } from '../../context/authContext/authContext';
+import { ThemeContext } from '../../context/themeContext/ThemeContext';
+import auth from '@react-native-firebase/auth';
 
 interface Props extends StackScreenProps<any, any> { }
 
@@ -15,12 +17,15 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+    const [pswModal, setpswModal] = useState(false);
+    const { theme: { colors } } = useContext(ThemeContext);
 
     const { signIn, errorMessage, removeError } = useContext(AuthContext);
 
-    const { email, password, onChange } = useForm({
+    const { email, password, emailReset, onChange } = useForm({
         email: '',
-        password: ''
+        password: '',
+        emailReset: '',
     });
 
     useEffect(() => {
@@ -40,6 +45,20 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     }
 
+    const resetPassword = async () => {
+        await auth().sendPasswordResetEmail(emailReset).then(() => {
+            Alert.alert('Éxito', 'Se ha enviado un correo electrónico para restablecer la contraseña.');
+        }).catch(error => {
+            if (error.code === 'auth/invalid-email') {
+                Alert.alert('Error', 'El email no es valido');
+            }
+            if (error.code === 'auth/user-not-found') {
+                Alert.alert('Error', 'No existe usuario con el email introducido');
+            }
+        })
+        setpswModal(false);
+    }
+
     return (
         <>
             <Background />
@@ -48,8 +67,6 @@ export const LoginScreen = ({ navigation }: Props) => {
 
                 <View style={ loginStyles.formContainer }>
                     <LogginLogo />
-
-                    <Text style={ loginStyles.title }>Login</Text>
 
                     {/* EMAIL */ }
                     <View style={ {
@@ -134,6 +151,46 @@ export const LoginScreen = ({ navigation }: Props) => {
                         </TouchableOpacity>
                     </View>
 
+                    {/* RESET PASSWORD */ }
+                    <View style={ loginStyles.resetContainer }>
+                        <TouchableOpacity
+                            activeOpacity={ 0.8 }
+                            onPress={ () => setpswModal(true) }//Replace x navigate asi no puedo regresar
+                        >
+                            <Text style={ loginStyles.textReset }>Recuperar contraseña</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <Modal
+                        animationType='fade'
+                        visible={ pswModal }
+                        transparent={ true }
+                    //Supongo que se podra hacer que al hacer click fuera se quite?
+                    >
+                        {/* BG del Modal */ }
+                        <View style={ loginStyles.modalBgOut }>
+                            {/* Contenido del Modal */ }
+                            <View style={ loginStyles.modalContent }>
+                                <View style={ loginStyles.inputAreaReset }>
+                                    <TextInput
+                                        placeholder="Introduce email"
+                                        placeholderTextColor="rgba(175, 175, 175, 0.6)"
+                                        style={ loginStyles.inputFieldReset }
+                                        onSubmitEditing={ resetPassword }
+                                        onChangeText={ (value) => onChange(value, 'emailReset') }
+                                    />
+                                </View>
+                                <TouchableOpacity
+                                    activeOpacity={ 0.8 }
+                                    onPress={ resetPassword }
+                                    style={ { alignSelf: 'flex-end' } }
+                                >
+                                    <Text style={ { color: colors.primary, fontSize: 18 } }>Enviar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
 
                 </View>
 
@@ -142,3 +199,4 @@ export const LoginScreen = ({ navigation }: Props) => {
         </>
     )
 }
+
