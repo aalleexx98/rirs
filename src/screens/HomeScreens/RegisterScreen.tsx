@@ -34,7 +34,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
     }, [errorMessage])
 
     const onRegister = () => {
-        console.log({ email, password, name });
+        console.log({ email, password, name }); //TODO: Comentar
         Keyboard.dismiss();
         signUp({
             name,
@@ -65,6 +65,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         <Icon
                             name="person-outline"
                             size={ 20 }
+                            color="white"
                         />
                         <TextInput
                             placeholder="NickName"
@@ -94,6 +95,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         <Icon
                             name="mail-outline"
                             size={ 20 }
+                            color="white"
                         />
                         <TextInput
                             placeholder="Email"
@@ -123,6 +125,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         <Icon
                             name="key-outline"
                             size={ 20 }
+                            color="white"
                         />
                         <TextInput
                             placeholder="******"

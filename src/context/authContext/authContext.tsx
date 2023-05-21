@@ -6,10 +6,10 @@ import { AuthState, authReducer } from "./authReducer";
 import { getItemStorage, removeItem, setItemStorage } from "../../helpers/helperStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginData, RegisterData } from "../../interfaces/loginInterficie";
+import firestore from '@react-native-firebase/firestore';
 
-// Ojo porque estas props son del backend de fernando y no de firebase
 type AuthContextProps = {
-    errorMessage: string; //Para mandar mensaje de error
+    errorMessage: string;
     uid: string | null;
     user: FirebaseAuthTypes.User | null;
     status: 'checking' | 'authenticated' | 'not-authenticated'; //Checking para cuando abre la app mirar si ya estaba loggin
@@ -34,22 +34,43 @@ export const AuthProvider = ({ children }: any) => {
 
     const [state, dispatch] = useReducer(authReducer, authInicialState);
 
+    useEffect(() => {
+        const unsubscribe = auth().onAuthStateChanged(user => {
+            if (user) {
+                setItemStorage('uid', user.uid);
+                dispatch({
+                    type: 'signUp',
+                    payload: {
+                        uid: user.uid,
+                        user: user
+                    }
+                });
+            } else {
+                return dispatch({ type: 'notAuthenticated' });
+            }
+        });
+        // Limpia el evento de escucha cuando el componente se desmonta
+        return () => unsubscribe();
+    }, []);
+
     // useEffect(() => {
-    //     checkToken();
+    //     checkUid();
     // }, [])
 
-    // //Esto habria que cambiarlo para la data de firebase
-    // const checkToken = async () => {
-    //     const token = getItemStorage('token');
+    //Esto habria que cambiarlo para la data de firebase
+    // const checkUid = async () => {
+    //     const uid = getItemStorage('uid');
 
     //     // No token, no autenticado
-    //     if (!token) return dispatch({ type: 'notAuthenticated' });
+    //     if (!uid) return dispatch({ type: 'notAuthenticated' });
 
-    //     // Hay token
-    //     const resp = await cafeApi.get('/auth'); //Esto comprueba si el token existe
-    //     if (resp.status !== 200) { //SI hay token registrado (getItemStorage) pero no existe
-    //         return dispatch({ type: 'notAuthenticated' });
-    //     }
+    //     const userRecord = await auth().getUser(uid);
+    //     //AQUI COMPROBAR SI EXISTE USUARIO EN FIREBASE CON ESE UID
+    //     // // 
+    //     // const resp = await cafeApi.get('/auth'); //Esto comprueba si el token existe
+    //     // if (resp.status !== 200) { //SI hay token registrado (getItemStorage) pero no existe
+    //     //     return dispatch({ type: 'notAuthenticated' });
+    //     // }
 
     //     //Si esta lo guardamos y hacemos singUp
     //     setItemStorage('token', resp.data.token);
@@ -64,23 +85,12 @@ export const AuthProvider = ({ children }: any) => {
 
     const signUp = async ({ name, email, password }: RegisterData) => {
 
-        const hasUppercaseAndLowercase = /[A-Z]/.test(password) && /[a-z]/.test(password);
-
-        if (password.length < 8) {
-            dispatch({
-                type: 'addError',
-                payload: 'La contraseña debe de contener mínimo 8 caracteres'
-            });
-        } else if (!hasUppercaseAndLowercase) {
-            dispatch({
-                type: 'addError',
-                payload: 'La contraseña debe de contener mínimo 1 minúscula y 1 mayúscula'
-            });
-        } else {
+        if (await checkUsername(name) && checkPassword(password)) {
             await auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const user = userCredential.user;
+
                     dispatch({
                         type: 'signUp',
                         payload: {
@@ -89,8 +99,16 @@ export const AuthProvider = ({ children }: any) => {
                         }
                     });
 
+                    firestore()
+                        .collection('users')
+                        .doc(user.uid)
+                        .set({
+                            uid: user.uid,
+                            name: name,
+                            email: email,
+                        });
+
                     setItemStorage('uid', user.uid);
-                    console.log(user);
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
@@ -109,33 +127,84 @@ export const AuthProvider = ({ children }: any) => {
         }
     };
 
-    //LoginData es del tipo que le entra (lo que necesita mandar a la peti)
-    //LoginResponse lo que recibira de la petición.
+    const checkUsername = async (name: string): Promise<boolean> => {
+
+        if (name.includes(' ')) { //TODO: Mejorar esto
+            dispatch({
+                type: 'addError',
+                payload: 'El username no puede contener espacios'
+            });
+            return false;
+        }
+
+        const usersRef = firestore().collection('users');
+        const querySnapshot = await usersRef.where('name', '==', name).get();
+
+        if (!querySnapshot.empty) {
+            dispatch({
+                type: 'addError',
+                payload: 'El UserName ya existe'
+            });
+        }
+
+        return querySnapshot.empty;
+    }
+
+    const checkPassword = (password: string): boolean => {
+        const hasUppercaseAndLowercase = /[A-Z]/.test(password) && /[a-z]/.test(password);
+
+        if (password.length < 8) {
+            dispatch({
+                type: 'addError',
+                payload: 'La contraseña debe de contener mínimo 8 caracteres'
+            });
+            return false;
+        } else if (!hasUppercaseAndLowercase) {
+            dispatch({
+                type: 'addError',
+                payload: 'La contraseña debe de contener mínimo 1 minúscula y 1 mayúscula'
+            });
+            return false;
+        }
+
+        return true;
+    }
+
     const signIn = async ({ email, password }: LoginData) => {
-        // try {
+        await auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
 
-        //     //Correo y password es la data
-        //     const { data } = await cafeApi.post<LoginResponse>('/auth/login', { correo, password });
-        //     dispatch({//Es dispatch de authReducer
-        //         type: 'signUp',
-        //         payload: {
-        //             token: data.token,
-        //             user: data.usuario
-        //         }
-        //     });
+                dispatch({//Es dispatch de authReducer
+                    type: 'signUp',
+                    payload: {
+                        uid: user.uid,
+                        user: user,
+                    }
+                });
 
-        //     setItemStorage('token', data.token);
-
-        // } catch (error: any) {//Probar mas adelante de quitar lo de :any
-        //     dispatch({ //Es dispatch de authReducer
-        //         type: 'addError',
-        //         payload: error.response.data.msg || 'Información incorrecta' //Si msg viene nulo mando el msg de info incorrecta
-        //     })
-        // }
+                setItemStorage('uid', user.uid);
+            })
+            .catch(error => {
+                if (error.code === 'auth/user-not-found') {
+                    dispatch({
+                        type: 'addError',
+                        payload: 'Email no registrado a ninguna cuenta'
+                    });
+                }
+                if (error.code === 'auth/wrong-password') {
+                    dispatch({
+                        type: 'addError',
+                        payload: 'Contraseña incorrecta'
+                    });
+                }
+            });
     };
 
     const logOut = async () => {
-        //removeItem('token')
+        auth().signOut();
+        removeItem('uid');
         dispatch({ type: 'logout' });
     };
 

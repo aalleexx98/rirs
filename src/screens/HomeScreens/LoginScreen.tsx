@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { TouchableOpacity, Text, TextInput, View, Keyboard } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert } from 'react-native'
 import { Background } from '../../components/home/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { loginStyles } from '../../theme/loginTheme';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useForm } from '../../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { AuthContext } from '../../context/authContext/authContext';
 
 interface Props extends StackScreenProps<any, any> { }
 
@@ -16,29 +17,28 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
 
+    const { signIn, errorMessage, removeError } = useContext(AuthContext);
+
     const { email, password, onChange } = useForm({
         email: '',
         password: ''
     });
 
+    useEffect(() => {
+        if (errorMessage.length === 0) return;
+
+        Alert.alert('Login incorrecto', errorMessage, [{
+            text: 'Ok',
+            onPress: removeError
+        }]);
+
+    }, [errorMessage])
+
     const onLogin = async () => {
         console.log({ email, password });
         Keyboard.dismiss();
+        signIn({ email, password });
 
-        try {
-            await auth()
-                .signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-
-                    if (user) {
-                        console.log(user);
-                        //setIsLogin(true);
-                    }
-                });
-        } catch (error) {
-            console.log('can not login: ', error);
-        }
     }
 
     return (
@@ -63,6 +63,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         <Icon
                             name="mail-outline"
                             size={ 20 }
+                            color="white"
                         />
                         <TextInput
                             placeholder="Email"
@@ -92,6 +93,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         <Icon
                             name="key-outline"
                             size={ 20 }
+                            color="white"
                         />
                         <TextInput
                             placeholder="******"
