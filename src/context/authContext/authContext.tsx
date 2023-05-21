@@ -166,6 +166,12 @@ export const AuthProvider = ({ children }: any) => {
                         payload: 'Contraseña incorrecta'
                     });
                 }
+                if (error.code === 'auth/invalid-email') {
+                    dispatch({
+                        type: 'addError',
+                        payload: 'El email no es valido'
+                    });
+                }
             });
     };
 

@@ -42,10 +42,10 @@ export const LoginScreen = ({ navigation }: Props) => {
         console.log({ email, password });
         Keyboard.dismiss();
         signIn({ email, password });
-
     }
 
     const resetPassword = async () => {
+        Keyboard.dismiss();
         await auth().sendPasswordResetEmail(emailReset).then(() => {
             Alert.alert('Éxito', 'Se ha enviado un correo electrónico para restablecer la contraseña.');
         }).catch(error => {
@@ -91,7 +91,6 @@ export const LoginScreen = ({ navigation }: Props) => {
                             onBlur={ () => setIsFocused(false) }
 
                             onChangeText={ (value) => onChange(value, 'email') }
-                            // value={ email }
                             onSubmitEditing={ onLogin }
 
                             autoCapitalize="none"
@@ -121,7 +120,6 @@ export const LoginScreen = ({ navigation }: Props) => {
                             onBlur={ () => setIsFocusedPassword(false) }
 
                             onChangeText={ (value) => onChange(value, 'password') }
-                            // value={ email }
                             onSubmitEditing={ onLogin }
 
                             autoCapitalize="none"
@@ -175,9 +173,12 @@ export const LoginScreen = ({ navigation }: Props) => {
                                     <TextInput
                                         placeholder="Introduce email"
                                         placeholderTextColor="rgba(175, 175, 175, 0.6)"
+                                        keyboardType="email-address"
                                         style={ loginStyles.inputFieldReset }
                                         onSubmitEditing={ resetPassword }
                                         onChangeText={ (value) => onChange(value, 'emailReset') }
+                                        autoCapitalize="none"
+                                        autoCorrect={ false }
                                     />
                                 </View>
                                 <TouchableOpacity
@@ -185,9 +186,18 @@ export const LoginScreen = ({ navigation }: Props) => {
                                     onPress={ resetPassword }
                                     style={ { alignSelf: 'flex-end' } }
                                 >
-                                    <Text style={ { color: colors.primary, fontSize: 18 } }>Enviar</Text>
+                                    <Text style={ { color: 'black', fontSize: 18, marginTop: 40 } }>Enviar</Text>
                                 </TouchableOpacity>
+
+                                <Icon
+                                    name="close-outline"
+                                    size={ 25 }
+                                    color="black"
+                                    style={ { position: 'absolute', right: 5, top: 5 } }
+                                    onPress={ () => setpswModal(false) }
+                                />
                             </View>
+
                         </View>
                     </Modal>
 

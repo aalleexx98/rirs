@@ -89,7 +89,6 @@ export const loginStyles = StyleSheet.create({
         padding: 20,
         backgroundColor: 'white',
         width: 250,
-        rowGap: 40,
         shadowOffset: {
             width: 0,
             height: 10,
