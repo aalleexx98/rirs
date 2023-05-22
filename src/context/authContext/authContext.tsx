@@ -138,41 +138,43 @@ export const AuthProvider = ({ children }: any) => {
     }
 
     const signIn = async ({ email, password }: LoginData) => {
-        await auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                const user = userCredential.user;
+        if (email && password) {
+            await auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const user = userCredential.user;
 
-                dispatch({//Es dispatch de authReducer
-                    type: 'signUp',
-                    payload: {
-                        uid: user.uid,
-                        user: user,
+                    dispatch({//Es dispatch de authReducer
+                        type: 'signUp',
+                        payload: {
+                            uid: user.uid,
+                            user: user,
+                        }
+                    });
+
+                    setItemStorage('uid', user.uid);
+                })
+                .catch(error => {
+                    if (error.code === 'auth/user-not-found') {
+                        dispatch({
+                            type: 'addError',
+                            payload: 'Email no registrado a ninguna cuenta'
+                        });
+                    }
+                    if (error.code === 'auth/wrong-password') {
+                        dispatch({
+                            type: 'addError',
+                            payload: 'Contraseña incorrecta'
+                        });
+                    }
+                    if (error.code === 'auth/invalid-email') {
+                        dispatch({
+                            type: 'addError',
+                            payload: 'El email no es valido'
+                        });
                     }
                 });
-
-                setItemStorage('uid', user.uid);
-            })
-            .catch(error => {
-                if (error.code === 'auth/user-not-found') {
-                    dispatch({
-                        type: 'addError',
-                        payload: 'Email no registrado a ninguna cuenta'
-                    });
-                }
-                if (error.code === 'auth/wrong-password') {
-                    dispatch({
-                        type: 'addError',
-                        payload: 'Contraseña incorrecta'
-                    });
-                }
-                if (error.code === 'auth/invalid-email') {
-                    dispatch({
-                        type: 'addError',
-                        payload: 'El email no es valido'
-                    });
-                }
-            });
+        }
     };
 
     const logOut = async () => {

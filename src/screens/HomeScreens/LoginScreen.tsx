@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert, Button, Modal, StyleSheet } from 'react-native'
-import { Background } from '../../components/home/Background';
+import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert, Button, Modal, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
+import { Background } from '../../components/login/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { loginStyles } from '../../theme/loginTheme';
-import { LogginLogo } from '../../components/home/Logo';
+import { LogginLogo } from '../../components/login/Logo';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useForm } from '../../hooks/useForm';
+import { useForm } from '../../hooks/global/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthContext } from '../../context/authContext/authContext';
 import { ThemeContext } from '../../context/themeContext/ThemeContext';
@@ -46,24 +46,28 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const resetPassword = async () => {
         Keyboard.dismiss();
-        await auth().sendPasswordResetEmail(emailReset).then(() => {
-            Alert.alert('Éxito', 'Se ha enviado un correo electrónico para restablecer la contraseña.');
-        }).catch(error => {
-            if (error.code === 'auth/invalid-email') {
-                Alert.alert('Error', 'El email no es valido');
-            }
-            if (error.code === 'auth/user-not-found') {
-                Alert.alert('Error', 'No existe usuario con el email introducido');
-            }
-        })
-        setpswModal(false);
+        if (emailReset) {
+            await auth().sendPasswordResetEmail(emailReset).then(() => {
+                Alert.alert('Éxito', 'Se ha enviado un correo electrónico para restablecer la contraseña.');
+            }).catch(error => {
+                if (error.code === 'auth/invalid-email') {
+                    Alert.alert('Error', 'El email no es valido');
+                }
+                if (error.code === 'auth/user-not-found') {
+                    Alert.alert('Error', 'No existe usuario con el email introducido');
+                }
+            })
+            setpswModal(false);
+        }
     }
 
     return (
         <>
             <Background />
 
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView
+                keyboardShouldPersistTaps='always'
+            >
 
                 <View style={ loginStyles.formContainer }>
                     <LogginLogo />
@@ -163,7 +167,6 @@ export const LoginScreen = ({ navigation }: Props) => {
                         animationType='fade'
                         visible={ pswModal }
                         transparent={ true }
-                    //Supongo que se podra hacer que al hacer click fuera se quite?
                     >
                         {/* BG del Modal */ }
                         <View style={ loginStyles.modalBgOut }>
@@ -200,7 +203,6 @@ export const LoginScreen = ({ navigation }: Props) => {
 
                         </View>
                     </Modal>
-
 
                 </View>
 

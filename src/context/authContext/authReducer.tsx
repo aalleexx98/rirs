@@ -40,7 +40,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
                 status: 'authenticated',
                 uid: action.payload.uid,
                 user: action.payload.user
-            }
+            };
 
         case 'logout': //No es que no haga nada, si no que hace lo mismo que notAuthenticated
         case 'notAuthenticated':
