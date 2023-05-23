@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { TouchableOpacity, Text, TextInput, View, Keyboard, Alert, Button, Modal, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
-import { Background } from '../../components/login/Background';
+import { Background } from '../components/login/Background';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { loginStyles } from '../../theme/loginTheme';
-import { LogginLogo } from '../../components/login/Logo';
+import { loginStyles } from '../theme/loginTheme';
+import { LogginLogo } from '../components/login/Logo';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useForm } from '../../hooks/global/useForm';
+import { useForm } from '../hooks/global/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AuthContext } from '../../context/authContext/authContext';
-import { ThemeContext } from '../../context/themeContext/ThemeContext';
+import { AuthContext } from '../context/authContext/authContext';
+import { ThemeContext } from '../context/themeContext/ThemeContext';
 import auth from '@react-native-firebase/auth';
 
 interface Props extends StackScreenProps<any, any> { }

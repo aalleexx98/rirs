@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Button, Text, View } from 'react-native'
-import { AuthContext } from '../../context/authContext/authContext';
-import { ProfilePicture } from '../../components/home/ProfilePicture';
+import { AuthContext } from '../context/authContext/authContext';
+import { ProfilePicture } from '../components/home/ProfilePicture';
 
 
 

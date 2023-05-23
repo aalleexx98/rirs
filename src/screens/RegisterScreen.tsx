@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { loginStyles } from '../../theme/loginTheme'
-import { LogginLogo } from '../../components/login/Logo'
-import { useForm } from '../../hooks/global/useForm'
+import { loginStyles } from '../theme/loginTheme'
+import { LogginLogo } from '../components/login/Logo'
+import { useForm } from '../hooks/global/useForm'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StackScreenProps } from '@react-navigation/stack'
-import { AuthContext } from '../../context/authContext/authContext'
+import { AuthContext } from '../context/authContext/authContext'
 
 interface Props extends StackScreenProps<any, any> { }
 

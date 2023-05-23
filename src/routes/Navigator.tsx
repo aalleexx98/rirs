@@ -1,13 +1,13 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginScreen } from '../screens/HomeScreens/LoginScreen';
-import { RegisterScreen } from '../screens/HomeScreens/RegisterScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
 import SplashScreen from 'react-native-splash-screen'
 import { useContext, useEffect } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../context/authContext/authContext';
-import { LoadingScreen } from '../screens/HomeScreens/LoadingScreen';
-import { HomeScreen } from '../screens/HomeScreens/HomeScreen';
+import { LoadingScreen } from '../screens/LoadingScreen';
+import { HomeScreen } from '../screens/HomeScreen';
 
 const Stack = createStackNavigator();
 

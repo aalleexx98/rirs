@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker';
 import { AuthContext } from '../../context/authContext/authContext';
 import storage from '@react-native-firebase/storage';
@@ -11,7 +11,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export const ProfilePicture = () => {
 
     const { user, uid } = useContext(AuthContext);
-
     const [tempUri, setTempUri] = useState<string>()
 
     useEffect(() => {
@@ -73,22 +72,22 @@ export const ProfilePicture = () => {
     return (
         <>
             { tempUri ? (
-                <View style={ { borderRadius: 200, overflow: 'hidden', height: 200, width: 200 } }>
+                <View style={ styles.containerPicture }>
                     <TouchableOpacity onPress={ takePhotoFromGallery }>
                         <FadeInImage
                             key={ tempUri }
                             uri={ tempUri }
-                            style={ { width: 200, height: 200, resizeMode: 'cover' } }
+                            style={ styles.picture }
                         />
 
                     </TouchableOpacity>
                 </View>
             ) : (
-                <View style={ { borderRadius: 200, overflow: 'hidden', height: 200, width: 200 } }>
+                <View style={ styles.containerPicture }>
                     <TouchableOpacity onPress={ takePhotoFromGallery }>
                         <Image
                             source={ require('../../assets/blank-profile.png') }
-                            style={ { width: 200, height: 200, resizeMode: 'cover' } }
+                            style={ styles.picture }
                         />
                     </TouchableOpacity>
                 </View>
@@ -96,3 +95,17 @@ export const ProfilePicture = () => {
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    containerPicture: {
+        borderRadius: 200,
+        overflow: 'hidden',
+        height: 200,
+        width: 200,
+    },
+    picture: {
+        width: 200,
+        height: 200,
+        resizeMode: 'cover',
+    }
+});
