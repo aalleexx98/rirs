@@ -22,7 +22,7 @@ export const lightTheme: ThemeState = {
     colors: {
         primary: '#8C03FC',
         background: '#FFFFFF',
-        card: '#A5BECC', //nO SE XD
+        card: '#000000', //nO SE XD
         text: '#000000',
         border: '#000000',
         notification: '#FFFFFF',
@@ -38,7 +38,7 @@ export const darkTheme: ThemeState = {
     colors: {
         primary: '#8C03FC',
         background: '#000000',
-        card: '#A5BECC',
+        card: '#000000',
         text: '#FFFFFF',
         border: '#000000',
         notification: '#FFFFFF',
@@ -55,7 +55,7 @@ export const createTheme = (currentTheme: 'light' | 'dark', dark: boolean): Them
         colors: {
             primary: '#8C03FC',
             background: dark ? '#000000' : '#FFFFFF',
-            card: '#A5BECC',
+            card: '#000000',
             text: dark ? '#FFFFFF' : '#000000',
             border: '#000000',
             notification: '#FFFFFF',
