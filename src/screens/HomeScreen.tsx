@@ -2,11 +2,14 @@ import React, { useContext } from 'react'
 import { Button, Text, View } from 'react-native'
 import { AuthContext } from '../context/authContext/authContext';
 import { ProfilePicture } from '../components/home/ProfilePicture';
+import { ThemeContext } from '../context/themeContext/ThemeContext';
 
 
 
 export const HomeScreen = () => {
     const { user, logOut } = useContext(AuthContext);
+    const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
+
 
     return (
         <View>
@@ -23,6 +26,6 @@ export const HomeScreen = () => {
             <ProfilePicture />
 
 
-        </View>
+        </View >
     )
 }

@@ -4,7 +4,7 @@ import { useColorScheme } from "react-native";
 import { DarkTheme } from "@react-navigation/native";
 
 interface ThemeContextProps {
-    theme: ThemeState; //TODO
+    theme: ThemeState;
     setDarkTheme: () => void;
     setLightTheme: () => void;
 }
@@ -15,7 +15,7 @@ export const ThemeProvider = ({ children }: any) => {
 
     //Esto es para que coga el theme del sistema
     const colorScheme = useColorScheme();
-    const [theme, dispatch] = useReducer(themeReducer, (colorScheme === 'dark') ? createTheme('dark', true) : createTheme('light', false)) //TODO
+    const [theme, dispatch] = useReducer(themeReducer, (colorScheme === 'dark') ? createTheme('dark', true) : createTheme('light', false))
     useEffect(() => {
 
         (colorScheme === 'light')

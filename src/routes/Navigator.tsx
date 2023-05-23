@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../context/authContext/authContext';
 import { LoadingScreen } from '../screens/LoadingScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { Tabs } from './Tabs';
 
 const Stack = createStackNavigator();
 
@@ -39,7 +40,7 @@ export const Navigator = () => {
                         )
                         : (
                             <>
-                                <Stack.Screen name="HomeScreen" component={ HomeScreen } />
+                                <Stack.Screen name="Tabs" component={ Tabs } />
                             </>
                         )
                 }

@@ -1,4 +1,5 @@
 import { Theme, DarkTheme } from '@react-navigation/native';
+import { Background } from '../../components/login/Background';
 
 type ThemeAction =
     | { type: 'set_light_theme' }
@@ -8,6 +9,7 @@ export interface ThemeState extends Theme {
     currentTheme: 'light' | 'dark',
     dividerColor: string;
     textSecondary: string;
+    backgroundTab: string;
 }
 
 //EN EL RETURN DEL themeReducer,se podria poner return { ...lightTheme }, pero es mala practica
@@ -16,6 +18,7 @@ export const lightTheme: ThemeState = {
     dark: false,
     dividerColor: '#243A73',
     textSecondary: '#FFFFFF',
+    backgroundTab: 'rgba(255,255,255,0.82)',
     colors: {
         primary: '#8C03FC',
         background: '#FFFFFF',
@@ -31,6 +34,7 @@ export const darkTheme: ThemeState = {
     dark: true,
     dividerColor: '#243A73',
     textSecondary: '#FFFFFF',
+    backgroundTab: 'rgba(0, 0, 0, 0.82)',
     colors: {
         primary: '#8C03FC',
         background: '#000000',
@@ -47,6 +51,7 @@ export const createTheme = (currentTheme: 'light' | 'dark', dark: boolean): Them
         dark,
         dividerColor: '#243A73',
         textSecondary: '#FFFFFF',
+        backgroundTab: dark ? 'rgba(0, 0, 0, 0.82)' : 'rgba(255,255,255,0.82)',
         colors: {
             primary: '#8C03FC',
             background: dark ? '#000000' : '#FFFFFF',
