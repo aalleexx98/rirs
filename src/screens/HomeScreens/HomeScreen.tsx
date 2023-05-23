@@ -70,14 +70,15 @@ export const HomeScreen = () => {
                 console.log('El usuario no está autenticado');
             }
         } catch (error) {
-            Alert.alert('Error', 'Error al actualizar la URL de foto' + error);
+            Alert.alert('Error', 'Error al actualizar la URL de foto');
         }
     };
 
     return (
         <View>
             <Text>
-                { JSON.stringify(user, null, 5) }
+                {/* { JSON.stringify(user, null, 5) } */ }
+                { user?.email }
             </Text>
             <Button
                 title="logout"
