@@ -5,7 +5,7 @@ import { AuthContext } from '../../context/authContext/authContext';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import { Image } from '@rneui/base';
-import { FadeInImage } from '../../components/global/FadeInImage';
+import { FadeInImage } from '../FadeInImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const ProfilePicture = () => {

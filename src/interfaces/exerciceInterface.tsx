@@ -1,5 +1,8 @@
-export interface exercice {
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+
+export interface exercicePreview {
+    ref: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>,
     name: string;
-    type: string;
-    muscle: string;
+    muscle: string,
+    img: string,
 }
