@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Platform } from 'react-native';
 import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
-import { ExerciceNavigator, ExerciceStack } from './ExerciceStack';
+import { ExerciceStack } from './ExerciceStack';
 
 const Tab = createBottomTabNavigator();
 

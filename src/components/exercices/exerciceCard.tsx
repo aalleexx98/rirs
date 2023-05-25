@@ -20,7 +20,7 @@ export const ExerciceCard = ({ exercice }: Props) => {
     return (
         <TouchableOpacity
             activeOpacity={ 0.6 }
-            onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: 'hola' }) }
+            onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: exercice.ref.id }) }
         >
             <View style={ { ...styles.card, backgroundColor: colors.primary } }>
                 <FadeInImage
