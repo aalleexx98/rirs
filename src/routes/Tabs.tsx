@@ -5,16 +5,15 @@ import { RoutineScreen } from '../screens/RoutineScreen';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
 import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
-import { NavigationContainer } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 export const Tabs = () => {
 
-    const { theme: { colors, backgroundTab }, theme } = useContext(ThemeContext);
+    const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
 
     return (
         //TODO: ¿CUANDO LO TENGA REDEFINIR LOS TABS PARA HACERLO COMO LO DE LOS POKEMONS?

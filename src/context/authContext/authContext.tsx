@@ -96,10 +96,10 @@ export const AuthProvider = ({ children }: any) => {
 
     const checkUsername = async (name: string): Promise<boolean> => {
 
-        if (name.includes(' ')) { //TODO: Mejorar esto
+        if (name.includes(' ') || name.length === 0) { //TODO: Mejorar esto
             dispatch({
                 type: 'addError',
-                payload: 'El username no puede contener espacios'
+                payload: 'El username no puede contener espacios o estar vacío'
             });
             return false;
         }

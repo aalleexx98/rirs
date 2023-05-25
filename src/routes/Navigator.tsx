@@ -7,7 +7,6 @@ import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../context/authContext/authContext';
 import { LoadingScreen } from '../screens/LoadingScreen';
-import { HomeScreen } from '../screens/HomeScreen';
 import { Tabs } from './Tabs';
 
 const Stack = createStackNavigator();

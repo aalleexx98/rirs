@@ -48,7 +48,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
             <KeyboardAwareScrollView contentContainerStyle={ {
                 flex: 1,
                 backgroundColor: '#8C03FC',
-            } }>
+            } } keyboardShouldPersistTaps='always'>
 
                 <View style={ loginStyles.formContainer }>
                     <LogginLogo />
