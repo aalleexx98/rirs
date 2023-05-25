@@ -8,9 +8,7 @@ export const useExercicesPaginated = () => {
     const [isFetching, setIsFetching] = useState(true);
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
 
-
     const loadExercices = async () => {
-        console.log("--------------------------------------------------------");
         try {
             const querySnapshot = await exercicesCollection.orderBy('rel_number').limit(20).get();
 
@@ -20,6 +18,7 @@ export const useExercicesPaginated = () => {
                     name: documento.data().name,
                     muscle: documento.data().primaryMuscle,
                     img: documento.data().image,
+                    equipment: documento.data().equipment,
                 };
             });
 

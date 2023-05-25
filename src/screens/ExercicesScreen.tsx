@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
-import { Button, FlatList, Image, Text, View } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 import { globalStyles } from '../theme/globalTheme'
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { useExercicesPaginated } from '../hooks/global/exercices/useExercicesPaginated';
 import { Loading } from '../components/Loading';
+import { ExerciceCard } from '../components/exercices/exerciceCard';
 
 export const ExercicesScreen = () => {
     const { theme: { colors } } = useContext(ThemeContext);
@@ -23,12 +24,7 @@ export const ExercicesScreen = () => {
                 keyExtractor={ (exercice) => exercice.name }
                 showsVerticalScrollIndicator={ false }
 
-                renderItem={ ({ item }) => (
-                    <Image
-                        source={ { uri: item.img } }
-                        style={ { width: 100, height: 100 } }
-                    />
-                ) }
+                renderItem={ ({ item }) => (<ExerciceCard exercice={ item } />) }
             />
 
         </View>

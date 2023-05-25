@@ -5,4 +5,5 @@ export interface exercicePreview {
     name: string;
     muscle: string,
     img: string,
+    equipment: string,
 }

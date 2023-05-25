@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Platform } from 'react-native';
 import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { ExerciceNavigator, ExerciceStack } from './ExerciceStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,8 +51,8 @@ export const Tabs = () => {
             />
 
             <Tab.Screen
-                name="ExercicesScreen"
-                component={ ExercicesScreen }
+                name="ExerciceStack"
+                component={ ExerciceStack }
                 options={ {
                     tabBarLabel: 'Ejercicios',
                     tabBarIcon: ({ color }) => (
