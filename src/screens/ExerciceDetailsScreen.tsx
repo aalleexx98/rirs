@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useContext, useEffect, useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View, Linking, ScrollView } from 'react-native'
 import { RootStackParams } from '../routes/ExerciceStack'
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
@@ -8,6 +8,8 @@ import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FadeInImage } from '../components/FadeInImage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Loading } from '../components/Loading';
 
 
 const windowWith = Dimensions.get('window').width
@@ -17,8 +19,10 @@ interface Props extends StackScreenProps<RootStackParams, 'ExerciceDetailsScreen
 export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
 
     const [exercice, setExercice] = useState<FirebaseFirestoreTypes.DocumentData | undefined>();
-    const { theme: { colors } } = useContext(ThemeContext);
+    const [loading, setLoading] = useState(false);
+    const { theme: { colors, textSecondary } } = useContext(ThemeContext);
     const { top } = useSafeAreaInsets();
+    const tabBarHeight = useBottomTabBarHeight();
 
     const getFullExercice = async () => {
         try {
@@ -39,11 +43,18 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
     };
 
     useEffect(() => {
+        setLoading(true);
         getFullExercice();
+        setLoading(false);
     }, [])
 
+
+    if (loading) {
+        return <Loading />
+    }
+
     return (
-        <>
+        <View style={ { flex: 1, paddingBottom: tabBarHeight } }>
             {/* Backbutton */ }
             <TouchableOpacity
                 onPress={ () => navigation.pop() }
@@ -62,7 +73,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
             </TouchableOpacity>
             { exercice ?
                 (
-                    <>
+                    <ScrollView style={ { flex: 1 } }>
                         <View style={ { ...styles.containerImage, width: windowWith } }>
                             <FadeInImage
                                 uri={ exercice.image }
@@ -72,44 +83,47 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
                         <View style={ { ...styles.containerDetails } }>
                             <Text style={ { ...styles.title, color: colors.text } }>{ exercice.name }</Text>
 
-                            <TouchableOpacity onPress={ handlePress } style={ { ...styles.botonYT, borderColor: colors.text } }>
-                                <Text style={ { color: colors.text } }>Ver video en YouTube</Text>
+                            <TouchableOpacity onPress={ handlePress } style={ { ...styles.botonYT, backgroundColor: colors.primary } } activeOpacity={ 0.8 }>
+                                <Text style={ { color: textSecondary } }>Ver video en YouTube</Text>
                             </TouchableOpacity>
 
                             <View style={ { rowGap: 5 } }>
-                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Ejecucción.</Text>
+                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Ejecucción</Text>
                                 <FlatList
                                     data={ exercice.execution }
-                                    renderItem={ ({ item }) => <Text style={ { color: colors.text } }>{ item }</Text> }
+                                    renderItem={ ({ item }) => <Text style={ { color: colors.text, textAlign: 'justify', paddingBottom: 8 } }>{ item }</Text> }
                                     keyExtractor={ (item, index) => index.toString() }
+                                    scrollEnabled={ false }
                                 />
                             </View>
 
                             <View style={ { rowGap: 5 } }>
-                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Tips.</Text>
+                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Tips</Text>
                                 <FlatList
                                     data={ exercice.tips }
-                                    renderItem={ ({ item }) => <Text style={ { color: colors.text } }> - { item }</Text> }
+                                    renderItem={ ({ item }) => <Text style={ { color: colors.text, textAlign: 'justify', paddingBottom: 8 } }> - { item }</Text> }
                                     keyExtractor={ (item, index) => index.toString() }
+                                    scrollEnabled={ false }
                                 />
                             </View>
 
                             <View style={ { rowGap: 5 } }>
-                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Músculo Principal:</Text>
-                                <Text style={ { color: colors.text, textTransform: 'capitalize' } }>{ exercice.primaryMuscle }</Text>
+                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Músculo Principal</Text>
+                                <Text style={ { color: colors.text, textTransform: 'capitalize' } }>{ exercice.primaryMuscle }.</Text>
                             </View>
 
                             <View style={ { rowGap: 5 } }>
-                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Músculos Secundarios:</Text>
-                                <FlatList
-                                    data={ exercice.tips }
-                                    renderItem={ ({ item }) => <Text style={ { color: colors.text } }> Poner musculo, musculo</Text> }
-                                    keyExtractor={ (item, index) => index.toString() }
-                                />
+                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Músculos Secundarios</Text>
+                                <Text style={ { color: colors.text } }>{ exercice.secondaryMuscles.join(', ') }.</Text>
+                            </View>
+
+                            <View style={ { rowGap: 5 } }>
+                                <Text style={ { ...styles.sectionTitle, color: colors.text } }>Equipamiento</Text>
+                                <Text style={ { color: colors.text, textTransform: 'capitalize' } }>{ exercice.equipment }.</Text>
                             </View>
 
                         </View>
-                    </>
+                    </ScrollView>
                 )
                 :
                 (
@@ -119,7 +133,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
                 )
             }
 
-        </>
+        </View>
     )
 }
 
@@ -137,20 +151,19 @@ const styles = StyleSheet.create({
     containerDetails: {
         flex: 1,
         padding: 15,
-        rowGap: 20,
+        rowGap: 40,
     },
     title: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: '600'
     },
     sectionTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '600'
     },
     botonYT: {
         alignItems: 'center',
-        borderWidth: 1,
-        padding: 4,
+        padding: 8,
         borderRadius: 10,
     }
 });
