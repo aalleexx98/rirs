@@ -37,18 +37,15 @@ export const useExercicesPaginated = () => {
         if (name.length === 0) { //Si la busqueda no contiene nada
             setExerciceFiltered(simpleExerciceList);
         }
-
-        if (isNaN(Number(name))) { //Si no es numero para asi buscar por id o name
+        if (isNaN(Number(name))) { //Si no es numero
             setExerciceFiltered( //Busca pokemons x name y los setea para mostrar
                 simpleExerciceList.filter(poke => {
-                    const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); //para accentos
                     const normalizedName = poke.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                     return normalizedName.includes(normalizedSearch);
                 })
             );
         }
-
-        console.log(simpleExerciceList);
     }
 
     useEffect(() => {
