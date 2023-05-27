@@ -5,7 +5,7 @@ import { RoutineScreen } from '../screens/RoutineScreen';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Platform } from 'react-native';
+import { Platform, KeyboardAvoidingView } from 'react-native';
 import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { ExerciceStack } from './ExerciceStack';
@@ -23,15 +23,16 @@ export const Tabs = () => {
             screenOptions={ ({ route }) => ({
                 headerShown: false,
                 tabBarStyle: {
-                    position: 'absolute',
-                    paddingBottom: (Platform.OS === 'ios') ? 0 : 5,
+                    paddingVertical: (Platform.OS === 'ios') ? 0 : 8,
                     backgroundColor: backgroundTab,
                     borderWidth: 0,
                     elevation: 0,
-                    height: (Platform.OS === 'ios') ? 50 : 60,
+                    height: (Platform.OS === 'ios') ? 30 : 50,
                 },
                 tabBarActiveTintColor: colors.primary,
                 tabBarInactiveTintColor: colors.text,
+                tabBarHideOnKeyboard: true
+
             }) }
             initialRouteName='HomeScreen'
         >

@@ -8,9 +8,11 @@ export const useExercicesPaginated = () => {
     const [isFetching, setIsFetching] = useState(true);
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
 
+    const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
+
     const loadExercices = async () => {
         try {
-            const querySnapshot = await exercicesCollection.orderBy('rel_number').limit(20).get();
+            const querySnapshot = await exercicesCollection.orderBy('rel_number').get();
 
             const exerciceList: exercicePreview[] = querySnapshot.docs.map((documento) => {
                 return {
@@ -23,10 +25,30 @@ export const useExercicesPaginated = () => {
             });
 
             setSimpleExerciceList(exerciceList);
+            setExerciceFiltered(exerciceList);
             setIsFetching(false);
         } catch (error) {
             console.log('Error al obtener documentos:', error);
         }
+    }
+
+    const searchExercice = (name: string) => { //TODO:
+        console.log(name);
+        if (name.length === 0) { //Si la busqueda no contiene nada
+            setExerciceFiltered(simpleExerciceList);
+        }
+
+        if (isNaN(Number(name))) { //Si no es numero para asi buscar por id o name
+            setExerciceFiltered( //Busca pokemons x name y los setea para mostrar
+                simpleExerciceList.filter(poke => {
+                    const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const normalizedName = poke.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    return normalizedName.includes(normalizedSearch);
+                })
+            );
+        }
+
+        console.log(simpleExerciceList);
     }
 
     useEffect(() => {
@@ -35,6 +57,8 @@ export const useExercicesPaginated = () => {
 
     return {
         isFetching,
-        simpleExerciceList
+        simpleExerciceList,
+        searchExercice,
+        exerciceFiltered//TODO:
     }
 }

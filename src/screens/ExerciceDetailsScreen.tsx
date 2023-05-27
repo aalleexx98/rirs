@@ -8,7 +8,6 @@ import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FadeInImage } from '../components/FadeInImage';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Loading } from '../components/Loading';
 
 
@@ -22,7 +21,6 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
     const [loading, setLoading] = useState(false);
     const { theme: { colors, textSecondary } } = useContext(ThemeContext);
     const { top } = useSafeAreaInsets();
-    const tabBarHeight = useBottomTabBarHeight();
 
     const getFullExercice = async () => {
         try {
@@ -54,7 +52,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
     }
 
     return (
-        <View style={ { flex: 1, paddingBottom: tabBarHeight } }>
+        <>
             {/* Backbutton */ }
             <TouchableOpacity
                 onPress={ () => navigation.pop() }
@@ -133,7 +131,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
                 )
             }
 
-        </View>
+        </>
     )
 }
 
