@@ -22,31 +22,29 @@ export const SearchInput = ({ style, onDebounce }: Props) => {
 
 
     return (
-        <KeyboardAwareScrollView
-            keyboardShouldPersistTaps='always'
-        >
-            <View style={ {
-                ...style as any
-            } }>
-                <View style={ styles.textBg }>
-                    <TextInput
-                        placeholder='Buscar Ejercicio...'
-                        placeholderTextColor="grey"
-                        style={ { ...styles.textInput, top: (Platform.OS === 'ios') ? 0 : 2 } }
-                        autoCapitalize='none'
-                        autoCorrect={ false }
-                        value={ textValue }
-                        onChangeText={ setTextValue }
-                    />
 
-                    <Icon
-                        name="search-outline"
-                        color="grey"
-                        size={ 30 }
-                    />
-                </View>
+        <View style={ {
+            ...style as any
+        } }>
+            <View style={ styles.textBg }>
+                <TextInput
+                    placeholder='Buscar Ejercicio...'
+                    placeholderTextColor="grey"
+                    style={ { ...styles.textInput, top: (Platform.OS === 'ios') ? 0 : 2 } }
+                    autoCapitalize='none'
+                    autoCorrect={ false }
+                    value={ textValue }
+                    onChangeText={ setTextValue }
+                />
+
+                <Icon
+                    name="search-outline"
+                    color="grey"
+                    size={ 30 }
+                />
             </View>
-        </KeyboardAwareScrollView>
+        </View>
+
     )
 }
 

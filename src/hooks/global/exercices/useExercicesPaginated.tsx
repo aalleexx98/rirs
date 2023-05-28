@@ -26,26 +26,50 @@ export const useExercicesPaginated = () => {
 
             setSimpleExerciceList(exerciceList);
             setExerciceFiltered(exerciceList);
+
             setIsFetching(false);
         } catch (error) {
             console.log('Error al obtener documentos:', error);
         }
     }
 
-    const searchExercice = (name: string) => { //TODO:
-        console.log(name);
-        if (name.length === 0) { //Si la busqueda no contiene nada
-            setExerciceFiltered(simpleExerciceList);
-        }
-        if (isNaN(Number(name))) { //Si no es numero
-            setExerciceFiltered( //Busca pokemons x name y los setea para mostrar
-                simpleExerciceList.filter(poke => {
-                    const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); //para accentos
-                    const normalizedName = poke.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    return normalizedName.includes(normalizedSearch);
-                })
-            );
-        }
+    const searchExercice = (name: string, equipment: string, muscle: string) => { //TODO:
+
+        // if (name && muscle === 'todos') {
+        //     setExerciceFiltered(
+        //         simpleExerciceList.filter(exercice => {
+        //             const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //             const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //             return normalizedName.includes(normalizedSearch);
+        //         })
+        //     );
+        // } else if (!name && muscle !== 'todos') {
+        //     setExerciceFiltered(
+        //         simpleExerciceList.filter(poke => poke.muscle.toLowerCase().includes(muscle.toLowerCase()))
+        //     );
+        // } else if (name && muscle) {
+        //     setExerciceFiltered(
+        //         simpleExerciceList.filter(exercice => {
+        //             const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //             const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //             return normalizedName.includes(normalizedSearch) && exercice.muscle.toLowerCase().includes(muscle.toLowerCase());
+        //         })
+        //     );
+        // } else {
+        //     setExerciceFiltered(simpleExerciceList);
+        // }
+
+        setExerciceFiltered(
+            simpleExerciceList.filter(exercice => {
+                const normalizedSearch = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+                const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const normalizedMuscle = muscle ? muscle.toLowerCase() : "";
+
+                return (!name || normalizedName.includes(normalizedSearch)) &&
+                    (!muscle || normalizedMuscle === 'todos' || exercice.muscle.toLowerCase().includes(normalizedMuscle));
+            })
+        );
+
     }
 
     useEffect(() => {

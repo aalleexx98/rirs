@@ -7,3 +7,19 @@ export interface exercicePreview {
     img: string,
     equipment: string,
 }
+
+export enum muscles {
+    abdomen,
+    abductores,
+    aductores,
+    antebrazo,
+    biceps,
+    cuadriceps,
+    espalda,
+    gluteos,
+    hombro,
+    isquiosurales,
+    pectoral,
+    trapecio,
+    triceps
+}

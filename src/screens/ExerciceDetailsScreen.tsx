@@ -71,7 +71,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
             </TouchableOpacity>
             { exercice ?
                 (
-                    <ScrollView style={ { flex: 1 } }>
+                    <ScrollView style={ { flex: 1 } } showsVerticalScrollIndicator={ false }>
                         <View style={ { ...styles.containerImage, width: windowWith } }>
                             <FadeInImage
                                 uri={ exercice.image }

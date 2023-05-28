@@ -23,7 +23,7 @@ export const Tabs = () => {
             screenOptions={ ({ route }) => ({
                 headerShown: false,
                 tabBarStyle: {
-                    paddingVertical: (Platform.OS === 'ios') ? 0 : 8,
+                    paddingVertical: (Platform.OS === 'ios') ? 0 : 5,
                     backgroundColor: backgroundTab,
                     borderWidth: 0,
                     elevation: 0,
