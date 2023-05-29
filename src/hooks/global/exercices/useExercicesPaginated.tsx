@@ -59,14 +59,16 @@ export const useExercicesPaginated = () => {
         //     setExerciceFiltered(simpleExerciceList);
         // }
 
-        setExerciceFiltered(
+        setExerciceFiltered(//TODO: Mejorar esto
             simpleExerciceList.filter(exercice => {
                 const normalizedSearch = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
                 const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const normalizedMuscle = muscle ? muscle.toLowerCase() : "";
+                const normalizedEquipment = equipment ? equipment.toLowerCase() : "";
 
                 return (!name || normalizedName.includes(normalizedSearch)) &&
-                    (!muscle || normalizedMuscle === 'todos' || exercice.muscle.toLowerCase().includes(normalizedMuscle));
+                    (!muscle || normalizedMuscle === 'todos' || exercice.muscle.toLowerCase().includes(normalizedMuscle)) &&
+                    (!equipment || normalizedEquipment === 'todos' || exercice.equipment.toLowerCase().includes(normalizedEquipment));
             })
         );
 
