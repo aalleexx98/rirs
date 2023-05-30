@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export const RoutineScreen = () => {
 
     const [isFrontal, setIsFrontal] = useState(true);
-
     const [selectedMuscle, setSelectedMuscle] = useState('');
 
 
@@ -25,7 +24,7 @@ export const RoutineScreen = () => {
                         style={ { position: 'absolute', zIndex: 50, right: 0, top: 10 } }
                     />
 
-
+                    {/* FRONTAL */ }
                     { isFrontal ? (
                         <View style={ { flex: 1 } }>
                             <Image
@@ -87,10 +86,52 @@ export const RoutineScreen = () => {
                             </TouchableOpacity>
                         </View>
                     ) : (
-                        <Image
-                            source={ require('../assets/backBody.png') }
-                            style={ { width: 350, height: 700, zIndex: -10 } }
-                        />
+                        // BACK
+                        <View style={ { flex: 1 } }>
+                            <Image
+                                source={ require('../assets/backBody.png') }
+                                style={ { width: 350, height: 700, zIndex: -10 } }
+                            />
+
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtons, width: '42%', top: '13%' } }
+                            >
+                                <Text style={ { color: 'black' } }>Trapecio</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtons, width: '28%', top: '22%' } }
+                            >
+                                <Text style={ { color: 'black' } }>Tríceps</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtons, width: '35%', top: '55%', left: 4 } }
+                            >
+                                <Text style={ { color: 'black' } }>Isquiotibiales</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtons, width: '32%', top: '70%', left: 4 } }
+                            >
+                                <Text style={ { color: 'black' } }>Gemelo</Text>
+                            </TouchableOpacity>
+
+                            {/* DERECHA */ }
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtons, width: '40%', top: '22%', right: '0%' } }
+                            >
+                                <Text style={ { color: 'black', alignSelf: 'flex-end' } }>Espalda</Text>
+                            </TouchableOpacity>
+
+                            <View style={ { ...styles.diagonalLineAbductor, position: 'absolute', top: '55%', right: '14%' } }></View>
+                            <TouchableOpacity
+                                style={ { ...styles.muscleButtonDiagonal, width: '40%', top: '58%', right: '8%' } }
+                            >
+                                <Text style={ { color: 'black', alignSelf: 'flex-end', ...styles.underlinedText } }>Glúteos</Text>
+                            </TouchableOpacity>
+
+                        </View>
                     ) }
 
 
