@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/HomeScreen';
 import { ExercicesScreen } from '../screens/ExercicesScreen';
-import { RoutineScreen } from '../screens/RoutineScreen';
+import { RoutineScreen } from '../screens/Routines/RoutineScreen';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ import { Platform, KeyboardAvoidingView } from 'react-native';
 import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { ExerciceStack } from './ExerciceStack';
+import { RoutineStack } from './RoutineStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -82,8 +83,8 @@ export const Tabs = () => {
             />
 
             <Tab.Screen
-                name="RoutineScreen"
-                component={ RoutineScreen }
+                name="RoutineStack"
+                component={ RoutineStack }
                 options={ {
                     tabBarLabel: 'Rutinas',
                     tabBarIcon: ({ color }) => (
