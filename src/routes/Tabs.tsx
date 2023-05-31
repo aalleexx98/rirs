@@ -80,6 +80,7 @@ export const Tabs = () => {
                         />
                     )
                 } }
+
             />
 
             <Tab.Screen
@@ -93,7 +94,8 @@ export const Tabs = () => {
                             size={ 25 }
                             name="clipboard-outline"
                         />
-                    )
+                    ),
+                    unmountOnBlur: true
                 } }
             />
 

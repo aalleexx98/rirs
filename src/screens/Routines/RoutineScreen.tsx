@@ -110,7 +110,9 @@ export const RoutineScreen = () => {
                 { selectedGendre && selectedLevel && selectedType && (
                     <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
                         activeOpacity={ 0.7 }
-                        onPress={ () => navigation.navigate('RoutineBodyScreen') }
+                        onPress={ () => selectedType === 'day' ?
+                            navigation.navigate('RoutineBodyScreen', { gender: selectedGendre, level: selectedLevel }) :
+                            navigation.navigate('RoutineWeeklyScreen', { gender: selectedGendre, level: selectedLevel }) }
                     >
                         <Text style={ { fontSize: 16, color: textSecondary } }>Siguiente</Text>
                     </TouchableOpacity>

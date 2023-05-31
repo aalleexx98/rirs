@@ -1,9 +1,19 @@
-import React, { useRef, useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { RootStackParamsRoutine } from '../../routes/RoutineStack';
+import { globalStyles } from '../../theme/globalTheme';
+import { ThemeContext } from '../../context/themeContext/ThemeContext';
 
+interface Props extends StackScreenProps<RootStackParamsRoutine, 'RoutineBodyScreen'> { };
 
-export const RoutineBodyScreen = () => {
+export const RoutineBodyScreen = ({ route }: Props) => {
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParamsRoutine>>();
+
+    const { theme: { colors, textSecondary } } = useContext(ThemeContext);
 
     const [isFrontal, setIsFrontal] = useState(true);
     const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
@@ -34,9 +44,45 @@ export const RoutineBodyScreen = () => {
         }
     };
 
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            // Cancela la navegación predeterminada
+            e.preventDefault();
+
+            // Muestra una ventana emergente de confirmación
+            Alert.alert(
+                'Confirmar',
+                '¿Estás seguro de que deseas salir?',
+                [
+                    { text: 'Cancelar', style: 'cancel' },
+                    { text: 'Salir', style: 'destructive', onPress: () => navigation.dispatch(e.data.action) },
+                ],
+                { cancelable: false }
+            );
+        });
+
+        // Devuelve una función de limpieza para eliminar el listener cuando el componente se desmonte
+        return unsubscribe;
+    }, [navigation]);
+
     return (
-        <View style={ styles.container }>
+        <View style={ { ...styles.container } }>
             <ScrollView style={ { flex: 1 } }>
+
+                <Text style={ { color: 'black', marginVertical: 15 } }>Según tu nivel se recomienda escoger entre{ ' ' }
+                    { route.params.level === 'beginner' ? '3-5 músculos' :
+                        route.params.level === 'middle' ? '2-5 músculos' :
+                            route.params.level === 'advanced' ? '2-3 músculos' : '' }</Text>
+
+                { selectedMuscles.length >= 1 && (
+                    <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
+                        activeOpacity={ 0.7 }
+                        onPress={ () => navigation.navigate('Routine1DayScreen',
+                            { gender: route.params.gender, level: route.params.level, muscles: selectedMuscles }) }
+                    >
+                        <Text style={ { fontSize: 16, color: textSecondary } }>Generar Rutina</Text>
+                    </TouchableOpacity>
+                ) }
 
                 {/* HUMAN BODY */ }
                 <View style={ { flex: 1 } }>
@@ -229,5 +275,13 @@ const styles = StyleSheet.create({
     underlinedText: {
         textDecorationStyle: 'solid',
         borderBottomWidth: 2, // Ajusta el valor según el grosor deseado
+    },
+    nextButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 15,
+        alignSelf: 'center',
+        marginBottom: 15,
+
     }
 });
