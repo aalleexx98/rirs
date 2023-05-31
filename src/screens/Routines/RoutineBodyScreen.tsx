@@ -104,64 +104,64 @@ export const RoutineBodyScreen = ({ route }: Props) => {
                             />
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '30%', top: '15%' } }
+                                style={ { ...styles.muscleButtons, width: '30%', top: '15%', borderBottomColor: buttonColors['hombro'] } }
                                 onPress={ () => handleMuscleClick('hombro') }
                             >
                                 <Text style={ { color: buttonColors['hombro'] } }>Hombro</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '25%', top: '23%' } }
+                                style={ { ...styles.muscleButtons, width: '25%', top: '23%', borderBottomColor: buttonColors['biceps'] } }
                                 onPress={ () => handleMuscleClick('biceps') }
                             >
                                 <Text style={ { color: buttonColors['biceps'] } }>Biceps</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '30%', top: '52%' } }
+                                style={ { ...styles.muscleButtons, width: '30%', top: '52%', borderBottomColor: buttonColors['aductores'] } }
                                 onPress={ () => handleMuscleClick('aductores') }
                             >
                                 <Text style={ { color: buttonColors['aductores'] } }>Aductores</Text>
                             </TouchableOpacity>
 
-                            <View style={ { ...styles.diagonalLineQuads, position: 'absolute', top: '65%', left: '18%' } }></View>
+                            <View style={ { ...styles.diagonalLineQuads, position: 'absolute', top: '65%', left: '18%', backgroundColor: buttonColors['cuadriceps'] } }></View>
                             <TouchableOpacity
                                 style={ { ...styles.muscleButtonDiagonal, width: '22%', top: '65%' } }
                                 onPress={ () => handleMuscleClick('cuadriceps') }
                             >
-                                <Text style={ { color: buttonColors['cuadriceps'], ...styles.underlinedText } }>Cuadriceps</Text>
+                                <Text style={ { color: buttonColors['cuadriceps'], ...styles.underlinedText, borderBottomColor: buttonColors['cuadriceps'] } }>Cuadriceps</Text>
                             </TouchableOpacity>
 
 
                             {/* DERECHA */ }
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '40%', top: '15%', right: '0%' } }
+                                style={ { ...styles.muscleButtons, width: '40%', top: '15%', right: '0%', borderBottomColor: buttonColors['pectoral'] } }
                                 onPress={ () => handleMuscleClick('pectoral') }
                             >
                                 <Text style={ { color: buttonColors['pectoral'], alignSelf: 'flex-end' } }>Pectoral</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '50%', top: '28%', right: '0%' } }
+                                style={ { ...styles.muscleButtons, width: '50%', top: '28%', right: '0%', borderBottomColor: buttonColors['abdomen'] } }
                                 onPress={ () => handleMuscleClick('abdomen') }
                             >
                                 <Text style={ { color: buttonColors['abdomen'], alignSelf: 'flex-end' } }>Abs</Text>
                             </TouchableOpacity>
 
-                            <View style={ { ...styles.diagonalLine, position: 'absolute', top: '51%', right: '0%' } }></View>
+                            <View style={ { ...styles.diagonalLine, position: 'absolute', top: '51%', right: '0%', backgroundColor: buttonColors['antebrazo'] } }></View>
                             <TouchableOpacity
                                 style={ { ...styles.muscleButtonDiagonal, width: '30%', top: '54%', right: '0%' } }
                                 onPress={ () => handleMuscleClick('antebrazo') }
                             >
-                                <Text style={ { color: buttonColors['antebrazo'], alignSelf: 'flex-end', ...styles.underlinedText } }>Antebrazo</Text>
+                                <Text style={ { color: buttonColors['antebrazo'], alignSelf: 'flex-end', ...styles.underlinedText, borderBottomColor: buttonColors['antebrazo'] } }>Antebrazo</Text>
                             </TouchableOpacity>
 
-                            <View style={ { ...styles.diagonalLineAbductor, position: 'absolute', top: '61%', right: '14%' } }></View>
+                            <View style={ { ...styles.diagonalLineAbductor, position: 'absolute', top: '61%', right: '14%', backgroundColor: buttonColors['abductores'] } }></View>
                             <TouchableOpacity
                                 style={ { ...styles.muscleButtonDiagonal, width: '30%', top: '65%', right: '0%' } }
                                 onPress={ () => handleMuscleClick('abductores') }
                             >
-                                <Text style={ { color: buttonColors['abductores'], alignSelf: 'flex-end', ...styles.underlinedText } }>Abductores</Text>
+                                <Text style={ { color: buttonColors['abductores'], alignSelf: 'flex-end', ...styles.underlinedText, borderBottomColor: buttonColors['abductores'] } }>Abductores</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -173,28 +173,28 @@ export const RoutineBodyScreen = ({ route }: Props) => {
                             />
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '42%', top: '13%' } }
+                                style={ { ...styles.muscleButtons, width: '42%', top: '13%', borderBottomColor: buttonColors['trapecio'] } }
                                 onPress={ () => handleMuscleClick('trapecio') }
                             >
                                 <Text style={ { color: buttonColors['trapecio'] } }>Trapecio</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '28%', top: '22%' } }
+                                style={ { ...styles.muscleButtons, width: '28%', top: '22%', borderBottomColor: buttonColors['triceps'] } }
                                 onPress={ () => handleMuscleClick('triceps') }
                             >
                                 <Text style={ { color: buttonColors['triceps'] } }>Tríceps</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '35%', top: '55%', left: 4 } }
+                                style={ { ...styles.muscleButtons, width: '35%', top: '55%', left: 4, borderBottomColor: buttonColors['isquiosurales'] } }
                                 onPress={ () => handleMuscleClick('isquiosurales') }
                             >
                                 <Text style={ { color: buttonColors['isquiosurales'] } }>Isquiosurales</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '32%', top: '70%', left: 4 } }
+                                style={ { ...styles.muscleButtons, width: '32%', top: '70%', left: 4, borderBottomColor: buttonColors['gemelos'] } }
                                 onPress={ () => handleMuscleClick('gemelos') }
                             >
                                 <Text style={ { color: buttonColors['gemelos'] } }>Gemelos</Text>
@@ -202,25 +202,25 @@ export const RoutineBodyScreen = ({ route }: Props) => {
 
                             {/* DERECHA */ }
                             <TouchableOpacity
-                                style={ { ...styles.muscleButtons, width: '40%', top: '22%', right: '0%' } }
+                                style={ { ...styles.muscleButtons, width: '40%', top: '22%', right: '0%', borderBottomColor: buttonColors['espalda'] } }
                                 onPress={ () => handleMuscleClick('espalda') }
                             >
                                 <Text style={ { color: buttonColors['espalda'], alignSelf: 'flex-end' } }>Espalda</Text>
                             </TouchableOpacity>
 
-                            <View style={ { ...styles.diagonalLineAbductor, position: 'absolute', top: '55%', right: '14%' } }></View>
+                            <View style={ { ...styles.diagonalLineAbductor, position: 'absolute', top: '55%', right: '14%', backgroundColor: buttonColors['gluteos'] } }></View>
                             <TouchableOpacity
                                 style={ { ...styles.muscleButtonDiagonal, width: '40%', top: '58%', right: '8%' } }
                                 onPress={ () => handleMuscleClick('gluteos') }
                             >
-                                <Text style={ { color: buttonColors['gluteos'], alignSelf: 'flex-end', ...styles.underlinedText } }>Glúteos</Text>
+                                <Text style={ { color: buttonColors['gluteos'], alignSelf: 'flex-end', ...styles.underlinedText, borderBottomColor: buttonColors['gluteos'] } }>Glúteos</Text>
                             </TouchableOpacity>
 
                         </View>
                     ) }
                 </View>
 
-                <View style={ { marginVertical: 10, flex: 1, width: '80%' } }>
+                <View style={ { marginVertical: 20, flex: 1, width: '80%' } }>
                     <Text style={ { color: 'black', fontWeight: 'bold', fontSize: 18 } }>Músculos seleccionados:</Text>
                     { selectedMuscles.length > 0 ? (
                         <Text style={ { color: 'black', textTransform: 'capitalize' } }>{ selectedMuscles.join(', ') }</Text>
@@ -257,19 +257,16 @@ const styles = StyleSheet.create({
     diagonalLine: {
         width: 100,
         height: 2,
-        backgroundColor: 'black',
         transform: [{ rotate: '70deg' }]
     },
     diagonalLineQuads: {
         width: 90,
         height: 2,
-        backgroundColor: 'black',
         transform: [{ rotate: '130deg' }]
     },
     diagonalLineAbductor: {
         width: 130,
         height: 2,
-        backgroundColor: 'black',
         transform: [{ rotate: '60deg' }]
     },
     underlinedText: {
