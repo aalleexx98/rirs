@@ -6,6 +6,8 @@ export interface exercicePreview {
     muscle: string,
     img: string,
     equipment: string,
+    rel_number: number,
+    type: string,
 }
 
 export enum muscles {

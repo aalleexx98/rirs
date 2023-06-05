@@ -6,6 +6,7 @@ module.exports = {
       {
         relativeSourceLocation: true,
       },
+      'react-native-paper/babel',
     ],
   ],
 };

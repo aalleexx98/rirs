@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParamsRoutine } from '../../routes/RoutineStack';
-import { globalStyles } from '../../theme/globalTheme';
 import { ThemeContext } from '../../context/themeContext/ThemeContext';
 
 interface Props extends StackScreenProps<RootStackParamsRoutine, 'RoutineBodyScreen'> { };
@@ -69,22 +68,25 @@ export const RoutineBodyScreen = ({ route }: Props) => {
         <View style={ { ...styles.container } }>
             <ScrollView style={ { flex: 1 } }>
 
-                <Text style={ { color: 'black', marginTop: 15, fontWeight: '600' } }>Indicaciones:</Text>
-                <Text style={ { color: 'black', marginVertical: 10 } }>Según tu nivel se recomienda escoger entre{ ' ' }
+                <Text style={ { color: 'black', marginTop: 15, fontWeight: '600', fontSize: 20 } }>Indicaciones:</Text>
+                <Text style={ { color: 'black', marginVertical: 10 } }>
+                    <Icon
+                        name="ellipse"
+                        size={ 10 }
+                        color="black"
+                    />
+                    Según tu nivel se recomienda escoger entre{ ' ' }
                     { route.params.level === 'beginner' ? '3-5 músculos' :
                         route.params.level === 'middle' ? '2-5 músculos' :
                             route.params.level === 'advanced' ? '2-3 músculos' : '' }</Text>
-                <Text style={ { color: 'black', marginBottom: 15 } }>Escoge los músculos por orden de preferencia.</Text>
-
-                { selectedMuscles.length >= 1 && (
-                    <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
-                        activeOpacity={ 0.7 }
-                        onPress={ () => navigation.navigate('Routine1DayScreen',
-                            { gender: route.params.gender, level: route.params.level, muscles: selectedMuscles }) }
-                    >
-                        <Text style={ { fontSize: 16, color: textSecondary } }>Generar Rutina</Text>
-                    </TouchableOpacity>
-                ) }
+                <Text style={ { color: 'black', marginBottom: 15 } }>
+                    <Icon
+                        name="ellipse"
+                        size={ 10 }
+                        color="black"
+                    />
+                    Escoge los músculos por orden de preferencia.
+                </Text>
 
                 {/* HUMAN BODY */ }
                 <View style={ { flex: 1 } }>
@@ -222,6 +224,16 @@ export const RoutineBodyScreen = ({ route }: Props) => {
                     ) }
                 </View>
 
+                { selectedMuscles.length >= 1 && (
+                    <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
+                        activeOpacity={ 0.7 }
+                        onPress={ () => navigation.navigate('Routine1DayScreen',
+                            { gender: route.params.gender, level: route.params.level, muscles: selectedMuscles }) }
+                    >
+                        <Text style={ { fontSize: 16, color: textSecondary } }>Generar Rutina</Text>
+                    </TouchableOpacity>
+                ) }
+
                 <View style={ { marginVertical: 20, flex: 1, width: '80%' } }>
                     <Text style={ { color: 'black', fontWeight: 'bold', fontSize: 18 } }>Músculos seleccionados:</Text>
                     { selectedMuscles.length > 0 ? (
@@ -280,7 +292,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 15,
         alignSelf: 'center',
-        marginBottom: 15,
-
+        marginTop: 15,
     }
 });

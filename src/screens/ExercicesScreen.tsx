@@ -46,14 +46,6 @@ export const ExercicesScreen = () => {
         { label: 'Peso Libre', value: 'peso_libre' },
     ]);
 
-    // const onEquipamentOpen = useCallback(() => {
-    //     setMuscleOpen(false);
-    // }, []);
-
-    // const onMuscleOpen = useCallback(() => {
-    //     setEquipmentOpen(false);
-    // }, []);
-
     const { isFetching, searchExercice, exerciceFiltered } = useExercicesPaginated();
 
     useEffect(() => {
