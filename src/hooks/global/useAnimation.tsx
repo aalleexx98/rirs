@@ -29,7 +29,6 @@ export const useAnimation = () => {
         ).start();
     }
 
-
     const startMovingPosition = (initPosition: number, duration: number = 300) => {
 
         position.setValue(initPosition);
@@ -44,7 +43,6 @@ export const useAnimation = () => {
             }
         ).start();
     }
-
 
     return {
         opacity,

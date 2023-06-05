@@ -69,10 +69,12 @@ export const RoutineBodyScreen = ({ route }: Props) => {
         <View style={ { ...styles.container } }>
             <ScrollView style={ { flex: 1 } }>
 
-                <Text style={ { color: 'black', marginVertical: 15 } }>Según tu nivel se recomienda escoger entre{ ' ' }
+                <Text style={ { color: 'black', marginTop: 15, fontWeight: '600' } }>Indicaciones:</Text>
+                <Text style={ { color: 'black', marginVertical: 10 } }>Según tu nivel se recomienda escoger entre{ ' ' }
                     { route.params.level === 'beginner' ? '3-5 músculos' :
                         route.params.level === 'middle' ? '2-5 músculos' :
                             route.params.level === 'advanced' ? '2-3 músculos' : '' }</Text>
+                <Text style={ { color: 'black', marginBottom: 15 } }>Escoge los músculos por orden de preferencia.</Text>
 
                 { selectedMuscles.length >= 1 && (
                     <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }

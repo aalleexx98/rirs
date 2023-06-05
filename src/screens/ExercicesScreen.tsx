@@ -43,6 +43,7 @@ export const ExercicesScreen = () => {
         { label: 'Maquina', value: 'maquina' },
         { label: 'Multipower', value: 'multipower' },
         { label: 'Polea', value: 'polea' },
+        { label: 'Peso Libre', value: 'peso_libre' },
     ]);
 
     // const onEquipamentOpen = useCallback(() => {

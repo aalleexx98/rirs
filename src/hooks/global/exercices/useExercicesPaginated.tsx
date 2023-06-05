@@ -5,10 +5,14 @@ import { exercicePreview } from '../../../interfaces/exerciceInterface';
 export const useExercicesPaginated = () => {
 
     const exercicesCollection = firestore().collection('exercices');
+
+
     const [isFetching, setIsFetching] = useState(true);
+    const [isGenerating, setIsGenerating] = useState(true);
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
 
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
+    const [routineDayExercices, setroutineDayExercices] = useState<exercicePreview[]>([]);
 
     const loadExercices = async () => {
         try {
@@ -33,33 +37,9 @@ export const useExercicesPaginated = () => {
         }
     }
 
-    const searchExercice = (name: string, equipment: string, muscle: string) => { //TODO:
+    const searchExercice = (name: string, equipment: string, muscle: string) => {
 
-        // if (name && muscle === 'todos') {
-        //     setExerciceFiltered(
-        //         simpleExerciceList.filter(exercice => {
-        //             const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        //             const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        //             return normalizedName.includes(normalizedSearch);
-        //         })
-        //     );
-        // } else if (!name && muscle !== 'todos') {
-        //     setExerciceFiltered(
-        //         simpleExerciceList.filter(poke => poke.muscle.toLowerCase().includes(muscle.toLowerCase()))
-        //     );
-        // } else if (name && muscle) {
-        //     setExerciceFiltered(
-        //         simpleExerciceList.filter(exercice => {
-        //             const normalizedSearch = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        //             const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        //             return normalizedName.includes(normalizedSearch) && exercice.muscle.toLowerCase().includes(muscle.toLowerCase());
-        //         })
-        //     );
-        // } else {
-        //     setExerciceFiltered(simpleExerciceList);
-        // }
-
-        setExerciceFiltered(//TODO: Mejorar esto
+        setExerciceFiltered(
             simpleExerciceList.filter(exercice => {
                 const normalizedSearch = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
                 const normalizedName = exercice.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -74,6 +54,10 @@ export const useExercicesPaginated = () => {
 
     }
 
+    const routineDayGenerate = (muscles: string[]) => {
+
+    }
+
     useEffect(() => {
         loadExercices();
     }, [])
@@ -82,6 +66,7 @@ export const useExercicesPaginated = () => {
         isFetching,
         simpleExerciceList,
         searchExercice,
-        exerciceFiltered//TODO:
+        exerciceFiltered,
+        routineDayExercices
     }
 }
