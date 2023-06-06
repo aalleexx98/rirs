@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
-import { exercicePreview } from '../../../interfaces/exerciceInterface';
+import { exercicePreview, routineExercices } from '../../../interfaces/exerciceInterface';
 
 export const useExercicesPaginated = () => {
 
@@ -9,10 +9,10 @@ export const useExercicesPaginated = () => {
 
     const [isFetching, setIsFetching] = useState(true);
     const [isGenerating, setIsGenerating] = useState(true);
-    const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
 
+    const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
-    const [routineDayExercices, setroutineDayExercices] = useState<exercicePreview[]>([]);
+    const [routineDayExercices, setRoutineDayExercices] = useState<routineExercices[]>([]);
 
     const loadExercices = async () => {
         try {
@@ -81,7 +81,7 @@ export const useExercicesPaginated = () => {
             );
 
             const combinedExercises = querySnapshot.flat();
-            setroutineDayExercices(combinedExercises);
+            setRoutineDayExercices(combinedExercises);
 
             setIsGenerating(false);
         } catch (error) {
@@ -90,20 +90,53 @@ export const useExercicesPaginated = () => {
 
     };
 
+    const removeRoutineExercise = (exerciseId: string) => {
+        const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
+        setRoutineDayExercices(updatedExercices);
+    };
+
+    const editRoutineExercise = (exerciseId: string, sets: number, repetitions: string, restTime: number) => {
+        const updatedExercises = routineDayExercices.map((exercise) => {
+            if (exercise.exercise.ref.id === exerciseId) {
+                return {
+                    ...exercise,
+                    sets,
+                    repetitions,
+                    restTime,
+                };
+            }
+            return exercise;
+        });
+
+        console.log(sets);
+        console.log(updatedExercises)
+        setRoutineDayExercices(updatedExercises);
+    };
+
+
+    // HACIA ABAJO EXTRAS
     function getExercicesByMuscle (muscle: string, sets: number) {
         const filteredExercises = simpleExerciceList.filter((exercice) => exercice.muscle === muscle);
-        const selectedExercises: exercicePreview[] = [];
+        const selectedExercises: routineExercices[] = [];
         const subvalues: string[] = getSubvalues(muscle)
         let subvalueIndex = 0;
+        const initialSets = sets;
 
         while (sets > 0 && filteredExercises.length > 0) {
             const subvalue = subvalues[subvalueIndex];
-            const matchingExercises = matchExercices(filteredExercises, subvalue);
+            const matchingExercises = matchExercices(filteredExercises, subvalue); //busco ejercicios posibles
             const randomIndex = Math.floor(Math.random() * matchingExercises.length);
 
             const selectedExercise = matchingExercises[randomIndex];
-            selectedExercises.push(selectedExercise);
             filteredExercises.splice(filteredExercises.indexOf(selectedExercise), 1);
+
+            const exerciseObject = {
+                exercise: selectedExercise,
+                sets: (initialSets >= sets) ? 3 : sets,
+                repetitions: initialSets === sets ? "6-8" : sets <= 3 ? "12-15" : "8-10",
+                restTime: initialSets === sets ? 120 : sets <= 3 ? 60 : 90
+            };
+            selectedExercises.push(exerciseObject);
 
             sets -= 3;
 
@@ -113,7 +146,7 @@ export const useExercicesPaginated = () => {
             }
 
         }
-        console.log(selectedExercises)
+        //console.log(selectedExercises)
         return selectedExercises;
     }
 
@@ -179,12 +212,20 @@ export const useExercicesPaginated = () => {
     }, [])
 
     return {
+        //Loadings
         isFetching,
-        simpleExerciceList,
+        isGenerating,
+
+        //Funciones
         searchExercice,
-        exerciceFiltered,
         routineDayGenerate,
+        removeRoutineExercise,
+        editRoutineExercise,
+
+        //Variables
+        simpleExerciceList,
+        exerciceFiltered,
         routineDayExercices,
-        isGenerating
+
     }
 }

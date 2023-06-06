@@ -1,7 +1,7 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 export interface exercicePreview {
-    ref?: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>, //TODO: Quitar el ?
+    ref: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>, //TODO: Quitar el ?
     name: string;
     muscle: string,
     img: string,
@@ -24,4 +24,11 @@ export enum muscles {
     pectoral,
     trapecio,
     triceps
+}
+
+export interface routineExercices {
+    exercise: exercicePreview;
+    sets: number;
+    repetitions: string;
+    restTime: number;
 }
