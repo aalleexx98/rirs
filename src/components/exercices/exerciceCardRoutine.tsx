@@ -76,7 +76,7 @@ export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExer
     return (
         <TouchableOpacity
             activeOpacity={ 0.6 }
-
+            onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: exercice.ref.id }) }
         >
             <View style={ { ...styles.card, backgroundColor: colors.primary } }>
                 <View style={ styles.containerImage }>
