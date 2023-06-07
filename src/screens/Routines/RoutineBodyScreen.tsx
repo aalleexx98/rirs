@@ -68,26 +68,27 @@ export const RoutineBodyScreen = ({ route }: Props) => {
         <View style={ { ...styles.container } }>
             <ScrollView style={ { flex: 1 } }>
 
-                <Text style={ { color: 'black', marginTop: 15, fontWeight: '600', fontSize: 20 } }>Indicaciones:</Text>
-                <Text style={ { color: 'black', marginVertical: 10 } }>
-                    <Icon
-                        name="ellipse"
-                        size={ 10 }
-                        color="black"
-                    />
-                    Según tu nivel se recomienda escoger entre{ ' ' }
-                    { route.params.level === 'beginner' ? '3-5 músculos' :
-                        route.params.level === 'middle' ? '2-5 músculos' :
-                            route.params.level === 'advanced' ? '2-3 músculos' : '' }</Text>
-                <Text style={ { color: 'black', marginBottom: 15 } }>
-                    <Icon
-                        name="ellipse"
-                        size={ 10 }
-                        color="black"
-                    />
-                    Escoge los músculos por orden de preferencia.
-                </Text>
-
+                <View style={ { width: '88%' } }>
+                    <Text style={ { color: 'black', marginTop: 15, fontWeight: '600', fontSize: 20 } }>Indicaciones:</Text>
+                    <Text style={ { color: 'black', marginVertical: 10 } }>
+                        <Icon
+                            name="ellipse"
+                            size={ 10 }
+                            color="black"
+                        />
+                        Según tu nivel se recomienda escoger entre{ ' ' }
+                        { route.params.level === 'beginner' ? '3-5 músculos' :
+                            route.params.level === 'middle' ? '2-5 músculos' :
+                                route.params.level === 'advanced' ? '2-3 músculos' : '' }</Text>
+                    <Text style={ { color: 'black', marginBottom: 15 } }>
+                        <Icon
+                            name="ellipse"
+                            size={ 10 }
+                            color="black"
+                        />
+                        Escoge los músculos por orden de preferencia.
+                    </Text>
+                </View>
                 {/* HUMAN BODY */ }
                 <View style={ { flex: 1 } }>
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Dimensions, FlatList, Platform, ScrollView, Text, View } from 'react-native'
+import { Dimensions, FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { globalStyles } from '../theme/globalTheme'
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { useExercicesPaginated } from '../hooks/global/exercices/useExercicesPaginated';
@@ -7,11 +7,19 @@ import { Loading } from '../components/Loading';
 import { ExerciceCard } from '../components/exercices/exerciceCard';
 import { SearchInput } from '../components/exercices/searchInput';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamsRoutine } from '../routes/RoutineStack';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const screenWidth = Dimensions.get('window').width;
+interface Props extends StackScreenProps<RootStackParamsRoutine, 'ExercicesScreen'> { };
 
+export const ExercicesScreen = ({ navigation, route }: Props) => {
 
-export const ExercicesScreen = () => {
+    const { add = false } = route.params || {}; // Miro si add existe para sabe si viene de routine o de ejercicios.
+
     const { theme: { colors } } = useContext(ThemeContext);
     const [term, setTerm] = useState('');
 
@@ -59,6 +67,23 @@ export const ExercicesScreen = () => {
     return (
         <View style={ { ...globalStyles.globalMargin } }>
 
+            { add && <View style={ { flexDirection: 'row', alignItems: 'center' } }>
+                <TouchableOpacity
+                    onPress={ () => navigation.pop() }
+                    activeOpacity={ 0.8 }
+                >
+                    <Icon
+                        name="arrow-back-outline"
+                        color={ colors.text }
+                        size={ 30 }
+                    />
+                </TouchableOpacity>
+
+                <Text style={ { color: colors.text, fontWeight: '600', fontSize: 20, marginLeft: 10 } }>Agregar Ejercicio</Text>
+
+            </View> }
+
+
             <SearchInput
                 //Cada vez qe recoga un term nuevo
                 onDebounce={ (value) => setTerm(value) }//recoge el valor del onDebounce del useEffect y lo cambia al usestate de term
@@ -105,7 +130,7 @@ export const ExercicesScreen = () => {
                 keyExtractor={ (exercice) => exercice.name }
                 showsVerticalScrollIndicator={ false }
                 style={ { marginBottom: 100 } } //Misma altura que exerciceCard
-                renderItem={ ({ item }) => (<ExerciceCard exercice={ item } />) }
+                renderItem={ ({ item }) => (<ExerciceCard exercice={ item } add={ true } />) }
             />
 
         </View>

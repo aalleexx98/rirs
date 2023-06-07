@@ -90,7 +90,24 @@ export const useExercicesPaginated = () => {
 
     };
 
+    const addRoutineExercise = (exerciseId: string) => {
+        console.log("Antes de empezar a añadir:" + routineDayExercices)
+        const exerciseToAdd = simpleExerciceList.find(exercise => exercise.ref.id === exerciseId);
+        if (exerciseToAdd) {
+            console.log("Existe")
+            const newExercise = {
+                exercise: exerciseToAdd,
+                sets: 10,
+                repetitions: "8",
+                restTime: 90,
+            };
+            setRoutineDayExercices([newExercise]);
+        }
+    };
+
     const removeRoutineExercise = (exerciseId: string) => {
+        console.log("Antes de empezar a borrar:" + routineDayExercices)
+
         const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
         setRoutineDayExercices(updatedExercices);
     };
@@ -108,8 +125,6 @@ export const useExercicesPaginated = () => {
             return exercise;
         });
 
-        console.log(sets);
-        console.log(updatedExercises)
         setRoutineDayExercices(updatedExercises);
     };
 
@@ -211,6 +226,11 @@ export const useExercicesPaginated = () => {
         loadExercices();
     }, [])
 
+    // useEffect(() => {
+    //     console.log("Se cambiaron" + routineDayExercices);
+    // }, [routineDayExercices])
+
+
     return {
         //Loadings
         isFetching,
@@ -221,6 +241,7 @@ export const useExercicesPaginated = () => {
         routineDayGenerate,
         removeRoutineExercise,
         editRoutineExercise,
+        addRoutineExercise,
 
         //Variables
         simpleExerciceList,

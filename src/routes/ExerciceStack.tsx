@@ -4,7 +4,7 @@ import { ExercicesScreen } from '../screens/ExercicesScreen';
 import { ExerciceDetailsScreen } from '../screens/ExerciceDetailsScreen';
 
 export type RootStackParams = {
-    ExercicesScreen: undefined,
+    ExercicesScreen: { add: boolean },
     ExerciceDetailsScreen: { ref: string }
 }
 
