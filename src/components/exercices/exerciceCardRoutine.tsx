@@ -16,11 +16,15 @@ interface Props {
     reps: string,
     restTime: number,
     sets: number,
+    index: number,
+    isLast: number,
     removeExercise: (exerciseId: string) => void,
+    moveExerciseUp: (exerciseId: string) => void,
+    moveExerciseDown: (exerciseId: string) => void,
     editExercise: (exerciseId: string, sets: number, reps: string, time: number) => void,
 }
 
-export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExercise, editExercise }: Props) => {
+export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExercise, editExercise, moveExerciseDown, moveExerciseUp, index, isLast }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
@@ -74,136 +78,160 @@ export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExer
 
 
     return (
-        <TouchableOpacity
-            activeOpacity={ 0.6 }
-            onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: exercice.ref.id }) }
-        >
-            <View style={ { ...styles.card, backgroundColor: colors.primary } }>
-                <View style={ styles.containerImage }>
-                    <FadeInImage
-                        uri={ exercice.img }
-                        style={ { height: 100, width: 100 } }
-                    />
-                </View>
+        <View>
+            { index > 0 && <TouchableOpacity
+                style={ { ...styles.buttonUp, backgroundColor: colors.text } }
+                activeOpacity={ 0.8 }
+                onPress={ () => moveExerciseUp(exercice.ref.id) }
+            >
+                <Icon
+                    color={ colors.background }
+                    size={ 20 }
+                    name="chevron-up-outline"
+                />
+            </TouchableOpacity> }
 
-                <View style={ styles.containerText }>
-                    <Text style={ styles.title }>{ exercice.name }</Text>
-                    <View>
-                        <Text style={ styles.muscle }>
-                            <Text style={ { fontWeight: '600' } }>Series:</Text> { sets }
-                        </Text>
-                        <Text style={ styles.muscle }>
-                            <Text style={ { fontWeight: '600' } }>Repeticiones:</Text> { reps }
-                        </Text>
-                        <Text style={ styles.muscle }>
-                            <Text style={ { fontWeight: '600' } }>Descanso:</Text> { restTime }
-                        </Text>
-                        <Text style={ styles.muscle }>
-                            <Text style={ { fontWeight: '600' } }>Equipamiento:</Text> { exercice.equipment }
-                        </Text>
-                        <Text style={ styles.muscle }>
-                            <Text style={ { fontWeight: '600' } }>Músculo:</Text> { exercice.muscle }
-                        </Text>
+            <TouchableOpacity
+                activeOpacity={ 0.6 }
+                onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: exercice.ref.id }) }
+            >
+                <View style={ { ...styles.card, backgroundColor: colors.primary } }>
+                    <View style={ styles.containerImage }>
+                        <FadeInImage
+                            uri={ exercice.img }
+                            style={ { height: 100, width: 100 } }
+                        />
                     </View>
-                </View>
 
-                <View style={ styles.containerButtons }>
-                    <TouchableOpacity
-                        style={ styles.containterEdit }
-                        activeOpacity={ 0.8 }
-                        onPress={ () => setIsModalVisible(true) }
+                    <View style={ styles.containerText }>
+                        <Text style={ styles.title }>{ exercice.name }</Text>
+                        <View>
+                            <Text style={ styles.muscle }>
+                                <Text style={ { fontWeight: '600' } }>Series:</Text> { sets }
+                            </Text>
+                            <Text style={ styles.muscle }>
+                                <Text style={ { fontWeight: '600' } }>Repeticiones:</Text> { reps }
+                            </Text>
+                            <Text style={ styles.muscle }>
+                                <Text style={ { fontWeight: '600' } }>Descanso:</Text> { restTime }
+                            </Text>
+                            <Text style={ styles.muscle }>
+                                <Text style={ { fontWeight: '600' } }>Equipamiento:</Text> { exercice.equipment }
+                            </Text>
+                            <Text style={ styles.muscle }>
+                                <Text style={ { fontWeight: '600' } }>Músculo:</Text> { exercice.muscle }
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={ styles.containerButtons }>
+                        <TouchableOpacity
+                            style={ styles.containterEdit }
+                            activeOpacity={ 0.8 }
+                            onPress={ () => setIsModalVisible(true) }
+                        >
+                            <Icon
+                                color='black'
+                                size={ 30 }
+                                name="create-outline"
+                            />
+
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={ styles.containerDelete }
+                            activeOpacity={ 0.8 }
+                            onPress={ () => removeExercise(exercice.ref.id) }
+                        >
+                            <Icon
+                                color='black'
+                                size={ 30 }
+                                name="trash-outline"
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                    <Modal
+                        visible={ isModalVisible }
+                        onRequestClose={ () => setIsModalVisible(false) }
+                        transparent={ true }
+                        animationType='fade'
                     >
-                        <Icon
-                            color='black'
-                            size={ 30 }
-                            name="create-outline"
-                        />
+                        <View style={ styles.modalBox }>
 
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={ styles.containerDelete }
-                        activeOpacity={ 0.8 }
-                        onPress={ () => removeExercise(exercice.ref.id) }
-                    >
-                        <Icon
-                            color='black'
-                            size={ 30 }
-                            name="trash-outline"
-                        />
-                    </TouchableOpacity>
-                </View>
+                            <View style={ styles.modalContent }>
 
-                <Modal
-                    visible={ isModalVisible }
-                    onRequestClose={ () => setIsModalVisible(false) }
-                    transparent={ true }
-                    animationType='fade'
-                >
-                    <View style={ styles.modalBox }>
+                                <>
+                                    <TextInput
+                                        label="Series"
+                                        mode="outlined"
+                                        value={ setsForm.toString() }
+                                        onChangeText={ (value) => onChange(value, 'setsForm') }
+                                        keyboardType="numeric"
+                                        error={ errorSets }
+                                    />
+                                    { errorSets && <HelperText type="error" visible={ true }>Solo se permiten entre 1 y 20 series</HelperText> }
+                                </>
 
-                        <View style={ styles.modalContent }>
+                                <>
+                                    <TextInput
+                                        label="Repeticiones"
+                                        mode="outlined"
+                                        value={ repsForm.toString() }
+                                        onChangeText={ (value) => onChange(value, 'repsForm') }
+                                        keyboardType="numeric"
+                                        error={ errorReps }
+                                    />
+                                    { errorReps && <HelperText type="error" visible={ true }>Solo se permite poner números o intervalo Ex: 6-8</HelperText> }
+                                </>
 
-                            <>
-                                <TextInput
-                                    label="Series"
-                                    mode="outlined"
-                                    value={ setsForm.toString() }
-                                    onChangeText={ (value) => onChange(value, 'setsForm') }
-                                    keyboardType="numeric"
-                                    error={ errorSets }
-                                />
-                                { errorSets && <HelperText type="error" visible={ true }>Solo se permiten entre 1 y 20 series</HelperText> }
-                            </>
-
-                            <>
-                                <TextInput
-                                    label="Repeticiones"
-                                    mode="outlined"
-                                    value={ repsForm.toString() }
-                                    onChangeText={ (value) => onChange(value, 'repsForm') }
-                                    keyboardType="numeric"
-                                    error={ errorReps }
-                                />
-                                { errorReps && <HelperText type="error" visible={ true }>Solo se permite poner números o intervalo Ex: 6-8</HelperText> }
-                            </>
-
-                            <>
-                                <TextInput
-                                    label="Tiempo en segundos"
-                                    mode="outlined"
-                                    value={ timeForm.toString() }
-                                    onChangeText={ (value) => onChange(value, 'timeForm') }
-                                    keyboardType="numeric"
-                                    error={ errorTime }
-                                />
-                                { errorTime && <HelperText type="error" visible={ true }>Solo se permiten segundos entre 0 y 10 minutos</HelperText> }
-                            </>
+                                <>
+                                    <TextInput
+                                        label="Tiempo en segundos"
+                                        mode="outlined"
+                                        value={ timeForm.toString() }
+                                        onChangeText={ (value) => onChange(value, 'timeForm') }
+                                        keyboardType="numeric"
+                                        error={ errorTime }
+                                    />
+                                    { errorTime && <HelperText type="error" visible={ true }>Solo se permiten segundos entre 0 y 10 minutos</HelperText> }
+                                </>
 
 
-                            <Button
-                                onPress={ handleUpdate }
-                                style={ { backgroundColor: colors.primary, borderRadius: 10 } }
-                                textColor='white'
-                            >
-                                Actualizar
-                            </Button>
+                                <Button
+                                    onPress={ handleUpdate }
+                                    style={ { backgroundColor: colors.primary, borderRadius: 10 } }
+                                    textColor='white'
+                                >
+                                    Actualizar
+                                </Button>
+
+                            </View>
 
                         </View>
 
-                    </View>
+                    </Modal>
 
-                </Modal>
+                </View>
+            </TouchableOpacity >
 
-            </View>
-        </TouchableOpacity >
+            { index !== isLast && <TouchableOpacity
+                style={ { ...styles.bottomDown, backgroundColor: colors.text } }
+                activeOpacity={ 0.8 }
+                onPress={ () => moveExerciseDown(exercice.ref.id) }
+            >
+                <Icon
+                    color={ colors.background }
+                    size={ 20 }
+                    name="chevron-down-outline"
+                />
+            </TouchableOpacity> }
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     card: {
         height: 180,
-        marginBottom: 15,
-        borderRadius: 10,
         flex: 1,
         flexDirection: 'row',
         overflow: 'hidden',
@@ -274,4 +302,19 @@ const styles = StyleSheet.create({
         elevation: 10,
         borderRadius: 10,
     },
+    buttonUp: {
+        borderTopWidth: 1,
+        borderStartWidth: 1,
+        alignItems: 'center',
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
+    },
+    bottomDown: {
+        orderTopWidth: 1,
+        borderStartWidth: 1,
+        alignItems: 'center',
+        marginBottom: 20,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+    }
 });

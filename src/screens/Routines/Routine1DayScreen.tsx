@@ -19,7 +19,8 @@ export const Routine1DayScreen = ({ route }: Props) => {
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParamsRoutine>>();
 
-    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, removeRoutineExercise, editRoutineExercise, addRoutineExercise } = useExercicesPaginated();
+    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, removeRoutineExercise, editRoutineExercise, addRoutineExercise, moveExerciseUp, moveExerciseDown } = useExercicesPaginated();
+
     const [routineTitle, setRoutineTitle] = useState<string>("");
     const { titleForm, onChange } = useForm({
         titleForm: '',
@@ -42,7 +43,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                 size={ 50 }
                 name="add-circle-outline"
                 onPress={ () => navigation.navigate('ExercicesScreen', { add: true, addExercice: addRoutineExercise }) }
-                style={ { alignSelf: 'center', marginBottom: 100 } }
+                style={ { alignSelf: 'center', marginBottom: 100, marginTop: 20 } }
             />
         );
     };
@@ -73,7 +74,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                 data={ routineDayExercices }
                 keyExtractor={ (exercice) => exercice.exercise.name }
                 showsVerticalScrollIndicator={ false }
-                renderItem={ ({ item }) => (
+                renderItem={ ({ item, index }) => (
                     <ExerciceCardRoutine
                         exercice={ item.exercise }
                         reps={ item.repetitions }
@@ -81,6 +82,10 @@ export const Routine1DayScreen = ({ route }: Props) => {
                         sets={ item.sets }
                         removeExercise={ removeRoutineExercise }
                         editExercise={ editRoutineExercise }
+                        moveExerciseUp={ moveExerciseUp }
+                        moveExerciseDown={ moveExerciseDown }
+                        index={ index }
+                        isLast={ routineDayExercices.length - 1 }
                     />
                 ) }
 

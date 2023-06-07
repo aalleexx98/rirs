@@ -91,7 +91,6 @@ export const useExercicesPaginated = () => {
     };
 
     const addRoutineExercise = (exerciseId: string) => {
-        console.log("Antes de empezar a añadir:" + routineDayExercices)
         const exerciseToAdd = simpleExerciceList.find(exercise => exercise.ref.id === exerciseId);
         if (exerciseToAdd) {
             console.log("Existe")
@@ -106,7 +105,6 @@ export const useExercicesPaginated = () => {
     };
 
     const removeRoutineExercise = (exerciseId: string) => {
-        console.log("Antes de empezar a borrar:" + routineDayExercices)
 
         const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
         setRoutineDayExercices(updatedExercices);
@@ -126,6 +124,30 @@ export const useExercicesPaginated = () => {
         });
 
         setRoutineDayExercices(updatedExercises);
+    };
+
+    const moveExerciseUp = (exerciseId: string) => {
+        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+
+        if (index > 0) {
+            const updatedExercices = [...routineDayExercices];
+            const exerciseToMove = updatedExercices[index];
+            updatedExercices.splice(index, 1);
+            updatedExercices.splice(index - 1, 0, exerciseToMove);
+            setRoutineDayExercices(updatedExercices);
+        }
+    };
+
+    const moveExerciseDown = (exerciseId: string) => {
+        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+
+        if (index < routineDayExercices.length - 1) {
+            const updatedExercices = [...routineDayExercices];
+            const exerciseToMove = updatedExercices[index];
+            updatedExercices.splice(index, 1);
+            updatedExercices.splice(index + 1, 0, exerciseToMove);
+            setRoutineDayExercices(updatedExercices);
+        }
     };
 
 
@@ -242,6 +264,8 @@ export const useExercicesPaginated = () => {
         removeRoutineExercise,
         editRoutineExercise,
         addRoutineExercise,
+        moveExerciseUp,
+        moveExerciseDown,
 
         //Variables
         simpleExerciceList,
