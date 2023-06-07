@@ -41,7 +41,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                 color={ colors.primary }
                 size={ 50 }
                 name="add-circle-outline"
-                onPress={ () => navigation.navigate('ExercicesScreen', { add: true }) }
+                onPress={ () => navigation.navigate('ExercicesScreen', { add: true, addExercice: addRoutineExercise }) }
                 style={ { alignSelf: 'center', marginBottom: 100 } }
             />
         );
@@ -54,8 +54,9 @@ export const Routine1DayScreen = ({ route }: Props) => {
                 <TextInput
                     placeholder='Titulo de la rutina'
                     mode="flat"
+                    cursorColor='black'
                     onChangeText={ (value) => onChange(value, 'titleForm') }
-                    style={ { flex: 1, height: 60, borderRadius: 5 } }
+                    style={ { flex: 1, height: 60, borderRadius: 5, backgroundColor: 'white' } }
                 />
 
                 <TouchableOpacity

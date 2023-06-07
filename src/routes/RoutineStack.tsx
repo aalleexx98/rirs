@@ -12,7 +12,7 @@ export type RootStackParamsRoutine = {
     RoutineBodyScreen: { gender: string, level: string },
     RoutineWeeklyScreen: { gender: string, level: string },
     Routine1DayScreen: { gender: string, level: string, muscles: string[] },
-    ExercicesScreen: { add: boolean; addExercice?: () => void },
+    ExercicesScreen: { add: boolean; addExercice?: (exerciseId: string) => void },
     ExerciceDetailsScreen: { ref: string }
 }
 

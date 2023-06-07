@@ -130,7 +130,12 @@ export const ExercicesScreen = ({ navigation, route }: Props) => {
                 keyExtractor={ (exercice) => exercice.name }
                 showsVerticalScrollIndicator={ false }
                 style={ { marginBottom: 100 } } //Misma altura que exerciceCard
-                renderItem={ ({ item }) => (<ExerciceCard exercice={ item } add={ true } />) }
+
+                //Aqui es porque llamo la pantalla en 2 sitios distintos, entonces si add existe es que estoy en routines si no en ejercicios y por lo tanto no tiene addExercice
+                renderItem={ ({ item }) => add ?
+                    <ExerciceCard exercice={ item } add={ true } addExercice={ route.params.addExercice } />
+                    :
+                    <ExerciceCard exercice={ item } /> }
             />
 
         </View>

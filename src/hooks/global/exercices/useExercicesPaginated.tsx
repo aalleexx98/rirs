@@ -97,11 +97,11 @@ export const useExercicesPaginated = () => {
             console.log("Existe")
             const newExercise = {
                 exercise: exerciseToAdd,
-                sets: 10,
+                sets: 3,
                 repetitions: "8",
                 restTime: 90,
             };
-            setRoutineDayExercices([newExercise]);
+            setRoutineDayExercices(prevExercises => [...prevExercises, newExercise]);
         }
     };
 

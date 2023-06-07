@@ -12,21 +12,22 @@ import { useExercicesPaginated } from '../../hooks/global/exercices/useExercices
 
 interface Props {
     exercice: exercicePreview,
-    add?: boolean
+    add?: boolean,
+    addExercice?: (exerciseId: string) => void
 }
 
-export const ExerciceCard = ({ exercice }: Props) => {
+export const ExerciceCard = ({ exercice, addExercice, add }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
     const { addRoutineExercise, routineDayExercices } = useExercicesPaginated();
 
-    const addExercice = () => {
+    const addExercices = () => {
         console.log(routineDayExercices);
-        addRoutineExercise(exercice.ref.id)
+        if (addExercice) addExercice(exercice.ref.id);
         console.log(exercice.ref.id)
-        //navigation.pop()
+        navigation.pop()
     }
 
     return (
@@ -45,17 +46,17 @@ export const ExerciceCard = ({ exercice }: Props) => {
                     <Text style={ styles.muscle }>{ exercice.muscle } / { exercice.equipment }</Text>
                 </View>
 
-                <TouchableOpacity
+                { add && <TouchableOpacity
                     style={ { backgroundColor: '#540197', flex: 1, justifyContent: 'center', alignItems: 'center' } }
                     activeOpacity={ 0.6 }
-                    onPress={ addExercice }
+                    onPress={ addExercices }
                 >
                     <Icon
                         name="add-circle-outline"
                         color={ colors.text }
                         size={ 30 }
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> }
             </View>
         </TouchableOpacity>
     )
