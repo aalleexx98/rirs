@@ -31,7 +31,6 @@ export const RoutineScreen = () => {
 
     return (
         <View style={ { ...globalStyles.globalMargin } }>
-            <Text>Routine Screen</Text>
 
             <View style={ { alignItems: 'center', rowGap: 50 } }>
 

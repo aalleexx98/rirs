@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthState, authReducer } from "./authReducer";
-import { getItemStorage, removeItem, setItemStorage } from "../../helpers/helperStorage";
+import { removeItem, setItemStorage } from "../../helpers/helperStorage";
 import { LoginData, RegisterData } from "../../interfaces/loginInterficie";
 import firestore from '@react-native-firebase/firestore';
 

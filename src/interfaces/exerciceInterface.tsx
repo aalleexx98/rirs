@@ -31,4 +31,5 @@ export interface routineExercices {
     sets: number;
     repetitions: string;
     restTime: number;
+    position?: number;
 }

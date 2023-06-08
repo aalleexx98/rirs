@@ -11,6 +11,11 @@ import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamsRoutine } from '../routes/RoutineStack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+]);
 
 
 const screenWidth = Dimensions.get('window').width;

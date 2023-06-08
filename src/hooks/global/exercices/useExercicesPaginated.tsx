@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
 import { exercicePreview, routineExercices } from '../../../interfaces/exerciceInterface';
+import { getItemStorage } from "../../../helpers/helperStorage";
+
 
 export const useExercicesPaginated = () => {
 
     const exercicesCollection = firestore().collection('exercices');
     const musclesCollection = firestore().collection('muscle');
+    const routinesCollection = firestore().collection('routines');
+
 
     const [isFetching, setIsFetching] = useState(true);
     const [isGenerating, setIsGenerating] = useState(true);
@@ -81,13 +85,21 @@ export const useExercicesPaginated = () => {
             );
 
             const combinedExercises = querySnapshot.flat();
-            setRoutineDayExercices(combinedExercises);
+            const orderExercices = assignPositions(combinedExercises);
+            setRoutineDayExercices(orderExercices);
 
             setIsGenerating(false);
         } catch (error) {
             console.log('Error al obtener documentos:', error);
         }
 
+    };
+
+    const assignPositions = (exercises: routineExercices[]): routineExercices[] => {
+        return exercises.map((exercise, index) => ({
+            ...exercise,
+            position: index,
+        }));
     };
 
     const addRoutineExercise = (exerciseId: string) => {
@@ -99,13 +111,15 @@ export const useExercicesPaginated = () => {
                 sets: 3,
                 repetitions: "8",
                 restTime: 90,
+                position: routineDayExercices.length,
             };
             setRoutineDayExercices(prevExercises => [...prevExercises, newExercise]);
+            console.log(newExercise)
         }
+
     };
 
     const removeRoutineExercise = (exerciseId: string) => {
-
         const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
         setRoutineDayExercices(updatedExercices);
     };
@@ -132,10 +146,19 @@ export const useExercicesPaginated = () => {
         if (index > 0) {
             const updatedExercices = [...routineDayExercices];
             const exerciseToMove = updatedExercices[index];
+            const exerciseToReplace = updatedExercices[index - 1];
+
+            exerciseToMove.position = exerciseToReplace.position;
+            exerciseToReplace.position = index;
+
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index - 1, 0, exerciseToMove);
             setRoutineDayExercices(updatedExercices);
         }
+
+        routineDayExercices.forEach(obj => {
+            console.log(obj);
+        });
     };
 
     const moveExerciseDown = (exerciseId: string) => {
@@ -144,11 +167,43 @@ export const useExercicesPaginated = () => {
         if (index < routineDayExercices.length - 1) {
             const updatedExercices = [...routineDayExercices];
             const exerciseToMove = updatedExercices[index];
+            const exerciseToReplace = updatedExercices[index + 1];
+
+            exerciseToMove.position = exerciseToReplace.position;
+            exerciseToReplace.position = index;
+
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index + 1, 0, exerciseToMove);
             setRoutineDayExercices(updatedExercices);
         }
+
+        routineDayExercices.forEach(obj => {
+            console.log(obj);
+        });
     };
+
+    const saveRoutine = async (title: string) => {
+        try {
+            const userUid = await getItemStorage('uid');
+            const exercicesArray = routineDayExercices.map((routineExercice) => ({
+                exercise: routineExercice.exercise.ref,
+                sets: routineExercice.sets,
+                repetitions: routineExercice.repetitions,
+                restTime: routineExercice.restTime,
+                position: routineExercice.position
+            }));
+
+            await routinesCollection
+                .add({
+                    userUid: userUid,
+                    title: title,
+                    exercices: exercicesArray
+                });
+
+        } catch (error) {
+            console.log('No se pudo guardar la rutina', error);
+        }
+    }
 
 
     // HACIA ABAJO EXTRAS
@@ -266,6 +321,7 @@ export const useExercicesPaginated = () => {
         addRoutineExercise,
         moveExerciseUp,
         moveExerciseDown,
+        saveRoutine,
 
         //Variables
         simpleExerciceList,
