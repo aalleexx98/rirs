@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { HelperText, TextInput, Button } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useForm } from '../../hooks/global/useForm'
+import { RoutineContext } from '../../context/routineContext/routineContext'
 
 interface Props {
     exercice: exercicePreview,
@@ -18,15 +19,13 @@ interface Props {
     sets: number,
     index: number,
     isLast: number,
-    removeExercise: (exerciseId: string) => void,
-    moveExerciseUp: (exerciseId: string) => void,
-    moveExerciseDown: (exerciseId: string) => void,
-    editExercise: (exerciseId: string, sets: number, reps: string, time: number) => void,
 }
 
-export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExercise, editExercise, moveExerciseDown, moveExerciseUp, index, isLast }: Props) => {
+export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, index, isLast }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
+    const { removeRoutineExercise, editRoutineExercise, moveExerciseDown, moveExerciseUp } = useContext(RoutineContext);
+
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -72,7 +71,7 @@ export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExer
     };
 
     useEffect(() => {
-        editExercise(exercice.ref.id, currentSets, currentReps, currentRestTime);
+        editRoutineExercise(exercice.ref.id, currentSets, currentReps, currentRestTime);
     }, [currentReps, currentSets, currentRestTime])
 
 
@@ -140,7 +139,7 @@ export const ExerciceCardRoutine = ({ exercice, reps, restTime, sets, removeExer
                         <TouchableOpacity
                             style={ styles.containerDelete }
                             activeOpacity={ 0.8 }
-                            onPress={ () => removeExercise(exercice.ref.id) }
+                            onPress={ () => removeRoutineExercise(exercice.ref.id) }
                         >
                             <Icon
                                 color='black'

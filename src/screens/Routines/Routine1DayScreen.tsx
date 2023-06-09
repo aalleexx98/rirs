@@ -2,7 +2,6 @@ import React, { memo, useContext, useEffect, useState } from 'react'
 import { View, FlatList, TouchableOpacity, StyleSheet, Text } from 'react-native'
 import { RootStackParamsRoutine } from '../../routes/RoutineStack'
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
-import { useExercicesPaginated } from '../../hooks/global/exercices/useExercicesPaginated'
 import { Loading } from '../../components/Loading'
 import { ExerciceCardRoutine } from '../../components/exercices/exerciceCardRoutine'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,17 +9,19 @@ import { ThemeContext } from '../../context/themeContext/ThemeContext'
 import { useForm } from '../../hooks/global/useForm'
 import { Button, HelperText, TextInput } from 'react-native-paper'
 import { globalStyles } from '../../theme/globalTheme'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { Alert } from 'react-native';
+import { RoutineContext } from '../../context/routineContext/routineContext'
 
 interface Props extends StackScreenProps<RootStackParamsRoutine, 'Routine1DayScreen'> { };
 
 export const Routine1DayScreen = ({ route }: Props) => {
+    const isFocused = useIsFocused();
 
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParamsRoutine>>();
 
-    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, removeRoutineExercise, editRoutineExercise, addRoutineExercise, moveExerciseUp, moveExerciseDown, saveRoutine } = useExercicesPaginated();
+    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices } = useContext(RoutineContext);
 
     const [routineTitle, setRoutineTitle] = useState<string>("");
     const [errorTime, setErrorTime] = useState(false);
@@ -58,8 +59,12 @@ export const Routine1DayScreen = ({ route }: Props) => {
         }
     }, [isFetching]);
 
+    useEffect(() => {
+        cleanRoutineDayExercices(); // Vaciar routineDayExercices al salir (desmontar) de pantalla
+    }, []);
+
     if (isGenerating) {
-        return <Loading />;
+        return <Loading loadingText='Generando Rutina' />;
     }
 
     return (
@@ -97,10 +102,6 @@ export const Routine1DayScreen = ({ route }: Props) => {
                         reps={ item.repetitions }
                         restTime={ item.restTime }
                         sets={ item.sets }
-                        removeExercise={ removeRoutineExercise }
-                        editExercise={ editRoutineExercise }
-                        moveExerciseUp={ moveExerciseUp }
-                        moveExerciseDown={ moveExerciseDown }
                         index={ index }
                         isLast={ routineDayExercices.length - 1 }
                     />

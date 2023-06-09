@@ -7,25 +7,24 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParams } from '../../routes/ExerciceStack'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useExercicesPaginated } from '../../hooks/global/exercices/useExercicesPaginated';
+import { RoutineContext } from '../../context/routineContext/routineContext';
 
 
 interface Props {
     exercice: exercicePreview,
     add?: boolean,
-    addExercice?: (exerciseId: string) => void
 }
 
-export const ExerciceCard = ({ exercice, addExercice, add }: Props) => {
+export const ExerciceCard = ({ exercice, add }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
-    const { addRoutineExercise, routineDayExercices } = useExercicesPaginated();
+    const { addRoutineExercise } = useContext(RoutineContext);
+
 
     const addExercices = () => {
-        console.log(routineDayExercices);
-        if (addExercice) addExercice(exercice.ref.id);
+        addRoutineExercise(exercice.ref.id); //TODO: MIRAR SI NO SE ACTUALIZA POR EL 1DAYROUTINE
         console.log(exercice.ref.id)
         navigation.pop()
     }

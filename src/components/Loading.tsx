@@ -2,7 +2,11 @@ import React, { useContext } from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 
-export const Loading = () => {
+interface LoadingProps {
+    loadingText: string; // Prop para el texto de carga
+}
+
+export const Loading = ({ loadingText }: LoadingProps) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
 
@@ -13,7 +17,7 @@ export const Loading = () => {
                 color={ colors.text }
             />
 
-            <Text style={ { color: colors.text } }>Cargando</Text>
+            <Text style={ { color: colors.text } }>{ loadingText }</Text>
         </View>
     )
 }

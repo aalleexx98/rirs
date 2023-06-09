@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { globalStyles } from '../theme/globalTheme'
 import { ThemeContext } from '../context/themeContext/ThemeContext';
-import { useExercicesPaginated } from '../hooks/global/exercices/useExercicesPaginated';
 import { Loading } from '../components/Loading';
 import { ExerciceCard } from '../components/exercices/exerciceCard';
 import { SearchInput } from '../components/exercices/searchInput';
@@ -12,6 +11,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamsRoutine } from '../routes/RoutineStack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LogBox } from 'react-native';
+import { RoutineContext } from '../context/routineContext/routineContext';
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -26,6 +26,8 @@ export const ExercicesScreen = ({ navigation, route }: Props) => {
     const { add = false } = route.params || {}; // Miro si add existe para sabe si viene de routine o de ejercicios.
 
     const { theme: { colors } } = useContext(ThemeContext);
+    const { exerciceFiltered, isFetching, searchExercice } = useContext(RoutineContext);
+
     const [term, setTerm] = useState('');
 
     const [muscleOpen, setMuscleOpen] = useState(false);
@@ -59,14 +61,12 @@ export const ExercicesScreen = ({ navigation, route }: Props) => {
         { label: 'Peso Libre', value: 'peso_libre' },
     ]);
 
-    const { isFetching, searchExercice, exerciceFiltered } = useExercicesPaginated();
-
     useEffect(() => {
         searchExercice(term, equipmentValue, muscleValue);
     }, [term, equipmentValue, muscleValue])
 
     if (isFetching) {
-        return <Loading />
+        return <Loading loadingText='Cargando Ejercicios' />
     }
 
     return (
@@ -138,7 +138,7 @@ export const ExercicesScreen = ({ navigation, route }: Props) => {
 
                 //Aqui es porque llamo la pantalla en 2 sitios distintos, entonces si add existe es que estoy en routines si no en ejercicios y por lo tanto no tiene addExercice
                 renderItem={ ({ item }) => add ?
-                    <ExerciceCard exercice={ item } add={ true } addExercice={ route.params.addExercice } />
+                    <ExerciceCard exercice={ item } add={ true } />
                     :
                     <ExerciceCard exercice={ item } /> }
             />

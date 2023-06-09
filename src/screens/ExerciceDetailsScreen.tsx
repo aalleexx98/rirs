@@ -48,7 +48,7 @@ export const ExerciceDetailsScreen = ({ navigation, route }: Props) => {
 
 
     if (loading) {
-        return <Loading />
+        return <Loading loadingText='Cargando Ejercicio' />
     }
 
     return (
