@@ -19,7 +19,6 @@ export const Tabs = () => {
     const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
 
     return (
-        //TODO: ¿CUANDO LO TENGA REDEFINIR LOS TABS PARA HACERLO COMO LO DE LOS POKEMONS?
 
         <Tab.Navigator
             screenOptions={ ({ route }) => ({

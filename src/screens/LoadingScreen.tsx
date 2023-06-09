@@ -15,5 +15,3 @@ export const LoadingScreen = () => {
         </View>
     )
 }
-
-//TODO: El dia de mañana cuando tenga slice quitar

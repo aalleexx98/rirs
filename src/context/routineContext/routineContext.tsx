@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { exercicePreview, routineExercices } from '../../interfaces/exerciceInterface';
+import { Routine, RoutineExercise, exercicePreview, routineExercices } from '../../interfaces/exerciceInterface';
 import { getItemStorage } from "../../helpers/helperStorage";
 import firestore from '@react-native-firebase/firestore';
 
@@ -7,11 +7,13 @@ import firestore from '@react-native-firebase/firestore';
 type ExercicesContextType = {
     isFetching: boolean;
     isGenerating: boolean;
+    isRoutines: boolean;
+
     numberOfActiveRoutines: number;
     simpleExerciceList: exercicePreview[];
     exerciceFiltered: exercicePreview[];
     routineDayExercices: routineExercices[];
-    activeRoutines: routineExercices[][];
+    activeRoutines: Routine[];
 
     searchExercice: (name: string, equipment: string, muscle: string) => void;
     routineDayGenerate: (muscles: string[], level: string) => void;
@@ -43,13 +45,14 @@ export const RoutineProvider = ({ children }: any) => {
 
     const [isFetching, setIsFetching] = useState(true);
     const [isGenerating, setIsGenerating] = useState(true);
+    const [isRoutines, setIsRoutines] = useState(true);
 
     const [numberOfActiveRoutines, setnumberOfActiveRoutines] = useState<number>(0);
 
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
     const [routineDayExercices, setRoutineDayExercices] = useState<routineExercices[]>([]);
-    const [activeRoutines, setActiveRoutines] = useState<routineExercices[][]>([]);
+    const [activeRoutines, setActiveRoutines] = useState<Routine[]>([]);
 
     useEffect(() => {
         setIsFetching(true);
@@ -86,47 +89,44 @@ export const RoutineProvider = ({ children }: any) => {
             const userUid = await getItemStorage('uid');
 
             if (userUid) {
-                await usersCollection
-                    .doc(userUid)
-                    .get()
-                    .then(documentSnapshot => {
-                        if (documentSnapshot.exists) {
-                            setnumberOfActiveRoutines(documentSnapshot.data()?.activeRoutines);
-                        }
-                    });
-                await showActiveRoutines();
+                const documentSnapshot = await usersCollection.doc(userUid).get();
+                if (documentSnapshot.exists) {
+                    const activeRoutinesCount = documentSnapshot.data()?.activeRoutines;
+                    setnumberOfActiveRoutines(activeRoutinesCount);
+                    await showActiveRoutines(userUid, activeRoutinesCount);
+                }
             }
-
         } catch (error) {
             console.log('No se pudo obtener la cantidad de rutinas activas', error);
         }
-    }
+    };
 
-    const showActiveRoutines = async () => {
+    const showActiveRoutines = async (userUid: string, activeRoutinesCount: number) => {
         try {
-            const userUid = await getItemStorage('uid');
-
-            if (userUid) {
-                await routinesCollection
-                    .where('userUid', '==', userUid)
-                    .get()
-                    .then(querySnapshot => {
-                        const routines: routineExercices[][] = [];
-                        querySnapshot.forEach(documentSnapshot => {
-                            if (documentSnapshot.exists) {
-                                const routineData = documentSnapshot.data();
-                                const routineExercises = routineData?.exercises || []; // Ajusta esto según el nombre del atributo que contiene los ejercicios
-                                routines.push(routineExercises);
-                            }
-                        });
-                        setActiveRoutines(routines);
-                    });
+            if (userUid && activeRoutinesCount > 0) {
+                const querySnapshot = await routinesCollection.where('userUid', '==', userUid).get();
+                const routines: Routine[] = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    if (documentSnapshot.exists) {
+                        const routineData = documentSnapshot.data();
+                        const routineExercises: RoutineExercise[] = routineData?.exercices || [];
+                        const routine: Routine = {
+                            exercises: routineExercises,
+                            title: routineData?.title || '',
+                            userUid: routineData?.userUid || ''
+                        };
+                        routines.push(routine);
+                    }
+                });
+                setActiveRoutines(routines);
             }
-
+            setIsRoutines(false);
         } catch (error) {
             console.log('No se pudo obtener la cantidad de rutinas activas', error);
         }
-    }
+    };
+
+
 
     const searchExercice = (name: string, equipment: string, muscle: string) => {
 
@@ -430,6 +430,7 @@ export const RoutineProvider = ({ children }: any) => {
             loadActiveRoutines,
             numberOfActiveRoutines,
             activeRoutines,
+            isRoutines,
         } }>
             { children }
         </RoutineContext.Provider >

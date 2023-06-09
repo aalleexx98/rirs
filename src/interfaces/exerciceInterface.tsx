@@ -1,7 +1,7 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 export interface exercicePreview {
-    ref: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>, //TODO: Quitar el ?
+    ref: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>,
     name: string;
     muscle: string,
     img: string,
@@ -32,4 +32,18 @@ export interface routineExercices {
     repetitions: string;
     restTime: number;
     position?: number;
+}
+
+export interface RoutineExercise {
+    exercise: string;
+    position: number;
+    repetitions: string;
+    restTime: number;
+    sets: number;
+}
+
+export interface Routine {
+    exercises: RoutineExercise[];
+    title: string;
+    userUid: string;
 }

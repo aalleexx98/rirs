@@ -24,7 +24,7 @@ export const ExerciceCard = ({ exercice, add }: Props) => {
 
 
     const addExercices = () => {
-        addRoutineExercise(exercice.ref.id); //TODO: MIRAR SI NO SE ACTUALIZA POR EL 1DAYROUTINE
+        addRoutineExercise(exercice.ref.id);
         console.log(exercice.ref.id)
         navigation.pop()
     }

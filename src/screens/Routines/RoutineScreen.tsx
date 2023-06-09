@@ -105,7 +105,6 @@ export const RoutineScreen = () => {
                     </View>
                 </View>
 
-                {/* TODO: SOLO MOSTRAR SI ESTAN LOS 3 SELECCIONADOS*/ }
                 { selectedGendre && selectedLevel && selectedType && (
                     <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
                         activeOpacity={ 0.7 }
