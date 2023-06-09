@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 type ExercicesContextType = {
     isFetching: boolean;
     isGenerating: boolean;
+    activeRoutines: number;
     simpleExerciceList: exercicePreview[];
     exerciceFiltered: exercicePreview[];
     routineDayExercices: routineExercices[];
@@ -24,20 +25,25 @@ type ExercicesContextType = {
     moveExerciseUp: (exerciseId: string) => void;
     moveExerciseDown: (exerciseId: string) => void;
     saveRoutine: (title: string) => void;
-    cleanRoutineDayExercices: () => void
+    cleanRoutineDayExercices: () => void;
+    loadActiveRoutines: () => void;
 };
 
 
 export const RoutineContext = createContext({} as ExercicesContextType);
+
 
 export const RoutineProvider = ({ children }: any) => {
 
     const exercicesCollection = firestore().collection('exercices');
     const musclesCollection = firestore().collection('muscle');
     const routinesCollection = firestore().collection('routines');
+    const usersCollection = firestore().collection('users');
 
     const [isFetching, setIsFetching] = useState(true);
     const [isGenerating, setIsGenerating] = useState(true);
+
+    const [activeRoutines, setActiveRoutines] = useState<number>(0);
 
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
@@ -70,6 +76,26 @@ export const RoutineProvider = ({ children }: any) => {
             setIsFetching(false);
         } catch (error) {
             console.log('Error al obtener documentos:', error);
+        }
+    }
+
+    const loadActiveRoutines = async () => {
+        try {
+            const userUid = await getItemStorage('uid');
+
+            if (userUid) {
+                await usersCollection
+                    .doc(userUid)
+                    .get()
+                    .then(documentSnapshot => {
+                        if (documentSnapshot.exists) {
+                            setActiveRoutines(documentSnapshot.data()?.activeRoutines);
+                        }
+                    })
+            }
+
+        } catch (error) {
+            console.log('No se pudo obtener la cantidad de rutinas activas', error);
         }
     }
 
@@ -231,6 +257,8 @@ export const RoutineProvider = ({ children }: any) => {
                     exercices: exercicesArray
                 });
 
+            updateUserActiveRoutines(true);
+
         } catch (error) {
             console.log('No se pudo guardar la rutina', error);
         }
@@ -301,6 +329,27 @@ export const RoutineProvider = ({ children }: any) => {
         return matchingExercises
     }
 
+    const updateUserActiveRoutines = async (shouldIncrement: boolean) => {
+        try {
+            const userUid = await getItemStorage('uid');
+            if (userUid) {
+                const updatedActiveRoutines = shouldIncrement ? activeRoutines + 1 : activeRoutines - 1;
+                await usersCollection
+                    .doc(userUid)
+                    .update({
+                        activeRoutines: updatedActiveRoutines,
+                    })
+                    .then(() => {
+                        console.log("User" + userUid + "Actualizada sus rutinas actuales: " + updatedActiveRoutines);
+                    });
+                setActiveRoutines(updatedActiveRoutines);
+            }
+
+        } catch (error) {
+            console.log('No se pudo obtener la cantidad de rutinas activas', error);
+        }
+    }
+
     function getFieldNameByLevel (level: string) {
         if (level === 'beginner') {
             return 'daySetsPrin';
@@ -349,6 +398,8 @@ export const RoutineProvider = ({ children }: any) => {
             exerciceFiltered,
             routineDayExercices,
             cleanRoutineDayExercices,
+            loadActiveRoutines,
+            activeRoutines,
         } }>
             { children }
         </RoutineContext.Provider >
