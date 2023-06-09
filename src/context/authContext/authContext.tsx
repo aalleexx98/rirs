@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }: any) => {
                             uid: user.uid,
                             name: name,
                             email: email,
+                            activeRoutines: 0,
                         });
 
                     setItemStorage('uid', user.uid);

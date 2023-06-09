@@ -37,7 +37,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
         setErrorTime(false);
         setRoutineTitle(titleForm); //Eliminar ?
         saveRoutine(titleForm);
-        navigation.navigate('HomeScreen');
+        navigation.navigate('HomeScreen'); //TODO CAMBIAR ESTO INTERFAZ ?
     };
 
     const renderFooter = () => {
