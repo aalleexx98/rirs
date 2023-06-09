@@ -10,6 +10,7 @@ import { HistorialScreen } from '../screens/HistorialScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { ExerciceStack } from './ExerciceStack';
 import { RoutineStack } from './RoutineStack';
+import { HomeStack } from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ export const Tabs = () => {
                 tabBarHideOnKeyboard: true
 
             }) }
-            initialRouteName='HomeScreen'
+            initialRouteName='HomeStack'
         >
             <Tab.Screen
                 name="HistorialScreen"
@@ -68,8 +69,8 @@ export const Tabs = () => {
             />
 
             <Tab.Screen
-                name="HomeScreen"
-                component={ HomeScreen }
+                name="HomeStack"
+                component={ HomeStack }
                 options={ {
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
