@@ -7,7 +7,6 @@ import firestore from '@react-native-firebase/firestore';
 type ExercicesContextType = {
     isFetching: boolean;
     isGenerating: boolean;
-    isRoutines: boolean;
 
     numberOfActiveRoutines: number;
     simpleExerciceList: exercicePreview[];
@@ -45,7 +44,6 @@ export const RoutineProvider = ({ children }: any) => {
 
     const [isFetching, setIsFetching] = useState(true);
     const [isGenerating, setIsGenerating] = useState(true);
-    const [isRoutines, setIsRoutines] = useState(true);
 
     const [numberOfActiveRoutines, setnumberOfActiveRoutines] = useState<number>(0);
 
@@ -104,13 +102,18 @@ export const RoutineProvider = ({ children }: any) => {
     const showActiveRoutines = async (userUid: string, activeRoutinesCount: number) => {
         try {
             if (userUid && activeRoutinesCount > 0) {
-                const querySnapshot = await routinesCollection.where('userUid', '==', userUid).get();
+                const querySnapshot = await routinesCollection
+                    .where('userUid', '==', userUid)
+                    .orderBy('title')
+                    .limit(activeRoutinesCount)
+                    .get();
                 const routines: Routine[] = [];
                 querySnapshot.forEach(documentSnapshot => {
                     if (documentSnapshot.exists) {
                         const routineData = documentSnapshot.data();
                         const routineExercises: RoutineExercise[] = routineData?.exercices || [];
                         const routine: Routine = {
+                            id: documentSnapshot.id,
                             exercises: routineExercises,
                             title: routineData?.title || '',
                             userUid: routineData?.userUid || ''
@@ -432,7 +435,6 @@ export const RoutineProvider = ({ children }: any) => {
             loadActiveRoutines,
             numberOfActiveRoutines,
             activeRoutines,
-            isRoutines,
         } }>
             { children }
         </RoutineContext.Provider >

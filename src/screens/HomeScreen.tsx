@@ -9,11 +9,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamsHome } from '../routes/HomeStack';
+import { RoutinePreview } from '../components/routine/RoutinePreview';
 
 export const HomeScreen = () => {
 
     const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
-    const { loadActiveRoutines, numberOfActiveRoutines, activeRoutines, isRoutines } = useContext(RoutineContext);
+    const { loadActiveRoutines, numberOfActiveRoutines, activeRoutines } = useContext(RoutineContext);
     const { } = useContext(AuthContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParamsHome>>();
 
@@ -27,13 +28,6 @@ export const HomeScreen = () => {
 
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if (activeRoutines.length > 0) {
-            // Realizar las acciones necesarias una vez que activeRoutines se haya actualizado
-            // ...
-        }
-    }, [activeRoutines]);
 
     if (isLoadingRoutines) {
         return <Loading loadingText='Cargando rutinas activas' />;
@@ -69,12 +63,17 @@ export const HomeScreen = () => {
                 <>
                     <FlatList
                         data={ activeRoutines }
-                        keyExtractor={ (title) => title.title }
+                        keyExtractor={ (item, index) => `${ index }-${ item.title }` }
                         showsVerticalScrollIndicator={ false }
-                        style={ { marginBottom: 100 } } //Misma altura que exerciceCard
+                        style={ { marginTop: 20 } }
 
                         //Aqui es porque llamo la pantalla en 2 sitios distintos, entonces si add existe es que estoy en routines si no en ejercicios y por lo tanto no tiene addExercice
-                        renderItem={ ({ item }) => <Text>{ item.title }</Text> }
+                        renderItem={ ({ item, index }) => (
+                            <RoutinePreview
+                                title={ item.title }
+                                id={ item.id }
+                            />
+                        ) }
                     />
                 </> }
 

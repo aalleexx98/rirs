@@ -21,7 +21,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParamsRoutine>>();
 
-    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices } = useContext(RoutineContext);
+    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices, numberOfActiveRoutines } = useContext(RoutineContext);
 
     const [routineTitle, setRoutineTitle] = useState<string>("");
     const [errorTime, setErrorTime] = useState(false);
@@ -35,10 +35,14 @@ export const Routine1DayScreen = ({ route }: Props) => {
             setErrorTime(true);
             return;
         }
+        if (numberOfActiveRoutines < 7) {
+            setRoutineTitle(titleForm); //Eliminar ?
+            saveRoutine(titleForm);
+            navigation.navigate('HomeScreen'); //TODO CAMBIAR ESTO INTERFAZ ?
+        } else {
+            Alert.alert('Error', 'Has alcanzado el máximo de rutinas activas (7), elimina una rutina para poder crear más.');
+        }
         setErrorTime(false);
-        setRoutineTitle(titleForm); //Eliminar ?
-        saveRoutine(titleForm);
-        navigation.navigate('HomeScreen'); //TODO CAMBIAR ESTO INTERFAZ ?
     };
 
     const renderFooter = () => {

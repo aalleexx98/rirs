@@ -43,6 +43,7 @@ export interface RoutineExercise {
 }
 
 export interface Routine {
+    id: string,
     exercises: RoutineExercise[];
     title: string;
     userUid: string;
