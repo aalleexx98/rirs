@@ -285,7 +285,8 @@ export const RoutineProvider = ({ children }: any) => {
                     exercices: exercicesArray
                 });
 
-            updateUserActiveRoutines(true);
+            const numRoutines = await updateUserActiveRoutines(true);
+            showActiveRoutines(userUid!, numRoutines!);
 
         } catch (error) {
             console.log('No se pudo guardar la rutina', error);
@@ -371,10 +372,12 @@ export const RoutineProvider = ({ children }: any) => {
                         console.log("User" + userUid + "Actualizada sus rutinas actuales: " + updatedActiveRoutines);
                     });
                 setnumberOfActiveRoutines(updatedActiveRoutines);
+                return updatedActiveRoutines;
             }
 
         } catch (error) {
             console.log('No se pudo obtener la cantidad de rutinas activas', error);
+            return 0;
         }
     }
 

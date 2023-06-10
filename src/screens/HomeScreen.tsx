@@ -33,7 +33,7 @@ export const HomeScreen = () => {
         }
     }, [activeRoutines]);
 
-    if (isRoutines || isLoadingRoutines) {
+    if (isLoadingRoutines) {
         return <Loading loadingText='Cargando rutinas activas' />;
     }
 
@@ -42,7 +42,7 @@ export const HomeScreen = () => {
             <Text style={ { color: colors.text, fontSize: 35, fontWeight: '600' } }>Bienvenido!</Text>
             <Text style={ { color: colors.text, fontSize: 20, marginTop: 5 } }>Rutinas activas: { numberOfActiveRoutines }/7</Text>
 
-            { numberOfActiveRoutines === 0 ? //TODO: MIRAR ESTO PORQUE NO ESTA ACTUALIZANDO AL MOMENTO, HACE LA DE 1 RETRASO
+            { numberOfActiveRoutines === 0 ?
                 <>
                     <Text style={ { textAlign: 'center', color: colors.text, marginTop: 50 } }>No tienes rutinas activas, crea tu primera rutina ahora:</Text>
 
