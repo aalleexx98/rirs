@@ -120,7 +120,7 @@ export const RoutineProvider = ({ children }: any) => {
                 });
                 setActiveRoutines(routines);
             }
-            setIsRoutines(false);
+
         } catch (error) {
             console.log('No se pudo obtener la cantidad de rutinas activas', error);
         }
@@ -200,7 +200,6 @@ export const RoutineProvider = ({ children }: any) => {
                 position: routineDayExercices.length,
             };
             setRoutineDayExercices(prevExercises => [...prevExercises, newExercise]);
-            console.log(newExercise)
         }
 
     };
