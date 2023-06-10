@@ -147,7 +147,7 @@ export const RoutineProvider = ({ children }: any) => {
         }
     };
 
-    const setActiveRoutine = (id: string) => { //Si esto devolviera algo funcionaria verdad?
+    const setActiveRoutine = (id: string) => { //TODO: Hacer que esto devuelva algo o que coño?
         const routine = activeRoutines.find((routine) => routine.id === id);
         setSelectedRoutine(routine)
 
@@ -168,8 +168,15 @@ export const RoutineProvider = ({ children }: any) => {
             //console.log(routineExercices);
         }
         setIsGenerating(false);
-
     }
+
+    useEffect(() => { //TODO: GUARDAR LO GUARDA BIEN BRO
+        routineExercices.forEach(obj => {
+            console.log(obj);
+            console.log("EYY")
+        });
+    }, [routineExercices])
+
 
 
     const searchExercice = (name: string, equipment: string, muscle: string) => {
