@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { ThemeContext } from '../../context/themeContext/ThemeContext';
 import { Text } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RoutineContext } from '../../context/routineContext/routineContext';
 
 interface Props {
     title: string,
@@ -12,6 +13,7 @@ interface Props {
 export const RoutinePreview = ({ title, id }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
+    const { removeRoutine } = useContext(RoutineContext);
 
     return (
         <View style={ { ...styles.Box, backgroundColor: colors.primary } }>
@@ -41,6 +43,7 @@ export const RoutinePreview = ({ title, id }: Props) => {
                     <TouchableOpacity
                         style={ styles.OptionBox }
                         activeOpacity={ 0.8 }
+                        onPress={ () => removeRoutine(id) }
                     >
                         <Text style={ styles.OptionText }>Eliminar</Text>
                     </TouchableOpacity>

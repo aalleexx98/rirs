@@ -29,6 +29,7 @@ type ExercicesContextType = {
     saveRoutine: (title: string) => void;
     cleanRoutineDayExercices: () => void;
     loadActiveRoutines: () => void;
+    removeRoutine: (id: string) => void
 };
 
 
@@ -129,6 +130,19 @@ export const RoutineProvider = ({ children }: any) => {
         }
     };
 
+    const removeRoutine = async (id: string) => {
+        try {
+            await routinesCollection
+                .doc(id)
+                .delete()
+                .then(() => {
+                    const updatedRoutines = activeRoutines.filter(routine => routine.id !== id);
+                    setActiveRoutines(updatedRoutines);
+                })
+        } catch (error) {
+            console.log('No se pudo obtener la cantidad de rutinas activas', error);
+        }
+    };
 
 
     const searchExercice = (name: string, equipment: string, muscle: string) => {
@@ -435,6 +449,7 @@ export const RoutineProvider = ({ children }: any) => {
             loadActiveRoutines,
             numberOfActiveRoutines,
             activeRoutines,
+            removeRoutine
         } }>
             { children }
         </RoutineContext.Provider >
