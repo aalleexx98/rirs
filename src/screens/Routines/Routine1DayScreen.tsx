@@ -12,14 +12,17 @@ import { globalStyles } from '../../theme/globalTheme'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { Alert } from 'react-native';
 import { RoutineContext } from '../../context/routineContext/routineContext'
+import { RootStackParamsHome } from '../../routes/HomeStack'
 
-interface Props extends StackScreenProps<RootStackParamsRoutine, 'Routine1DayScreen'> { };
+type RootStackParams = RootStackParamsHome | RootStackParamsRoutine;
+
+interface Props extends StackScreenProps<RootStackParams, 'Routine1DayScreen'> { };
 
 export const Routine1DayScreen = ({ route }: Props) => {
     const isFocused = useIsFocused();
 
     const { theme: { colors } } = useContext(ThemeContext);
-    const navigation = useNavigation<StackNavigationProp<RootStackParamsRoutine>>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
     const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices, numberOfActiveRoutines } = useContext(RoutineContext);
 
@@ -58,7 +61,18 @@ export const Routine1DayScreen = ({ route }: Props) => {
 
     useEffect(() => {
         if (!isFetching) {
-            routineDayGenerate(route.params.muscles, route.params.level);
+            switch (route.params.type) {
+                case 'Generate':
+                    console.log("Añadir")
+                    routineDayGenerate(route.params.muscles!, route.params.level!);
+                    break;
+                case 'Edit':
+                    console.log("Edit")
+                    break;
+                case 'New':
+                    console.log("New")
+                    break;
+            }
         }
     }, [isFetching]);
 

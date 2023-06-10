@@ -11,7 +11,7 @@ export type RootStackParamsRoutine = {
     RoutineScreen: undefined,
     RoutineBodyScreen: { gender: string, level: string },
     RoutineWeeklyScreen: { gender: string, level: string },
-    Routine1DayScreen: { gender: string, level: string, muscles: string[] },
+    Routine1DayScreen: { gender?: string, level?: string, muscles?: string[], type: "Generate" | "Edit" | "New" },
     ExercicesScreen: { add: boolean; addExercice?: (exerciseId: string) => void },
     ExerciceDetailsScreen: { ref: string }
     HomeScreen: undefined

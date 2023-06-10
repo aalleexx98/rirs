@@ -229,7 +229,7 @@ export const RoutineBodyScreen = ({ route }: Props) => {
                     <TouchableOpacity style={ { ...styles.nextButton, backgroundColor: colors.primary } }
                         activeOpacity={ 0.7 }
                         onPress={ () => navigation.navigate('Routine1DayScreen',
-                            { gender: route.params.gender, level: route.params.level, muscles: selectedMuscles }) }
+                            { gender: route.params.gender, level: route.params.level, muscles: selectedMuscles, type: 'Generate' }) }
                     >
                         <Text style={ { fontSize: 16, color: textSecondary } }>Generar Rutina</Text>
                     </TouchableOpacity>

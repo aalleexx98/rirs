@@ -4,6 +4,9 @@ import { ThemeContext } from '../../context/themeContext/ThemeContext';
 import { Text } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RoutineContext } from '../../context/routineContext/routineContext';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamsHome } from '../../routes/HomeStack';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
     title: string,
@@ -14,6 +17,8 @@ export const RoutinePreview = ({ title, id }: Props) => {
 
     const { theme: { colors } } = useContext(ThemeContext);
     const { removeRoutine } = useContext(RoutineContext);
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParamsHome>>();
 
     return (
         <View style={ { ...styles.Box, backgroundColor: colors.primary } }>
@@ -33,6 +38,7 @@ export const RoutinePreview = ({ title, id }: Props) => {
                     <TouchableOpacity
                         style={ { ...styles.OptionBox, borderRightWidth: 1 } }
                         activeOpacity={ 0.8 }
+                        onPress={ () => navigation.navigate("Routine1DayScreen", { type: 'Edit' }) }
                     >
                         <Text style={ styles.OptionText }>Editar</Text>
                     </TouchableOpacity>
