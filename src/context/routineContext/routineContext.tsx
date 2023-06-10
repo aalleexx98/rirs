@@ -11,7 +11,7 @@ type ExercicesContextType = {
     numberOfActiveRoutines: number;
     simpleExerciceList: exercicePreview[];
     exerciceFiltered: exercicePreview[];
-    routineDayExercices: routineExercices[];
+    routineExercices: routineExercices[];
     activeRoutines: Routine[];
 
     searchExercice: (name: string, equipment: string, muscle: string) => void;
@@ -27,9 +27,10 @@ type ExercicesContextType = {
     moveExerciseUp: (exerciseId: string) => void;
     moveExerciseDown: (exerciseId: string) => void;
     saveRoutine: (title: string) => void;
-    cleanRoutineDayExercices: () => void;
+    cleanroutineExercices: () => void;
     loadActiveRoutines: () => void;
-    removeRoutine: (id: string) => void
+    removeRoutine: (id: string) => void;
+    setActiveRoutine: (id: string) => void;
 };
 
 
@@ -50,8 +51,10 @@ export const RoutineProvider = ({ children }: any) => {
 
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
-    const [routineDayExercices, setRoutineDayExercices] = useState<routineExercices[]>([]);
+    const [routineExercices, setRoutineExercices] = useState<routineExercices[]>([]);
     const [activeRoutines, setActiveRoutines] = useState<Routine[]>([]);
+    const [selectedRoutine, setSelectedRoutine] = useState<Routine>();
+
 
     useEffect(() => {
         setIsFetching(true);
@@ -144,6 +147,30 @@ export const RoutineProvider = ({ children }: any) => {
         }
     };
 
+    const setActiveRoutine = (id: string) => { //Si esto devolviera algo funcionaria verdad?
+        const routine = activeRoutines.find((routine) => routine.id === id);
+        setSelectedRoutine(routine)
+
+        if (routine) {
+            const convertedExercises: routineExercices[] = routine.exercises.map((exercise) => {
+                const matchingExercice = simpleExerciceList.find((ex) => ex.ref.isEqual(exercise.exercise));
+                const convertedExercise: routineExercices = {
+                    exercise: matchingExercice!,
+                    sets: exercise.sets,
+                    repetitions: exercise.repetitions,
+                    restTime: exercise.restTime,
+                    position: exercise.position
+                };
+                return convertedExercise;
+            });
+            //console.log(convertedExercises)
+            setRoutineExercices(convertedExercises);
+            //console.log(routineExercices);
+        }
+        setIsGenerating(false);
+
+    }
+
 
     const searchExercice = (name: string, equipment: string, muscle: string) => {
 
@@ -189,7 +216,7 @@ export const RoutineProvider = ({ children }: any) => {
 
             const combinedExercises = querySnapshot.flat();
             const orderExercices = assignPositions(combinedExercises);
-            setRoutineDayExercices(orderExercices);
+            setRoutineExercices(orderExercices);
 
             setIsGenerating(false);
         } catch (error) {
@@ -214,20 +241,20 @@ export const RoutineProvider = ({ children }: any) => {
                 sets: 3,
                 repetitions: "8",
                 restTime: 90,
-                position: routineDayExercices.length,
+                position: routineExercices.length,
             };
-            setRoutineDayExercices(prevExercises => [...prevExercises, newExercise]);
+            setRoutineExercices(prevExercises => [...prevExercises, newExercise]);
         }
 
     };
 
     const removeRoutineExercise = (exerciseId: string) => {
-        const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
-        setRoutineDayExercices(updatedExercices);
+        const updatedExercices = routineExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
+        setRoutineExercices(updatedExercices);
     };
 
     const editRoutineExercise = (exerciseId: string, sets: number, repetitions: string, restTime: number) => {
-        const updatedExercises = routineDayExercices.map((exercise) => {
+        const updatedExercises = routineExercices.map((exercise) => {
             if (exercise.exercise.ref.id === exerciseId) {
                 return {
                     ...exercise,
@@ -239,14 +266,14 @@ export const RoutineProvider = ({ children }: any) => {
             return exercise;
         });
 
-        setRoutineDayExercices(updatedExercises);
+        setRoutineExercices(updatedExercises);
     };
 
     const moveExerciseUp = (exerciseId: string) => {
-        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+        const index = routineExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
 
         if (index > 0) {
-            const updatedExercices = [...routineDayExercices];
+            const updatedExercices = [...routineExercices];
             const exerciseToMove = updatedExercices[index];
             const exerciseToReplace = updatedExercices[index - 1];
 
@@ -255,19 +282,19 @@ export const RoutineProvider = ({ children }: any) => {
 
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index - 1, 0, exerciseToMove);
-            setRoutineDayExercices(updatedExercices);
+            setRoutineExercices(updatedExercices);
         }
 
-        routineDayExercices.forEach(obj => {
+        routineExercices.forEach(obj => {
             console.log(obj);
         });
     };
 
     const moveExerciseDown = (exerciseId: string) => {
-        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+        const index = routineExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
 
-        if (index < routineDayExercices.length - 1) {
-            const updatedExercices = [...routineDayExercices];
+        if (index < routineExercices.length - 1) {
+            const updatedExercices = [...routineExercices];
             const exerciseToMove = updatedExercices[index];
             const exerciseToReplace = updatedExercices[index + 1];
 
@@ -276,10 +303,10 @@ export const RoutineProvider = ({ children }: any) => {
 
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index + 1, 0, exerciseToMove);
-            setRoutineDayExercices(updatedExercices);
+            setRoutineExercices(updatedExercices);
         }
 
-        routineDayExercices.forEach(obj => {
+        routineExercices.forEach(obj => {
             console.log(obj);
         });
     };
@@ -287,7 +314,7 @@ export const RoutineProvider = ({ children }: any) => {
     const saveRoutine = async (title: string) => {
         try {
             const userUid = await getItemStorage('uid');
-            const exercicesArray = routineDayExercices.map((routineExercice) => ({
+            const exercicesArray = routineExercices.map((routineExercice) => ({
                 exercise: routineExercice.exercise.ref,
                 sets: routineExercice.sets,
                 repetitions: routineExercice.repetitions,
@@ -310,8 +337,8 @@ export const RoutineProvider = ({ children }: any) => {
         }
     }
 
-    const cleanRoutineDayExercices = async () => {
-        setRoutineDayExercices([]);
+    const cleanroutineExercices = async () => {
+        setRoutineExercices([]);
     }
 
 
@@ -444,12 +471,13 @@ export const RoutineProvider = ({ children }: any) => {
             saveRoutine,
             simpleExerciceList,
             exerciceFiltered,
-            routineDayExercices,
-            cleanRoutineDayExercices,
+            routineExercices,
+            cleanroutineExercices,
             loadActiveRoutines,
             numberOfActiveRoutines,
             activeRoutines,
-            removeRoutine
+            removeRoutine,
+            setActiveRoutine
         } }>
             { children }
         </RoutineContext.Provider >

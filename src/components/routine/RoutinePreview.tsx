@@ -38,7 +38,7 @@ export const RoutinePreview = ({ title, id }: Props) => {
                     <TouchableOpacity
                         style={ { ...styles.OptionBox, borderRightWidth: 1 } }
                         activeOpacity={ 0.8 }
-                        onPress={ () => navigation.navigate("Routine1DayScreen", { type: 'Edit' }) }
+                        onPress={ () => navigation.navigate("Routine1DayScreen", { type: 'Edit', id: id }) }
                     >
                         <Text style={ styles.OptionText }>Editar</Text>
                     </TouchableOpacity>

@@ -24,7 +24,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
-    const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices, numberOfActiveRoutines } = useContext(RoutineContext);
+    const { routineDayGenerate, routineExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanroutineExercices, numberOfActiveRoutines, setActiveRoutine } = useContext(RoutineContext);
 
     const [errorTime, setErrorTime] = useState(false);
     const { titleForm, onChange } = useForm({
@@ -67,6 +67,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                     routineDayGenerate(route.params.muscles!, route.params.level!);
                     break;
                 case 'Edit':
+                    setActiveRoutine(route.params.id!);
                     console.log("Edit")
                     break;
                 case 'New':
@@ -78,7 +79,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
 
 
     useEffect(() => {
-        cleanRoutineDayExercices(); // Vaciar routineDayExercices al salir (desmontar) de pantalla
+        cleanroutineExercices(); // Vaciar routineExercices al salir (desmontar) de pantalla
     }, []);
 
 
@@ -113,7 +114,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
             </View>
 
             <FlatList
-                data={ routineDayExercices }
+                data={ routineExercices }
                 keyExtractor={ (exercice) => exercice.exercise.name }
                 showsVerticalScrollIndicator={ false }
                 renderItem={ ({ item, index }) => (
@@ -123,7 +124,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                         restTime={ item.restTime }
                         sets={ item.sets }
                         index={ index }
-                        isLast={ routineDayExercices.length - 1 }
+                        isLast={ routineExercices.length - 1 }
                     />
                 ) }
 

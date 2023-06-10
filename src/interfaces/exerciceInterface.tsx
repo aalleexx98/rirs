@@ -35,7 +35,7 @@ export interface routineExercices {
 }
 
 export interface RoutineExercise {
-    exercise: string;
+    exercise: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>;
     position: number;
     repetitions: string;
     restTime: number;

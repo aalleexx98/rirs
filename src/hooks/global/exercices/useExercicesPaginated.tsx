@@ -16,7 +16,7 @@ export const useExercicesPaginated = () => {
 
     const [simpleExerciceList, setSimpleExerciceList] = useState<exercicePreview[]>([]);
     const [exerciceFiltered, setExerciceFiltered] = useState<exercicePreview[]>([]);
-    const [routineDayExercices, setRoutineDayExercices] = useState<routineExercices[]>([]);
+    const [routineExercices, setRoutineExercices] = useState<routineExercices[]>([]);
 
     const loadExercices = async () => {
         try {
@@ -86,7 +86,7 @@ export const useExercicesPaginated = () => {
 
             const combinedExercises = querySnapshot.flat();
             const orderExercices = assignPositions(combinedExercises);
-            setRoutineDayExercices(orderExercices);
+            setRoutineExercices(orderExercices);
 
             setIsGenerating(false);
         } catch (error) {
@@ -111,21 +111,21 @@ export const useExercicesPaginated = () => {
                 sets: 3,
                 repetitions: "8",
                 restTime: 90,
-                position: routineDayExercices.length,
+                position: routineExercices.length,
             };
-            setRoutineDayExercices(prevExercises => [...prevExercises, newExercise]);
+            setRoutineExercices(prevExercises => [...prevExercises, newExercise]);
             console.log(newExercise)
         }
 
     };
 
     const removeRoutineExercise = (exerciseId: string) => {
-        const updatedExercices = routineDayExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
-        setRoutineDayExercices(updatedExercices);
+        const updatedExercices = routineExercices.filter(exercise => exercise.exercise.ref.id !== exerciseId);
+        setRoutineExercices(updatedExercices);
     };
 
     const editRoutineExercise = (exerciseId: string, sets: number, repetitions: string, restTime: number) => {
-        const updatedExercises = routineDayExercices.map((exercise) => {
+        const updatedExercises = routineExercices.map((exercise) => {
             if (exercise.exercise.ref.id === exerciseId) {
                 return {
                     ...exercise,
@@ -137,14 +137,14 @@ export const useExercicesPaginated = () => {
             return exercise;
         });
 
-        setRoutineDayExercices(updatedExercises);
+        setRoutineExercices(updatedExercises);
     };
 
     const moveExerciseUp = (exerciseId: string) => {
-        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+        const index = routineExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
 
         if (index > 0) {
-            const updatedExercices = [...routineDayExercices];
+            const updatedExercices = [...routineExercices];
             const exerciseToMove = updatedExercices[index];
             const exerciseToReplace = updatedExercices[index - 1];
 
@@ -153,19 +153,19 @@ export const useExercicesPaginated = () => {
 
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index - 1, 0, exerciseToMove);
-            setRoutineDayExercices(updatedExercices);
+            setRoutineExercices(updatedExercices);
         }
 
-        routineDayExercices.forEach(obj => {
+        routineExercices.forEach(obj => {
             console.log(obj);
         });
     };
 
     const moveExerciseDown = (exerciseId: string) => {
-        const index = routineDayExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
+        const index = routineExercices.findIndex(exercise => exercise.exercise.ref.id === exerciseId);
 
-        if (index < routineDayExercices.length - 1) {
-            const updatedExercices = [...routineDayExercices];
+        if (index < routineExercices.length - 1) {
+            const updatedExercices = [...routineExercices];
             const exerciseToMove = updatedExercices[index];
             const exerciseToReplace = updatedExercices[index + 1];
 
@@ -174,10 +174,10 @@ export const useExercicesPaginated = () => {
 
             updatedExercices.splice(index, 1);
             updatedExercices.splice(index + 1, 0, exerciseToMove);
-            setRoutineDayExercices(updatedExercices);
+            setRoutineExercices(updatedExercices);
         }
 
-        routineDayExercices.forEach(obj => {
+        routineExercices.forEach(obj => {
             console.log(obj);
         });
     };
@@ -185,7 +185,7 @@ export const useExercicesPaginated = () => {
     const saveRoutine = async (title: string) => {
         try {
             const userUid = await getItemStorage('uid');
-            const exercicesArray = routineDayExercices.map((routineExercice) => ({
+            const exercicesArray = routineExercices.map((routineExercice) => ({
                 exercise: routineExercice.exercise.ref,
                 sets: routineExercice.sets,
                 repetitions: routineExercice.repetitions,
@@ -304,8 +304,8 @@ export const useExercicesPaginated = () => {
     }, [])
 
     // useEffect(() => {
-    //     console.log("Se cambiaron" + routineDayExercices);
-    // }, [routineDayExercices])
+    //     console.log("Se cambiaron" + routineExercices);
+    // }, [routineExercices])
 
 
     return {
@@ -326,7 +326,7 @@ export const useExercicesPaginated = () => {
         //Variables
         simpleExerciceList,
         exerciceFiltered,
-        routineDayExercices,
+        routineExercices,
 
     }
 }
