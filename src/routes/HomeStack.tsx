@@ -21,6 +21,7 @@ export const HomeStack = () => {
         >
 
             <HomeS.Screen name="HomeScreen" component={ HomeScreen } />
+            <HomeS.Screen name="Routine1DayScreen" component={ HomeScreen } />
 
 
         </HomeS.Navigator>

@@ -23,7 +23,6 @@ export const Routine1DayScreen = ({ route }: Props) => {
 
     const { routineDayGenerate, routineDayExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanRoutineDayExercices, numberOfActiveRoutines } = useContext(RoutineContext);
 
-    const [routineTitle, setRoutineTitle] = useState<string>("");
     const [errorTime, setErrorTime] = useState(false);
     const { titleForm, onChange } = useForm({
         titleForm: '',
@@ -36,7 +35,6 @@ export const Routine1DayScreen = ({ route }: Props) => {
             return;
         }
         if (numberOfActiveRoutines < 7) {
-            setRoutineTitle(titleForm); //Eliminar ?
             saveRoutine(titleForm);
             navigation.navigate('HomeScreen'); //TODO CAMBIAR ESTO INTERFAZ ?
         } else {
@@ -57,19 +55,23 @@ export const Routine1DayScreen = ({ route }: Props) => {
         );
     };
 
+
     useEffect(() => {
         if (!isFetching) {
             routineDayGenerate(route.params.muscles, route.params.level);
         }
     }, [isFetching]);
 
+
     useEffect(() => {
         cleanRoutineDayExercices(); // Vaciar routineDayExercices al salir (desmontar) de pantalla
     }, []);
 
+
     if (isGenerating) {
         return <Loading loadingText='Generando Rutina' />;
     }
+
 
     return (
         <View style={ { padding: 10 } }>
