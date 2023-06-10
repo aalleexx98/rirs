@@ -1,9 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { HomeScreen } from '../screens/HomeScreen';
+import { RoutineStack } from './RoutineStack';
+import { Tabs } from './Tabs';
 
 export type RootStackParamsHome = {
     HomeScreen: undefined,
+    RoutineStack: undefined,
 }
 
 const HomeS = createStackNavigator<RootStackParamsHome>();
@@ -18,6 +21,7 @@ export const HomeStack = () => {
         >
 
             <HomeS.Screen name="HomeScreen" component={ HomeScreen } />
+
 
         </HomeS.Navigator>
     )

@@ -7,13 +7,15 @@ import { Button, Text } from 'react-native-paper';
 import { Loading } from '../components/Loading';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamsHome } from '../routes/HomeStack';
 
 export const HomeScreen = () => {
 
     const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
     const { loadActiveRoutines, numberOfActiveRoutines, activeRoutines, isRoutines } = useContext(RoutineContext);
     const { } = useContext(AuthContext);
-    const navigation = useNavigation();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamsHome>>();
 
     const [isLoadingRoutines, setIsLoadingRoutines] = useState(true);
 
