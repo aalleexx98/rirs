@@ -27,7 +27,6 @@ type ExercicesContextType = {
     moveExerciseUp: (exerciseId: string) => void;
     moveExerciseDown: (exerciseId: string) => void;
     saveRoutine: (title: string) => void;
-    cleanroutineExercices: () => void;
     loadActiveRoutines: () => void;
     removeRoutine: (id: string) => void;
     setActiveRoutine: (id: string) => void;
@@ -138,9 +137,10 @@ export const RoutineProvider = ({ children }: any) => {
             await routinesCollection
                 .doc(id)
                 .delete()
-                .then(() => {
+                .then(async () => {
                     const updatedRoutines = activeRoutines.filter(routine => routine.id !== id);
                     setActiveRoutines(updatedRoutines);
+                    await updateUserActiveRoutines(false);
                 })
         } catch (error) {
             console.log('No se pudo obtener la cantidad de rutinas activas', error);
@@ -170,12 +170,12 @@ export const RoutineProvider = ({ children }: any) => {
         setIsGenerating(false);
     }
 
-    useEffect(() => { //TODO: GUARDAR LO GUARDA BIEN BRO
-        routineExercices.forEach(obj => {
-            console.log(obj);
-            console.log("EYY")
-        });
-    }, [routineExercices])
+    // useEffect(() => {
+    //     routineExercices.forEach(obj => {
+    //         console.log(obj);
+    //         console.log("EYY")
+    //     });
+    // }, [routineExercices])
 
 
 
@@ -320,6 +320,12 @@ export const RoutineProvider = ({ children }: any) => {
 
     const saveRoutine = async (title: string) => {
         try {
+            if (selectedRoutine) {
+                console.log("Si seleccionada")
+                console.log(selectedRoutine)
+            } else {
+                console.log("No seleccionada")
+            }
             const userUid = await getItemStorage('uid');
             const exercicesArray = routineExercices.map((routineExercice) => ({
                 exercise: routineExercice.exercise.ref,
@@ -343,11 +349,6 @@ export const RoutineProvider = ({ children }: any) => {
             console.log('No se pudo guardar la rutina', error);
         }
     }
-
-    const cleanroutineExercices = async () => {
-        setRoutineExercices([]);
-    }
-
 
     // HACIA ABAJO EXTRAS
     function getExercicesByMuscle (muscle: string, sets: number) {
@@ -479,7 +480,6 @@ export const RoutineProvider = ({ children }: any) => {
             simpleExerciceList,
             exerciceFiltered,
             routineExercices,
-            cleanroutineExercices,
             loadActiveRoutines,
             numberOfActiveRoutines,
             activeRoutines,

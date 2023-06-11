@@ -10,7 +10,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { FadeInImage } from '../components/FadeInImage';
 import { Loading } from '../components/Loading';
 
-
 const windowWith = Dimensions.get('window').width
 
 interface Props extends StackScreenProps<RootStackParams, 'ExerciceDetailsScreen'> { };

@@ -21,10 +21,10 @@ export const RoutinePreview = ({ title, id }: Props) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamsHome>>();
 
     return (
-        <View style={ { ...styles.Box, backgroundColor: colors.primary } }>
+        <View style={ { ...styles.Box } }>
             <Text style={ { ...styles.Title, color: colors.text } }>{ title }</Text>
 
-            <View style={ { ...styles.Options } }>
+            <View style={ { ...styles.Options, backgroundColor: colors.primary } }>
                 <View style={ { flex: 1 } }>
                     <TouchableOpacity
                         style={ { ...styles.OptionBox, borderRightWidth: 1 } }
@@ -38,7 +38,7 @@ export const RoutinePreview = ({ title, id }: Props) => {
                     <TouchableOpacity
                         style={ { ...styles.OptionBox, borderRightWidth: 1 } }
                         activeOpacity={ 0.8 }
-                        onPress={ () => navigation.navigate("Routine1DayScreen", { type: 'Edit', id: id }) }
+                        onPress={ () => navigation.navigate("Routine1DayScreen", { type: 'Edit', id: id, title }) }
                     >
                         <Text style={ styles.OptionText }>Editar</Text>
                     </TouchableOpacity>
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'space-between',
         overflow: 'hidden',
+        backgroundColor: '#A335FC'
     },
     Title: {
         padding: 10,
@@ -73,9 +74,7 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
     Options: {
-        backgroundColor: '#A335FC',
         flexDirection: 'row',
-
     },
     OptionBox: {
         paddingVertical: 8,

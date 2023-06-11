@@ -24,11 +24,11 @@ export const Routine1DayScreen = ({ route }: Props) => {
     const { theme: { colors } } = useContext(ThemeContext);
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
-    const { routineDayGenerate, routineExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, cleanroutineExercices, numberOfActiveRoutines, setActiveRoutine } = useContext(RoutineContext);
+    const { routineDayGenerate, routineExercices, isGenerating, isFetching, addRoutineExercise, saveRoutine, numberOfActiveRoutines, setActiveRoutine } = useContext(RoutineContext);
 
     const [errorTime, setErrorTime] = useState(false);
     const { titleForm, onChange } = useForm({
-        titleForm: '',
+        titleForm: route.params.title ? route.params.title : '',
     });
 
     const handleSave = async () => {
@@ -78,12 +78,6 @@ export const Routine1DayScreen = ({ route }: Props) => {
     }, [isFetching]);
 
 
-    //TODO: BORRAR EL PUTO cleanroutineExercices Y MIRAR SI AUN SIRVE EL SWITCH DE ARRIBA
-    // useEffect(() => {
-    //     cleanroutineExercices(); // Vaciar routineExercices al salir (desmontar) de pantalla
-    // }, []);
-
-
     if (isGenerating) {
         return <Loading loadingText='Generando Rutina' />;
     }
@@ -95,6 +89,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
             <View style={ { flexDirection: 'row', alignItems: 'flex-end', columnGap: 5, paddingBottom: 10, } }>
                 <>
                     <TextInput
+                        //value={ route.params.title ? route.params.title : '' }
                         placeholder='Titulo de la rutina'
                         mode="flat"
                         cursorColor='black'

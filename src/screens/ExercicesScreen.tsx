@@ -12,14 +12,16 @@ import { RootStackParamsRoutine } from '../routes/RoutineStack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LogBox } from 'react-native';
 import { RoutineContext } from '../context/routineContext/routineContext';
+import { RootStackParamsHome } from '../routes/HomeStack';
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
 ]);
 
+type RootStackParams = RootStackParamsHome | RootStackParamsRoutine;
 
 const screenWidth = Dimensions.get('window').width;
-interface Props extends StackScreenProps<RootStackParamsRoutine, 'ExercicesScreen'> { };
+interface Props extends StackScreenProps<RootStackParams, 'ExercicesScreen'> { };
 
 export const ExercicesScreen = ({ navigation, route }: Props) => {
 
