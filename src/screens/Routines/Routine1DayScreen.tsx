@@ -39,7 +39,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
         }
         if (numberOfActiveRoutines < 7) {
             saveRoutine(titleForm);
-            navigation.navigate('HomeScreen'); //TODO CAMBIAR ESTO INTERFAZ ?
+            navigation.navigate('HomeScreen');
         } else {
             Alert.alert('Error', 'Has alcanzado el máximo de rutinas activas (7), elimina una rutina para poder crear más.');
         }
@@ -78,9 +78,10 @@ export const Routine1DayScreen = ({ route }: Props) => {
     }, [isFetching]);
 
 
-    useEffect(() => {
-        cleanroutineExercices(); // Vaciar routineExercices al salir (desmontar) de pantalla
-    }, []);
+    //TODO: BORRAR EL PUTO cleanroutineExercices Y MIRAR SI AUN SIRVE EL SWITCH DE ARRIBA
+    // useEffect(() => {
+    //     cleanroutineExercices(); // Vaciar routineExercices al salir (desmontar) de pantalla
+    // }, []);
 
 
     if (isGenerating) {
