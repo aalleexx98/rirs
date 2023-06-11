@@ -198,6 +198,7 @@ export const RoutineProvider = ({ children }: any) => {
 
     const routineDayGenerate = async (muscles: string[], level: string) => {
         setIsGenerating(true);
+        setSelectedRoutine(undefined);
         const lvl = getFieldNameByLevel(level);
 
         try {
@@ -320,13 +321,8 @@ export const RoutineProvider = ({ children }: any) => {
 
     const saveRoutine = async (title: string) => {
         try {
-            if (selectedRoutine) {
-                console.log("Si seleccionada")
-                console.log(selectedRoutine)
-            } else {
-                console.log("No seleccionada")
-            }
             const userUid = await getItemStorage('uid');
+
             const exercicesArray = routineExercices.map((routineExercice) => ({
                 exercise: routineExercice.exercise.ref,
                 sets: routineExercice.sets,
@@ -335,20 +331,37 @@ export const RoutineProvider = ({ children }: any) => {
                 position: routineExercice.position
             }));
 
-            await routinesCollection
-                .add({
-                    userUid: userUid,
-                    title: title,
-                    exercices: exercicesArray
-                });
+            if (selectedRoutine) { //TODO: seleccionar selected routine.
+                console.log("Existente")
+                console.log(selectedRoutine)
+                await routinesCollection
+                    .doc(selectedRoutine.id)
+                    .update({
+                        userUid: userUid,
+                        title: title,
+                        exercices: exercicesArray
+                    })
+                showActiveRoutines(userUid!, numberOfActiveRoutines);//TODO ES QUE NO ES NI TRUE NI FALSE, PERO TENDRE DE OBTENER EL NUMERO ACTUAL
+            } else {
+                console.log("Nueva")
+                await routinesCollection
+                    .add({
+                        userUid: userUid,
+                        title: title,
+                        exercices: exercicesArray
+                    });
+                const numRoutines = await updateUserActiveRoutines(true);
+                showActiveRoutines(userUid!, numRoutines!);
+            }
 
-            const numRoutines = await updateUserActiveRoutines(true);
-            showActiveRoutines(userUid!, numRoutines!);
-
+            //RESET DE LA ACTUAL
+            setSelectedRoutine(undefined);
         } catch (error) {
             console.log('No se pudo guardar la rutina', error);
         }
     }
+
+
 
     // HACIA ABAJO EXTRAS
     function getExercicesByMuscle (muscle: string, sets: number) {

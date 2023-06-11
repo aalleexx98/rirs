@@ -89,7 +89,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
             <View style={ { flexDirection: 'row', alignItems: 'flex-end', columnGap: 5, paddingBottom: 10, } }>
                 <>
                     <TextInput
-                        //value={ route.params.title ? route.params.title : '' }
+                        value={ titleForm }
                         placeholder='Titulo de la rutina'
                         mode="flat"
                         cursorColor='black'
