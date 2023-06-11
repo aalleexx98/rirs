@@ -22,7 +22,7 @@ export const RoutinePreview = ({ title, id }: Props) => {
 
     return (
         <View style={ { ...styles.Box } }>
-            <Text style={ { ...styles.Title, color: colors.text } }>{ title }</Text>
+            <Text style={ { ...styles.Title, color: 'white' } }>{ title }</Text>
 
             <View style={ { ...styles.Options, backgroundColor: colors.primary } }>
                 <View style={ { flex: 1 } }>

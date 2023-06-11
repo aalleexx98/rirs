@@ -78,7 +78,8 @@ export const Tabs = () => {
                             size={ 25 }
                             name="home-outline"
                         />
-                    )
+                    ),
+                    unmountOnBlur: true
                 } }
 
             />

@@ -65,7 +65,7 @@ export const HomeScreen = () => {
                         data={ activeRoutines }
                         keyExtractor={ (item, index) => `${ index }-${ item.title }` }
                         showsVerticalScrollIndicator={ false }
-                        style={ { marginTop: 20 } }
+                        style={ { marginTop: 20, marginBottom: 50 } }
 
                         //Aqui es porque llamo la pantalla en 2 sitios distintos, entonces si add existe es que estoy en routines si no en ejercicios y por lo tanto no tiene addExercice
                         renderItem={ ({ item, index }) => (

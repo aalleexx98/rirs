@@ -39,7 +39,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
         }
         if (numberOfActiveRoutines < 7) {
             saveRoutine(titleForm);
-            navigation.navigate('HomeScreen');
+            route.params.title ? navigation.navigate('HomeScreen') : navigation.navigate('HomeStack');
         } else {
             Alert.alert('Error', 'Has alcanzado el máximo de rutinas activas (7), elimina una rutina para poder crear más.');
         }
@@ -86,7 +86,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
     return (
         <View style={ { padding: 10 } }>
 
-            <View style={ { flexDirection: 'row', alignItems: 'flex-end', columnGap: 5, paddingBottom: 10, } }>
+            <View style={ { flexDirection: 'row', alignItems: 'flex-end', columnGap: 5, paddingBottom: 20, } }>
                 <>
                     <TextInput
                         value={ titleForm }
@@ -104,7 +104,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                     activeOpacity={ 0.8 }
                     onPress={ handleSave }
                 >
-                    <Text style={ { color: colors.text } }>Guardar</Text>
+                    <Text style={ { color: 'white' } }>Guardar</Text>
                 </TouchableOpacity>
 
             </View>

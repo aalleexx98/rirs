@@ -8,6 +8,7 @@ import { ExercicesScreen } from '../screens/ExercicesScreen';
 import { ExerciceDetailsScreen } from '../screens/ExerciceDetailsScreen';
 
 export type RootStackParamsHome = {
+    HomeStack: undefined
     HomeScreen: undefined,
     RoutineStack: undefined,
     Routine1DayScreen: { gender?: string, level?: string, muscles?: string[], type: "Generate" | "Edit" | "New", id?: string, title?: string },

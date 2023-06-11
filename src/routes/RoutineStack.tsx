@@ -15,6 +15,8 @@ export type RootStackParamsRoutine = {
     ExercicesScreen: { add: boolean; addExercice?: (exerciseId: string) => void },
     ExerciceDetailsScreen: { ref: string }
     HomeScreen: undefined
+    HomeStack: undefined
+
 }
 
 const RoutineS = createStackNavigator<RootStackParamsRoutine>();
