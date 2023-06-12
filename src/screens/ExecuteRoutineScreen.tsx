@@ -5,6 +5,7 @@ import { RootStackParamsHome } from '../routes/HomeStack';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { routineExercices } from '../interfaces/exerciceInterface';
+import { FadeInImage } from '../components/FadeInImage';
 
 interface Props extends StackScreenProps<RootStackParamsHome, 'ExecuteRoutineScreen'> { };
 
@@ -49,34 +50,41 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
 
     return (
-        <View style={ { padding: 10 } }>
+        <View>
+
             {/* TODO: Ponerlo en position absolute */ }
-            <View style={ { flexDirection: 'row' } }>
+            <View style={ { flexDirection: 'row', backgroundColor: 'white' } }>
 
                 <TouchableOpacity
-                    style={ { position: 'absolute' } }
+                    style={ { position: 'absolute', left: 10 } }
                     activeOpacity={ 0.8 }
                 >
-                    <Text style={ { ...styles.textHeader, color: colors.text, paddingRight: 20 } }>Salir</Text>
+                    <Text style={ { ...styles.textHeader, color: 'black', paddingRight: 20 } }>Salir</Text>
                 </TouchableOpacity>
 
                 <View
                     style={ { justifyContent: 'center', flex: 1 } }
                 >
-                    <Text style={ { ...styles.textHeader, color: colors.text, textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
+                    <Text style={ { ...styles.textHeader, color: 'black', textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
                 </View>
 
-                <View style={ { position: 'absolute', right: 0 } }>
-                    <Text style={ { ...styles.textHeader, color: colors.text } }>{ formatTime(totalTime) }</Text>
+                <View style={ { position: 'absolute', right: 10 } }>
+                    <Text style={ { ...styles.textHeader, color: 'black', zIndex: 20 } }>{ formatTime(totalTime) }</Text>
                 </View>
-
 
             </View>
 
-            <View>
+            <View style={ { backgroundColor: 'white', justifyContent: 'center', zIndex: -10, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'black' } }>
+                <FadeInImage
+                    uri={ currentItem?.exercise.img }
+                    style={ { height: 250, width: 250 } }
+                />
+            </View>
+
+            {/* <View>
                 { currentItem?.repetitions && <Text>{ currentItem.exercise.name }</Text> }
                 <Button title="Siguiente" onPress={ nextExercice } />
-            </View>
+            </View> */}
         </View>
     )
 }
