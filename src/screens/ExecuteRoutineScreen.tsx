@@ -2,17 +2,25 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RoutineContext } from '../context/routineContext/routineContext';
 import { RootStackParamsHome } from '../routes/HomeStack';
-import { StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { routineExercices } from '../interfaces/exerciceInterface';
 import { FadeInImage } from '../components/FadeInImage';
+import { useNavigation } from '@react-navigation/native';
+import BackgroundTimer from 'react-native-background-timer';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+
 
 interface Props extends StackScreenProps<RootStackParamsHome, 'ExecuteRoutineScreen'> { };
 
 export const ExecuteRoutineScreen = ({ route }: Props) => {
 
+    const navigation = useNavigation<StackNavigationProp<RootStackParamsHome>>();
+
     const { routineExercices, setActiveRoutine } = useContext(RoutineContext);
-    const { theme: { colors } } = useContext(ThemeContext);
+    const { theme: { colors, textSecondary } } = useContext(ThemeContext);
     const [totalTime, setTotalTime] = useState(0);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentItem, setCurrentItem] = useState<routineExercices>();
@@ -21,6 +29,10 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
         if (currentIndex < routineExercices.length - 1) {
             setCurrentIndex(prevIndex => prevIndex + 1);
         }
+    };
+
+    const handlePress = () => {
+        //Enviar a info
     };
 
     useEffect(() => {
@@ -32,12 +44,12 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     }, [routineExercices, currentIndex])
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const interval = BackgroundTimer.setInterval(() => {
             setTotalTime(prevCount => prevCount + 1);
         }, 1000);
 
         return () => {
-            clearInterval(interval);
+            BackgroundTimer.clearInterval(interval);
         };
     }, []);
 
@@ -51,40 +63,51 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     return (
         <View>
+            { currentItem && (
+                <>
+                    {/* TODO: Ponerlo en position absolute */ }
+                    <View style={ { flexDirection: 'row', backgroundColor: 'white' } }>
 
-            {/* TODO: Ponerlo en position absolute */ }
-            <View style={ { flexDirection: 'row', backgroundColor: 'white' } }>
+                        <TouchableOpacity
+                            style={ { position: 'absolute', left: 10, top: 10 } }
+                            activeOpacity={ 0.8 }
+                        >
+                            <Text style={ { ...styles.textHeader, color: 'black', paddingRight: 20 } }>Salir</Text>
+                        </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={ { position: 'absolute', left: 10 } }
-                    activeOpacity={ 0.8 }
-                >
-                    <Text style={ { ...styles.textHeader, color: 'black', paddingRight: 20 } }>Salir</Text>
-                </TouchableOpacity>
+                        <View
+                            style={ { justifyContent: 'center', flex: 1, paddingTop: 10 } }
+                        >
+                            <Text style={ { ...styles.textHeader, color: 'black', textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
+                        </View>
 
-                <View
-                    style={ { justifyContent: 'center', flex: 1 } }
-                >
-                    <Text style={ { ...styles.textHeader, color: 'black', textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
-                </View>
+                        <View style={ { position: 'absolute', right: 10, top: 10 } }>
+                            <Text style={ { ...styles.textHeader, color: 'black', zIndex: 20 } }>{ formatTime(totalTime) }</Text>
+                        </View>
 
-                <View style={ { position: 'absolute', right: 10 } }>
-                    <Text style={ { ...styles.textHeader, color: 'black', zIndex: 20 } }>{ formatTime(totalTime) }</Text>
-                </View>
+                    </View>
 
-            </View>
+                    <View style={ styles.imageBox }>
+                        <FadeInImage
+                            uri={ currentItem?.exercise.img }
+                            style={ { height: 200, width: 200 } }
+                        />
+                    </View>
 
-            <View style={ { backgroundColor: 'white', justifyContent: 'center', zIndex: -10, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'black' } }>
-                <FadeInImage
-                    uri={ currentItem?.exercise.img }
-                    style={ { height: 250, width: 250 } }
-                />
-            </View>
+                    <View style={ { padding: 10 } }>
+                        <TouchableOpacity onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: currentItem.exercise.ref.id }) } style={ { ...styles.botonYT, backgroundColor: colors.primary } } activeOpacity={ 0.8 }>
+                            <Text style={ { color: textSecondary } }>Ver información del ejercicio</Text>
+                        </TouchableOpacity>
 
-            {/* <View>
-                { currentItem?.repetitions && <Text>{ currentItem.exercise.name }</Text> }
-                <Button title="Siguiente" onPress={ nextExercice } />
-            </View> */}
+                        <View style={ { marginTop: 100 } }>
+                            { currentItem?.repetitions && <Text>{ currentItem.exercise.name }</Text> }
+                            <Button title="Siguiente" onPress={ nextExercice } />
+                        </View>
+                    </View>
+
+
+                </>
+            ) }
         </View>
     )
 }
@@ -92,5 +115,19 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 const styles = StyleSheet.create({
     textHeader: {
         fontSize: 18,
+    },
+    imageBox: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        zIndex: -10,
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+        paddingVertical: 5
+    },
+    botonYT: {
+        alignItems: 'center',
+        padding: 8,
+        borderRadius: 10,
     }
 });
