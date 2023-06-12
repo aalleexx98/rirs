@@ -32,8 +32,8 @@ export const Routine1DayScreen = ({ route }: Props) => {
     });
 
     const handleSave = async () => {
-        if (!/^.{1,40}$/.test(titleForm)) {
-            Alert.alert('Error', 'El título debe tener entre 1 y 40 caracteres');
+        if (!/^.{1,20}$/.test(titleForm)) {
+            Alert.alert('Error', 'El título debe tener entre 1 y 20 caracteres');
             setErrorTime(true);
             return;
         }
@@ -111,7 +111,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
 
             <FlatList
                 data={ routineExercices }
-                keyExtractor={ (exercice) => exercice.exercise.name }
+                keyExtractor={ (exercice, index) => exercice.exercise.name + index }
                 showsVerticalScrollIndicator={ false }
                 renderItem={ ({ item, index }) => (
                     <ExerciceCardRoutine

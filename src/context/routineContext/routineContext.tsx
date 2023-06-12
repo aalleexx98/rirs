@@ -147,7 +147,7 @@ export const RoutineProvider = ({ children }: any) => {
         }
     };
 
-    const setActiveRoutine = async (id: string) => { //TODO: Hacer que esto devuelva algo o que coño?
+    const setActiveRoutine = async (id: string) => {
         const routine = activeRoutines.find((routine) => routine.id === id);
         setSelectedRoutine(routine)
 
