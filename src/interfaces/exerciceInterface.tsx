@@ -48,3 +48,15 @@ export interface Routine {
     title: string;
     userUid: string;
 }
+
+export interface ExerciceSetsData {
+    exercice_id: string,
+    name: string,
+    setsData: setsData[],
+}
+
+export interface setsData {
+    set_number: number,
+    reps: number,
+    kg: number,
+}

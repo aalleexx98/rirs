@@ -1,14 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { RoutineContext } from '../context/routineContext/routineContext';
 import { RootStackParamsHome } from '../routes/HomeStack';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
-import { routineExercices } from '../interfaces/exerciceInterface';
+import { routineExercices, setsData } from '../interfaces/exerciceInterface';
 import { FadeInImage } from '../components/FadeInImage';
 import { useNavigation } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer';
 import { LogBox } from 'react-native';
+import { withDecay } from 'react-native-reanimated';
+import { useForm } from '../hooks/global/useForm';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Alert } from 'react-native';
+import { Button, Dialog, PaperProvider, Portal } from 'react-native-paper';
+
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 
@@ -21,9 +27,21 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const { routineExercices, setActiveRoutine } = useContext(RoutineContext);
     const { theme: { colors, textSecondary } } = useContext(ThemeContext);
+
     const [totalTime, setTotalTime] = useState(0);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentItem, setCurrentItem] = useState<routineExercices>();
+    const [showSendButton, setShowSendButton] = useState<boolean[]>([]); //TODO: ELIMINAR ?
+    const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
+    const [setsData, setSetsData] = useState<setsData[]>([]);
+    const [visibleDialog, setVisibleDialog] = useState(false);
+    const [visibleDialogTime, setVisibleDialogTime] = useState(false);
+    const [secondsRestTime, setSecondsRestTime] = useState(0);
+
+    const { repsForm, kgForm, onChange } = useForm({
+        repsForm: '',
+        kgForm: '',
+    });
 
     const nextExercice = () => {
         if (currentIndex < routineExercices.length - 1) {
@@ -31,8 +49,37 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
         }
     };
 
-    const handlePress = () => {
-        //Enviar a info
+    //TODO: ELIMINAR ES SOLO CONSOLE.LOG
+    // useEffect(() => {
+    //     setsData.forEach(obj => {
+    //         console.log(obj.kg);
+    //     });
+    // }, [setsData])
+
+
+    const handleNextSet = (index: number) => {
+        setSecondsRestTime(currentItem?.restTime ?? 0)
+        if (repsForm && kgForm) {
+            const newSetData: setsData = {
+                set_number: index + 1,
+                reps: parseInt(repsForm),
+                kg: parseInt(kgForm),
+            }
+            onChange('', 'repsForm')
+            onChange('', 'kgForm')
+            setSetsData(prevSetsData => [...prevSetsData, newSetData]);
+
+            setShowSendButton(prevState => {
+                const newState = [...prevState];
+                newState[currentSeriesIndex] = false;
+                return newState;
+            });
+            setCurrentSeriesIndex(prevIndex => prevIndex + 1);
+
+            setVisibleDialogTime(true);
+        } else {
+            setVisibleDialog(true)
+        }
     };
 
     useEffect(() => {
@@ -44,6 +91,12 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     }, [routineExercices, currentIndex])
 
     useEffect(() => {
+        setShowSendButton(Array(currentItem?.sets || 0).fill(false));
+        setCurrentSeriesIndex(0);
+    }, [currentItem]);
+
+    // GENERAL TIME
+    useEffect(() => {
         const interval = BackgroundTimer.setInterval(() => {
             setTotalTime(prevCount => prevCount + 1);
         }, 1000);
@@ -53,6 +106,16 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
         };
     }, []);
 
+    //REST TIME
+    useEffect(() => {
+        const timer = BackgroundTimer.setInterval(() => {
+            setSecondsRestTime(prevSeconds => prevSeconds! - 1);
+        }, 1000);
+
+        return () => BackgroundTimer.clearInterval(timer);
+    }, []);
+
+
     const formatTime = (time: number) => {
         const hours = Math.floor(time / 3600).toString().padStart(2, '0');
         const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
@@ -60,55 +123,145 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
         return `${ hours }:${ minutes }:${ seconds }`;
     };
 
+    const formatRestTime = (time: number) => {
+        const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+        const seconds = (time % 60).toString().padStart(2, '0');
+        return `${ minutes }:${ seconds }`;
+    };
+
 
     return (
-        <View>
-            { currentItem && (
-                <>
-                    {/* TODO: Ponerlo en position absolute */ }
-                    <View style={ { flexDirection: 'row', backgroundColor: 'white' } }>
+        <PaperProvider>
+            <View style={ { flex: 1 } }>
+                { currentItem && (
+                    <>
+                        {/* TODO: Ponerlo en position absolute */ }
+                        <View style={ { flexDirection: 'row', backgroundColor: 'white' } }>
 
-                        <TouchableOpacity
-                            style={ { position: 'absolute', left: 10, top: 10 } }
-                            activeOpacity={ 0.8 }
-                        >
-                            <Text style={ { ...styles.textHeader, color: 'black', paddingRight: 20 } }>Salir</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity
+                                style={ { position: 'absolute', left: 10, top: 10 } }
+                                activeOpacity={ 0.8 }
+                            >
+                                <Text style={ { ...styles.textHeader, color: 'black', paddingRight: 20 } }>Salir</Text>
+                            </TouchableOpacity>
 
-                        <View
-                            style={ { justifyContent: 'center', flex: 1, paddingTop: 10 } }
-                        >
-                            <Text style={ { ...styles.textHeader, color: 'black', textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
+                            <View
+                                style={ { justifyContent: 'center', flex: 1, paddingTop: 10 } }
+                            >
+                                <Text style={ { ...styles.textHeader, color: 'black', textAlign: 'center' } }>{ currentIndex + 1 }/{ routineExercices.length }</Text>
+                            </View>
+
+                            <View style={ { position: 'absolute', right: 10, top: 10 } }>
+                                <Text style={ { ...styles.textHeader, color: 'black', zIndex: 20 } }>{ formatTime(totalTime) }</Text>
+                            </View>
+
                         </View>
 
-                        <View style={ { position: 'absolute', right: 10, top: 10 } }>
-                            <Text style={ { ...styles.textHeader, color: 'black', zIndex: 20 } }>{ formatTime(totalTime) }</Text>
+                        <View style={ styles.imageBox }>
+                            <FadeInImage
+                                uri={ currentItem?.exercise.img }
+                                style={ { height: 200, width: 200 } }
+                            />
+                            {/* <Icon
+                            color='black'
+                            size={ 30 }
+                            name="information-circle-outline"
+                            style={ { position: 'absolute', bottom: 5, right: 5 } }
+                        /> */}
                         </View>
 
-                    </View>
 
-                    <View style={ styles.imageBox }>
-                        <FadeInImage
-                            uri={ currentItem?.exercise.img }
-                            style={ { height: 200, width: 200 } }
-                        />
-                    </View>
+                        <ScrollView style={ { padding: 10, flex: 1 } } showsVerticalScrollIndicator={ false }>
 
-                    <View style={ { padding: 10 } }>
-                        <TouchableOpacity onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: currentItem.exercise.ref.id }) } style={ { ...styles.botonYT, backgroundColor: colors.primary } } activeOpacity={ 0.8 }>
-                            <Text style={ { color: textSecondary } }>Ver información del ejercicio</Text>
-                        </TouchableOpacity>
+                            <Text style={ { ...styles.title, color: colors.text } }>{ currentItem.exercise.name }</Text>
 
-                        <View style={ { marginTop: 100 } }>
-                            { currentItem?.repetitions && <Text>{ currentItem.exercise.name }</Text> }
-                            <Button title="Siguiente" onPress={ nextExercice } />
-                        </View>
-                    </View>
+                            <TouchableOpacity
+                                onPress={ () => navigation.navigate('ExerciceDetailsScreen', { ref: currentItem.exercise.ref.id }) }
+                                style={ { ...styles.botonYT, backgroundColor: colors.primary } }
+                                activeOpacity={ 0.8 }
+                            >
+                                <Text style={ { color: textSecondary } }>Ver información del ejercicio</Text>
+                            </TouchableOpacity>
+
+                            { currentItem?.sets && (
+                                Array.from({ length: currentItem.sets }, (_, index) => (
+                                    <View key={ index }>
+                                        { index === currentSeriesIndex ? (
+                                            <View style={ { ...styles.inputBox, borderColor: '#6202B0' } }>
+                                                <Text style={ { color: textSecondary, alignSelf: 'center' } }>{ `Serie ${ index + 1 }` }</Text>
+                                                <View>
+                                                    <View style={ { flexDirection: 'row', columnGap: 8, alignItems: 'center' } }>
+                                                        <Text style={ { color: textSecondary } }>Reps:</Text>
+                                                        <TextInput
+                                                            onChangeText={ (value) => onChange(value, 'repsForm') }
+                                                            style={ { width: 30, ...styles.inputText } }
+                                                        />
+                                                        <Text style={ { color: textSecondary } }>KG:</Text>
+                                                        <TextInput
+                                                            onChangeText={ (value) => onChange(value, 'kgForm') }
+                                                            style={ { width: 60, ...styles.inputText } }
+                                                        />
+                                                        <TouchableOpacity onPress={ () => handleNextSet(index) }>
+                                                            <Text style={ { color: textSecondary } }>Enviar</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        ) :
+                                            (
+                                                <View style={ { ...styles.inputBox, borderColor: '#6202B0' } }>
+                                                    <Text>{ `Serie ${ index + 1 }` }</Text>
+                                                    <View style={ { flexDirection: 'row', columnGap: 8 } }>
+                                                        <Text>{ currentSeriesIndex > index ? 'Reps: ' + setsData[index].reps : '' }</Text>
+                                                        <Text>{ currentSeriesIndex > index ? 'KG: ' + setsData[index].kg : '' }</Text>
+                                                    </View>
+                                                </View>
+                                            ) }
+                                    </View>
+                                ))
+                            ) }
+
+                            { currentSeriesIndex === currentItem.sets && (
+                                <View style={ { marginTop: 20 } }>
+                                    <TouchableOpacity onPress={ nextExercice } style={ { alignItems: 'flex-end' } }>
+                                        <Text style={ { color: colors.primary } }>SIGUIENTE EJERCICIO</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) }
 
 
-                </>
-            ) }
-        </View>
+                        </ScrollView>
+
+                    </>
+                ) }
+            </View>
+
+            {/* MODAL ERROR*/ }
+            <Portal>
+                <Dialog visible={ visibleDialog } onDismiss={ () => setVisibleDialog(false) }>
+                    <Dialog.Content>
+                        <Text>Rellena las repeticiones y kilos</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={ () => setVisibleDialog(false) }>Cerrar</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+
+            {/* MODAL TIME*/ }
+            <Portal>
+                <Dialog visible={ visibleDialogTime } onDismiss={ () => setVisibleDialogTime(false) }>
+                    <Dialog.Title style={ { textAlign: 'center' } }>{ secondsRestTime < 0 ? 'Se acabo el tiempo' : 'Tiempo de descanso' }</Dialog.Title>
+                    <Dialog.Content>
+                        <Text style={ { textAlign: 'center', fontSize: 24 } }>{ secondsRestTime < 0 ? '00:00' : formatRestTime(secondsRestTime!) }</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={ () => { setVisibleDialogTime(false) } }>{ secondsRestTime < 0 ? 'Cerrar' : 'Omitir' }</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+
+        </PaperProvider>
     )
 }
 
@@ -125,9 +278,32 @@ const styles = StyleSheet.create({
         borderBottomColor: 'black',
         paddingVertical: 5
     },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
+        marginBottom: 10
+    },
     botonYT: {
         alignItems: 'center',
         padding: 8,
         borderRadius: 10,
+        marginBottom: 10
+    },
+    inputBox: {
+        flex: 1,
+        borderWidth: 3,
+        marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#AC49FC'
+    },
+    inputText: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.5)',
+        paddingVertical: 0,
+        color: 'white',
+        marginRight: 20,
     }
 });
