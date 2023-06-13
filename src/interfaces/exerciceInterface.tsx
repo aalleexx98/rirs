@@ -49,9 +49,14 @@ export interface Routine {
     userUid: string;
 }
 
+
+//EXECUTE ROUTINE
 export interface ExerciceSetsData {
     exercice_id: string,
     name: string,
+    restTime: number,
+    reps_planned: string,
+    sets_planned: number,
     setsData: setsData[],
 }
 
