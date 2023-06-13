@@ -187,7 +187,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 Array.from({ length: currentItem.sets }, (_, index) => (
                                     <View key={ index }>
                                         { index === currentSeriesIndex ? (
-                                            <View style={ { ...styles.inputBox, borderColor: '#6202B0' } }>
+                                            <View style={ { ...styles.inputBox, borderColor: '#6202B0', paddingVertical: 15 } }>
                                                 <Text style={ { color: textSecondary, alignSelf: 'center' } }>{ `Serie ${ index + 1 }` }</Text>
                                                 <View>
                                                     <View style={ { flexDirection: 'row', columnGap: 8, alignItems: 'center' } }>
