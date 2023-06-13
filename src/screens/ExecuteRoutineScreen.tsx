@@ -9,10 +9,8 @@ import { FadeInImage } from '../components/FadeInImage';
 import { useNavigation } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer';
 import { LogBox } from 'react-native';
-import { withDecay } from 'react-native-reanimated';
 import { useForm } from '../hooks/global/useForm';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Alert } from 'react-native';
 import { Button, Dialog, PaperProvider, Portal } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useExecuteRoutine } from '../hooks/routines/useExecuteRoutine';
@@ -66,11 +64,6 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             }
             setExerciceSetsData(prevSetsData => [...prevSetsData, newExerciceSetsData]);
             setSetsData([])
-            // if (currentIndex + 1 === routineExercices.length) {
-            //     saveHistorialRoutine(exerciceSetsData)
-            // } else {
-            //     setCurrentIndex(prevIndex => prevIndex + 1);
-            // }
         }
         if (currentIndex < routineExercices.length - 1) {
             setCurrentIndex(prevIndex => prevIndex + 1);
@@ -79,13 +72,6 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
         }
 
     };
-
-    //TODO: ELIMINAR ES SOLO CONSOLE.LOG
-    // useEffect(() => {
-    //     setsData.forEach(obj => {
-    //         console.log(obj.kg);
-    //     });
-    // }, [setsData])
 
     useEffect(() => {
         if (isLast) {
@@ -229,14 +215,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 uri={ currentItem?.exercise.img }
                                 style={ { height: 200, width: 200 } }
                             />
-                            {/* <Icon
-                            color='black'
-                            size={ 30 }
-                            name="information-circle-outline"
-                            style={ { position: 'absolute', bottom: 5, right: 5 } }
-                        /> */}
                         </View>
-
 
                         <KeyboardAwareScrollView
                             keyboardShouldPersistTaps='always'
@@ -319,8 +298,14 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                             ) }
 
 
+                            <TouchableOpacity style={ { marginTop: 50 } }>
+                                <Text style={ { textAlign: 'center', color: colors.text } }>Ver Historial</Text>
+                            </TouchableOpacity>
+
+
+
                             { nextExercises.length > 0 && (
-                                <View style={ { marginTop: 60, marginBottom: 30 } }>
+                                <View style={ { marginTop: 50, marginBottom: 30 } }>
                                     <Text style={ { fontSize: 16, color: colors.text } }>Próximos Ejercicios:</Text>
                                     { nextExercises.map((exerciseName, index) => (
                                         <Text key={ index } style={ { color: colors.text, marginTop: 5 } }>
@@ -336,6 +321,19 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                     </>
                 ) }
             </View>
+
+            {/* MODAL HISTORIAL*/ }
+            <Portal>
+                <Dialog visible={ visibleDialog } onDismiss={ () => setVisibleDialog(false) }>
+                    <Dialog.Title>Historial</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>Rellena el historial</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={ () => setVisibleDialog(false) }>Cerrar</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
 
             {/* MODAL ERROR*/ }
             <Portal>

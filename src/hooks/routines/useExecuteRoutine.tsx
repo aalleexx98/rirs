@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getItemStorage } from "../../helpers/helperStorage";
-import firestore from '@react-native-firebase/firestore';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { ExerciceHistorial, ExerciceSetsData, HistorialRoutine } from '../../interfaces/exerciceInterface';
 
 
@@ -26,22 +26,36 @@ export const useExecuteRoutine = () => {
                 .doc()
                 .set(historialRoutine)
 
+            // Guardar información en la colección historialExerciceCollection
             historialData.forEach(async (exerciceData) => {
                 const exerciceHistorial: ExerciceHistorial = {
                     exercice_id: exerciceData.exercice_id,
                     name: exerciceData.name,
                     setsData: exerciceData.setsData,
                     userUid: userUid!,
-                    date: date,
-                    rutineName: title,
+                    date,
+                    rutineName: title
                 };
-                await historialExerciceCollection
-                    .doc()
-                    .set(exerciceHistorial)
+                const querySnapshot = await historialExerciceCollection
+                    .where('userUid', '==', userUid)
+                    .where('name', '==', exerciceData.name)
+                    .orderBy('date', 'desc')
+                    .get();
+                console.log(querySnapshot.size)
+                if (querySnapshot.size >= 5) {
+                    const lastDocument = querySnapshot.docs[querySnapshot.size - 1];
+                    await lastDocument.ref.set(exerciceHistorial);
+                } else {
+                    console.log("Menor de 5");
+                    await historialExerciceCollection
+                        .doc()
+                        .set(exerciceHistorial)
+                }
             });
 
-        } catch (error) {
 
+        } catch (error) {
+            console.log(error)
         }
     }
 
