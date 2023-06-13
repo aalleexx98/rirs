@@ -51,6 +51,23 @@ export interface Routine {
 
 
 //EXECUTE ROUTINE
+export interface HistorialRoutine {
+    userUid: string,
+    name: string,
+    totalTime: number,
+    date: Date,
+    exercices: ExerciceSetsData[]
+}
+
+export interface ExerciceHistorial {
+    exercice_id: string,
+    name: string,
+    setsData: setsData[],
+    userUid: string,
+    date: Date,
+    rutineName: string
+}
+
 export interface ExerciceSetsData {
     exercice_id: string,
     name: string,
@@ -65,3 +82,5 @@ export interface setsData {
     reps: number,
     kg: number,
 }
+
+

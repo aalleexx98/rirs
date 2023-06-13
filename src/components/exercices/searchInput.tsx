@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Platform, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDebouncedValue } from '../../hooks/global/exercices/useDebouncedValue';
+import { useDebouncedValue } from '../../hooks/exercices/useDebouncedValue';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface Props {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
-import { exercicePreview, routineExercices } from '../../../interfaces/exerciceInterface';
-import { getItemStorage } from "../../../helpers/helperStorage";
+import { exercicePreview, routineExercices } from '../../interfaces/exerciceInterface';
+import { getItemStorage } from "../../helpers/helperStorage";
 
 
 export const useExercicesPaginated = () => {

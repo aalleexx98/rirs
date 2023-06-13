@@ -4,7 +4,7 @@ import { RoutineContext } from '../context/routineContext/routineContext';
 import { RootStackParamsHome } from '../routes/HomeStack';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
-import { routineExercices, setsData } from '../interfaces/exerciceInterface';
+import { ExerciceSetsData, routineExercices, setsData } from '../interfaces/exerciceInterface';
 import { FadeInImage } from '../components/FadeInImage';
 import { useNavigation } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer';
@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert } from 'react-native';
 import { Button, Dialog, PaperProvider, Portal } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useExecuteRoutine } from '../hooks/routines/useExecuteRoutine';
 
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -28,6 +29,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const { routineExercices, setActiveRoutine } = useContext(RoutineContext);
     const { theme: { colors, textSecondary } } = useContext(ThemeContext);
+    const { saveHistorialRoutine } = useExecuteRoutine();
 
     const [totalTime, setTotalTime] = useState(0);
     const [secondsRestTime, setSecondsRestTime] = useState(0);
@@ -38,7 +40,9 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     const [showSendButton, setShowSendButton] = useState<boolean[]>([]); //TODO: ELIMINAR ?
     const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
     const [setsData, setSetsData] = useState<setsData[]>([]);
+    const [exerciceSetsData, setExerciceSetsData] = useState<ExerciceSetsData[]>([]);
 
+    const [isLast, setIsLast] = useState(false);
     const [isRestTimeOver, setIsRestTimeOver] = useState(false);
     const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDialogTime, setVisibleDialogTime] = useState(false);
@@ -51,9 +55,29 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     });
 
     const nextExercice = () => {
+        if (currentItem) {
+            const newExerciceSetsData: ExerciceSetsData = {
+                exercice_id: currentItem?.exercise.ref.id,
+                name: currentItem.exercise.name,
+                restTime: currentItem.restTime,
+                reps_planned: currentItem.repetitions,
+                sets_planned: currentItem.sets,
+                setsData: setsData
+            }
+            setExerciceSetsData(prevSetsData => [...prevSetsData, newExerciceSetsData]);
+            setSetsData([])
+            // if (currentIndex + 1 === routineExercices.length) {
+            //     saveHistorialRoutine(exerciceSetsData)
+            // } else {
+            //     setCurrentIndex(prevIndex => prevIndex + 1);
+            // }
+        }
         if (currentIndex < routineExercices.length - 1) {
             setCurrentIndex(prevIndex => prevIndex + 1);
+        } else {
+            setIsLast(true)
         }
+
     };
 
     //TODO: ELIMINAR ES SOLO CONSOLE.LOG
@@ -63,9 +87,17 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     //     });
     // }, [setsData])
 
+    useEffect(() => {
+        if (isLast) {
+            saveHistorialRoutine(exerciceSetsData, totalTime, route.params.title)
+        }
+    }, [isLast])
+
 
     const handleNextSet = (index: number) => {
         setSecondsRestTime(currentItem?.restTime ?? 0)
+        setIsRestTimeOver(false);
+        setAdditionalCounter(0);
 
         const isValidRepsForm = /^\d{1,3}$/.test(repsForm);
         const normalizedKgForm = kgForm.replace(/,/g, '.');
@@ -92,6 +124,10 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             setVisibleDialog(true)
         }
     };
+
+    const handleCloseModalTime = () => {
+        setVisibleDialogTime(false);
+    }
 
 
     useEffect(() => {
@@ -236,9 +272,15 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                                             style={ { width: 60, ...styles.inputText } }
                                                             keyboardType='numeric'
                                                         />
-                                                        <TouchableOpacity onPress={ () => handleNextSet(index) }>
+                                                        {/* <TouchableOpacity onPress={ () => handleNextSet(index) }>
                                                             <Text style={ { color: textSecondary } }>Enviar</Text>
-                                                        </TouchableOpacity>
+                                                        </TouchableOpacity> */}
+                                                        <Icon
+                                                            color='white'
+                                                            name='play-forward-outline'
+                                                            size={ 20 }
+                                                            onPress={ () => handleNextSet(index) }
+                                                        />
                                                     </View>
                                                 </View>
                                             </View>
@@ -247,8 +289,12 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                                 <View style={ { ...styles.inputBox, borderColor: '#6202B0' } }>
                                                     <Text>{ `Serie ${ index + 1 }` }</Text>
                                                     <View style={ { flexDirection: 'row', columnGap: 8 } }>
-                                                        <Text>{ currentSeriesIndex > index ? 'Reps: ' + setsData[index].reps : '' }</Text>
-                                                        <Text>{ currentSeriesIndex > index ? 'KG: ' + setsData[index].kg : '' }</Text>
+                                                        { setsData[index] && (
+                                                            <>
+                                                                <Text>{ 'Reps: ' + setsData[index].reps }</Text>
+                                                                <Text>{ 'KG: ' + setsData[index].kg }</Text>
+                                                            </>
+                                                        ) }
                                                     </View>
                                                 </View>
                                             ) }
@@ -256,7 +302,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 ))
                             ) }
 
-                            { currentSeriesIndex === currentItem.sets && (
+                            { (currentSeriesIndex === currentItem.sets && currentIndex + 1 !== routineExercices.length) && (
                                 <View style={ { marginTop: 20 } }>
                                     <TouchableOpacity onPress={ nextExercice } style={ { alignItems: 'flex-end' } }>
                                         <Text style={ { color: colors.primary } }>SIGUIENTE EJERCICIO</Text>
@@ -264,12 +310,25 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 </View>
                             ) }
 
-                            <View style={ { marginTop: 60, marginBottom: 30 } }>
-                                <Text style={ { fontSize: 16, color: colors.text } }>Próximos Ejercicios:</Text>
-                                { nextExercises.map((exerciseName, index) => (
-                                    <Text key={ index } style={ { color: colors.text, marginTop: 5 } }>- { exerciseName.name }</Text>
-                                )) }
-                            </View>
+                            { (currentSeriesIndex === currentItem.sets && currentIndex + 1 === routineExercices.length) && (
+                                <View style={ { marginTop: 20 } }>
+                                    <TouchableOpacity onPress={ nextExercice } style={ { alignItems: 'flex-end' } }>
+                                        <Text style={ { color: colors.primary } }>FINALIZAR</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) }
+
+
+                            { nextExercises.length > 0 && (
+                                <View style={ { marginTop: 60, marginBottom: 30 } }>
+                                    <Text style={ { fontSize: 16, color: colors.text } }>Próximos Ejercicios:</Text>
+                                    { nextExercises.map((exerciseName, index) => (
+                                        <Text key={ index } style={ { color: colors.text, marginTop: 5 } }>
+                                            - { exerciseName.name }
+                                        </Text>
+                                    )) }
+                                </View>
+                            ) }
 
 
                         </KeyboardAwareScrollView>
@@ -292,7 +351,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
             {/* MODAL TIME*/ }
             <Portal>
-                <Dialog visible={ visibleDialogTime } onDismiss={ () => setVisibleDialogTime(false) }>
+                <Dialog visible={ visibleDialogTime } onDismiss={ handleCloseModalTime }>
                     <Dialog.Title style={ { textAlign: 'center' } }>{ secondsRestTime < 0 ? 'Se acabo el tiempo' : 'Tiempo de descanso' }</Dialog.Title>
                     <Dialog.Content>
                         <Text style={ { textAlign: 'center', fontSize: 24 } }>{ secondsRestTime < 0 ? '00:00' : formatRestTime(secondsRestTime!) }</Text>
@@ -301,11 +360,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                         ) : null }
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={ () => {
-                            setVisibleDialogTime(false);
-                            setIsRestTimeOver(false);
-                            setAdditionalCounter(0);
-                        } }>{ secondsRestTime < 0 ? 'Cerrar' : 'Omitir' }</Button>
+                        <Button onPress={ handleCloseModalTime }>{ secondsRestTime < 0 ? 'Cerrar' : 'Omitir' }</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
