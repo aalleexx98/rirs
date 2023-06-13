@@ -66,6 +66,7 @@ export interface ExerciceHistorial {
     userUid: string,
     date: Date,
     rutineName: string
+    formattedDate?: string,
 }
 
 export interface ExerciceSetsData {

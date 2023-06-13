@@ -4,7 +4,7 @@ import { RoutineContext } from '../context/routineContext/routineContext';
 import { RootStackParamsHome } from '../routes/HomeStack';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
-import { ExerciceSetsData, routineExercices, setsData } from '../interfaces/exerciceInterface';
+import { ExerciceHistorial, ExerciceSetsData, routineExercices, setsData } from '../interfaces/exerciceInterface';
 import { FadeInImage } from '../components/FadeInImage';
 import { useNavigation } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer';
@@ -27,7 +27,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const { routineExercices, setActiveRoutine } = useContext(RoutineContext);
     const { theme: { colors, textSecondary } } = useContext(ThemeContext);
-    const { saveHistorialRoutine } = useExecuteRoutine();
+    const { saveHistorialRoutine, getHistorialExerice } = useExecuteRoutine();
 
     const [totalTime, setTotalTime] = useState(0);
     const [secondsRestTime, setSecondsRestTime] = useState(0);
@@ -35,15 +35,17 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentItem, setCurrentItem] = useState<routineExercices>();
-    const [showSendButton, setShowSendButton] = useState<boolean[]>([]); //TODO: ELIMINAR ?
     const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
     const [setsData, setSetsData] = useState<setsData[]>([]);
     const [exerciceSetsData, setExerciceSetsData] = useState<ExerciceSetsData[]>([]);
+    const [exerciceHistorialArray, setExerciceHistorialArray] = useState<ExerciceHistorial[]>([]);
 
     const [isLast, setIsLast] = useState(false);
     const [isRestTimeOver, setIsRestTimeOver] = useState(false);
     const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDialogTime, setVisibleDialogTime] = useState(false);
+    const [visibleDialogHistorial, setVisibleDialogHistorial] = useState(false);
+
 
     const nextExercises = routineExercices.slice(currentIndex + 1).map((exercise) => exercise.exercise);
 
@@ -53,6 +55,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     });
 
     const nextExercice = () => {
+        getHistorial();
         if (currentItem) {
             const newExerciceSetsData: ExerciceSetsData = {
                 exercice_id: currentItem?.exercise.ref.id,
@@ -97,13 +100,8 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             }
             onChange('', 'repsForm')
             onChange('', 'kgForm')
-            setSetsData(prevSetsData => [...prevSetsData, newSetData]);
 
-            setShowSendButton(prevState => {
-                const newState = [...prevState];
-                newState[currentSeriesIndex] = false;
-                return newState;
-            });
+            setSetsData(prevSetsData => [...prevSetsData, newSetData]);
             setCurrentSeriesIndex(prevIndex => prevIndex + 1);
             setVisibleDialogTime(true);
         } else {
@@ -113,6 +111,15 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const handleCloseModalTime = () => {
         setVisibleDialogTime(false);
+    }
+
+    const getHistorial = async () => {
+
+        const name = currentItem?.exercise.name;
+        if (name) {
+            const result = await getHistorialExerice(name);
+            if (result) setExerciceHistorialArray(result);
+        }
     }
 
 
@@ -125,9 +132,15 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     }, [routineExercices, currentIndex])
 
     useEffect(() => {
-        setShowSendButton(Array(currentItem?.sets || 0).fill(false));
         setCurrentSeriesIndex(0);
     }, [currentItem]);
+
+    useEffect(() => {
+        if (visibleDialogHistorial && currentItem?.exercise) {
+            getHistorialExerice(currentItem.exercise.name)
+        }
+    }, [visibleDialogHistorial])
+
 
     // GENERAL TIME
     useEffect(() => {
@@ -297,11 +310,12 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 </View>
                             ) }
 
-
-                            <TouchableOpacity style={ { marginTop: 50 } }>
+                            <TouchableOpacity
+                                style={ { marginTop: 50 } }
+                                onPress={ () => { setVisibleDialogHistorial(true), getHistorial() } }
+                            >
                                 <Text style={ { textAlign: 'center', color: colors.text } }>Ver Historial</Text>
                             </TouchableOpacity>
-
 
 
                             { nextExercises.length > 0 && (
@@ -324,13 +338,34 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
             {/* MODAL HISTORIAL*/ }
             <Portal>
-                <Dialog visible={ visibleDialog } onDismiss={ () => setVisibleDialog(false) }>
+                <Dialog visible={ visibleDialogHistorial } onDismiss={ () => setVisibleDialogHistorial(false) }>
                     <Dialog.Title>Historial</Dialog.Title>
                     <Dialog.Content>
-                        <Text>Rellena el historial</Text>
+
+                        { exerciceHistorialArray.length > 1 ? (
+                            <ScrollView style={ { height: '60%' } }>
+                                { exerciceHistorialArray.map((exerciceHistorial, index) => (
+                                    <View key={ index } style={ { marginBottom: 25 } }>
+                                        <Text style={ { fontSize: 16, fontWeight: '600' } }>Rutina: { exerciceHistorial.rutineName }</Text>
+                                        <Text style={ { fontSize: 16, fontWeight: '600' } }>Dia: { exerciceHistorial.formattedDate }</Text>
+                                        <View style={ { flexDirection: 'column' } }>
+                                            { exerciceHistorial.setsData.map((sets, index) => (
+                                                <View key={ index } style={ { flexDirection: 'row', columnGap: 30 } }>
+                                                    <Text>{ `Serie: ${ sets.set_number }` }</Text>
+                                                    <Text>{ `Reps: ${ sets.reps }` }</Text>
+                                                    <Text style={ { textAlign: 'left' } }>{ `Kg: ${ sets.kg }` }</Text>
+                                                </View>
+                                            )) }
+                                        </View>
+                                    </View>
+                                )) }
+                            </ScrollView>)
+                            : (<Text>No tienes todabia historial en este ejercicio</Text>)
+                        }
+
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={ () => setVisibleDialog(false) }>Cerrar</Button>
+                        <Button onPress={ () => setVisibleDialogHistorial(false) }>Cerrar</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
