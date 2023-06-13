@@ -29,14 +29,20 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     const { theme: { colors, textSecondary } } = useContext(ThemeContext);
 
     const [totalTime, setTotalTime] = useState(0);
+    const [secondsRestTime, setSecondsRestTime] = useState(0);
+    const [additionalCounter, setAdditionalCounter] = useState(0);
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentItem, setCurrentItem] = useState<routineExercices>();
     const [showSendButton, setShowSendButton] = useState<boolean[]>([]); //TODO: ELIMINAR ?
     const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
     const [setsData, setSetsData] = useState<setsData[]>([]);
+
+    const [isRestTimeOver, setIsRestTimeOver] = useState(false);
     const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDialogTime, setVisibleDialogTime] = useState(false);
-    const [secondsRestTime, setSecondsRestTime] = useState(0);
+
+    const nextExercises = routineExercices.slice(currentIndex + 1).map((exercise) => exercise.exercise);
 
     const { repsForm, kgForm, onChange } = useForm({
         repsForm: '',
@@ -114,6 +120,25 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
         return () => BackgroundTimer.clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        if (secondsRestTime === 1) {
+            // El tiempo de descanso ha terminado, inicia otro contador
+            setTimeout(() => {
+                setIsRestTimeOver(true);
+            }, 1000);
+        }
+    }, [secondsRestTime]);
+
+    useEffect(() => {
+        if (isRestTimeOver) {
+            const additionalTimer = setInterval(() => {
+                setAdditionalCounter(prevCounter => prevCounter + 1);
+            }, 1000);
+
+            return () => clearInterval(additionalTimer);
+        }
+    }, [isRestTimeOver]);
 
 
     const formatTime = (time: number) => {
@@ -229,6 +254,13 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                 </View>
                             ) }
 
+                            <View style={ { marginTop: 60, marginBottom: 30 } }>
+                                <Text style={ { fontSize: 16, color: colors.text } }>Próximos Ejercicios:</Text>
+                                { nextExercises.map((exerciseName, index) => (
+                                    <Text key={ index } style={ { color: colors.text, marginTop: 5 } }>- { exerciseName.name }</Text>
+                                )) }
+                            </View>
+
 
                         </ScrollView>
 
@@ -254,9 +286,16 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                     <Dialog.Title style={ { textAlign: 'center' } }>{ secondsRestTime < 0 ? 'Se acabo el tiempo' : 'Tiempo de descanso' }</Dialog.Title>
                     <Dialog.Content>
                         <Text style={ { textAlign: 'center', fontSize: 24 } }>{ secondsRestTime < 0 ? '00:00' : formatRestTime(secondsRestTime!) }</Text>
+                        { isRestTimeOver ? (
+                            <Text style={ { textAlign: 'center', fontSize: 14, marginTop: 10 } }>{ 'Te has pasado: ' + additionalCounter + ' segundos' }</Text>
+                        ) : null }
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={ () => { setVisibleDialogTime(false) } }>{ secondsRestTime < 0 ? 'Cerrar' : 'Omitir' }</Button>
+                        <Button onPress={ () => {
+                            setVisibleDialogTime(false);
+                            setIsRestTimeOver(false);
+                            setAdditionalCounter(0);
+                        } }>{ secondsRestTime < 0 ? 'Cerrar' : 'Omitir' }</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
@@ -305,5 +344,8 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         color: 'white',
         marginRight: 20,
+    },
+    timeOverText: {
+
     }
 });
