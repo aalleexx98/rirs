@@ -14,6 +14,7 @@ import { useForm } from '../hooks/global/useForm';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert } from 'react-native';
 import { Button, Dialog, PaperProvider, Portal } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -65,11 +66,16 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
 
     const handleNextSet = (index: number) => {
         setSecondsRestTime(currentItem?.restTime ?? 0)
-        if (repsForm && kgForm) {
+
+        const isValidRepsForm = /^\d{1,3}$/.test(repsForm);
+        const normalizedKgForm = kgForm.replace(/,/g, '.');
+        const isValidKgForm = /^(\d{1,6}|\d{1,3}\.\d{1,3}|\.\d{1,3})$/.test(normalizedKgForm);
+
+        if (isValidRepsForm && isValidKgForm) {
             const newSetData: setsData = {
                 set_number: index + 1,
                 reps: parseInt(repsForm),
-                kg: parseInt(kgForm),
+                kg: parseFloat(normalizedKgForm),
             }
             onChange('', 'repsForm')
             onChange('', 'kgForm')
@@ -81,12 +87,12 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                 return newState;
             });
             setCurrentSeriesIndex(prevIndex => prevIndex + 1);
-
             setVisibleDialogTime(true);
         } else {
             setVisibleDialog(true)
         }
     };
+
 
     useEffect(() => {
         setActiveRoutine(route.params.id!);
@@ -196,7 +202,9 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                         </View>
 
 
-                        <ScrollView style={ { padding: 10, flex: 1 } } showsVerticalScrollIndicator={ false }>
+                        <KeyboardAwareScrollView
+                            keyboardShouldPersistTaps='always'
+                            style={ { padding: 10, flex: 1 } } showsVerticalScrollIndicator={ false }>
 
                             <Text style={ { ...styles.title, color: colors.text } }>{ currentItem.exercise.name }</Text>
 
@@ -220,11 +228,13 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                                                         <TextInput
                                                             onChangeText={ (value) => onChange(value, 'repsForm') }
                                                             style={ { width: 30, ...styles.inputText } }
+                                                            keyboardType='numeric'
                                                         />
                                                         <Text style={ { color: textSecondary } }>KG:</Text>
                                                         <TextInput
                                                             onChangeText={ (value) => onChange(value, 'kgForm') }
                                                             style={ { width: 60, ...styles.inputText } }
+                                                            keyboardType='numeric'
                                                         />
                                                         <TouchableOpacity onPress={ () => handleNextSet(index) }>
                                                             <Text style={ { color: textSecondary } }>Enviar</Text>
@@ -262,7 +272,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                             </View>
 
 
-                        </ScrollView>
+                        </KeyboardAwareScrollView>
 
                     </>
                 ) }
