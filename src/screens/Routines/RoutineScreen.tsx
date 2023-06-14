@@ -85,20 +85,20 @@ export const RoutineScreen = () => {
                 </View>
 
                 <View style={ styles.rowButtons }>
-                    <Text style={ { color: colors.text, fontSize: 20 } }>Generar rutina para: </Text>
+                    <Text style={ { color: colors.text, fontSize: 20 } }>Generar rutina o Crear de 0: </Text>
                     <View style={ { flexDirection: 'row', columnGap: 15 } }>
                         <ButtonRoutine
-                            iconName='sunny-outline'
+                            iconName='shuffle-outline'
                             iconType='Ionicons'
-                            name='1 Dia'
+                            name='Generar'
                             onPress={ () => handleType('day') }
                             opacity={ selectedType === 'day' ? 0.6 : 1 }
                         />
 
                         <ButtonRoutine
-                            iconName='calendar-outline'
+                            iconName='desktop-outline'
                             iconType='Ionicons'
-                            name='Semanal'
+                            name='Crear'
                             onPress={ () => handleType('week') }
                             opacity={ selectedType === 'week' ? 0.6 : 1 }
                         />
@@ -110,7 +110,7 @@ export const RoutineScreen = () => {
                         activeOpacity={ 0.7 }
                         onPress={ () => selectedType === 'day' ?
                             navigation.navigate('RoutineBodyScreen', { gender: selectedGendre, level: selectedLevel }) :
-                            navigation.navigate('RoutineWeeklyScreen', { gender: selectedGendre, level: selectedLevel }) }
+                            navigation.navigate("Routine1DayScreen", { type: 'New' }) }
                     >
                         <Text style={ { fontSize: 16, color: textSecondary } }>Siguiente</Text>
                     </TouchableOpacity>

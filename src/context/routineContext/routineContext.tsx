@@ -148,6 +148,12 @@ export const RoutineProvider = ({ children }: any) => {
     };
 
     const setActiveRoutine = async (id: string) => {
+        if (id === '-1') {
+            setSelectedRoutine(undefined)
+            setRoutineExercices([])
+            console.log("No hay")
+            return;
+        }
         const routine = activeRoutines.find((routine) => routine.id === id);
         setSelectedRoutine(routine)
 

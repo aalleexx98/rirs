@@ -71,6 +71,7 @@ export const Routine1DayScreen = ({ route }: Props) => {
                     console.log("Edit")
                     break;
                 case 'New':
+                    setActiveRoutine('-1');
                     console.log("New")
                     break;
             }

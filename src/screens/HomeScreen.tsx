@@ -45,17 +45,9 @@ export const HomeScreen = () => {
                     <TouchableOpacity
                         style={ { flex: 0, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10 } }
                         activeOpacity={ 0.8 }
-                        onPress={ () => navigation.navigate('RoutineStack') } //TODO: MIRAR COMO PONER ESTO EN STACKPROPS
+                        onPress={ () => navigation.navigate('RoutineStack') }
                     >
                         <Text style={ { color: colors.text, padding: 10, fontSize: 16 } }>Generar Rutina</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={ { flex: 0, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10 } }
-                        activeOpacity={ 0.8 }
-
-                    >
-                        <Text style={ { color: colors.text, padding: 10, fontSize: 16 } }>Crear Rutina</Text>
                     </TouchableOpacity>
 
                 </>
