@@ -4,8 +4,8 @@ import { RoutineScreen } from '../screens/Routines/RoutineScreen';
 import { RoutineBodyScreen } from '../screens/Routines/RoutineBodyScreen';
 import { RoutineWeeklyScreen } from '../screens/Routines/RoutineWeeklyScreen';
 import { Routine1DayScreen } from '../screens/Routines/Routine1DayScreen';
-import { ExercicesScreen } from '../screens/ExercicesScreen';
-import { ExerciceDetailsScreen } from '../screens/ExerciceDetailsScreen';
+import { ExercicesScreen } from '../screens/Exercices/ExercicesScreen';
+import { ExerciceDetailsScreen } from '../screens/Exercices/ExerciceDetailsScreen';
 
 export type RootStackParamsRoutine = {
     RoutineScreen: undefined,

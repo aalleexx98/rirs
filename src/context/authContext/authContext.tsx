@@ -139,39 +139,93 @@ export const AuthProvider = ({ children }: any) => {
     }
 
     const signIn = async ({ email, password }: LoginData) => {
+        // if (email && password) {
+        //     await auth()
+        //         .signInWithEmailAndPassword(email, password)
+        //         .then(userCredential => {
+        //             const user = userCredential.user;
+
+        //             dispatch({//Es dispatch de authReducer
+        //                 type: 'signUp',
+        //                 payload: {
+        //                     uid: user.uid,
+        //                     user: user,
+        //                 }
+        //             });
+
+        //             setItemStorage('uid', user.uid);
+        //         })
+        //         .catch(error => {
+        //             if (error.code === 'auth/user-not-found') {
+        //                 dispatch({
+        //                     type: 'addError',
+        //                     payload: 'Email no registrado a ninguna cuenta'
+        //                 });
+        //             }
+        //             if (error.code === 'auth/wrong-password') {
+        //                 dispatch({
+        //                     type: 'addError',
+        //                     payload: 'Contraseña incorrecta'
+        //                 });
+        //             }
+        //             if (error.code === 'auth/invalid-email') {
+        //                 dispatch({
+        //                     type: 'addError',
+        //                     payload: 'El email no es valido'
+        //                 });
+        //             }
+        //         });
+        // }
         if (email && password) {
-            await auth()
-                .signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
+            const signInPromise = auth().signInWithEmailAndPassword(email, password);
+
+            // Establecer el tiempo máximo de espera en milisegundos
+            const timeoutDuration = 5000; // 5 segundos
+
+            // Crear una promesa de tiempo de espera que se rechaza después del tiempo máximo de espera
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => {
+                    reject(new Error('Tiempo de espera agotado. Inténtalo de nuevo más tarde.'));
+                }, timeoutDuration);
+            });
+
+            // Usar Promise.race para ejecutar la promesa de inicio de sesión y el tiempo de espera al mismo tiempo
+            await Promise.race([signInPromise, timeoutPromise])
+                .then((userCredential: any) => {
                     const user = userCredential.user;
 
-                    dispatch({//Es dispatch de authReducer
+                    dispatch({
                         type: 'signUp',
                         payload: {
                             uid: user.uid,
                             user: user,
-                        }
+                        },
                     });
 
                     setItemStorage('uid', user.uid);
                 })
-                .catch(error => {
+                .catch((error) => {
                     if (error.code === 'auth/user-not-found') {
                         dispatch({
                             type: 'addError',
-                            payload: 'Email no registrado a ninguna cuenta'
+                            payload: 'Email no registrado a ninguna cuenta',
                         });
-                    }
-                    if (error.code === 'auth/wrong-password') {
+                    } else if (error.code === 'auth/wrong-password') {
                         dispatch({
                             type: 'addError',
-                            payload: 'Contraseña incorrecta'
+                            payload: 'Contraseña incorrecta',
                         });
-                    }
-                    if (error.code === 'auth/invalid-email') {
+                    } else if (error.code === 'auth/invalid-email') {
                         dispatch({
                             type: 'addError',
-                            payload: 'El email no es valido'
+                            payload: 'El email no es válido',
+                        });
+                    } else {
+                        // Error desconocido
+                        console.log(error);
+                        dispatch({
+                            type: 'addError',
+                            payload: 'Tiempo agotado, revise su conexión a internet',
                         });
                     }
                 });

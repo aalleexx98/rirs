@@ -1,14 +1,14 @@
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View, Linking, ScrollView } from 'react-native'
-import { RootStackParams } from '../routes/ExerciceStack'
+import { RootStackParams } from '../../routes/ExerciceStack'
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { ThemeContext } from '../context/themeContext/ThemeContext';
+import { ThemeContext } from '../../context/themeContext/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { FadeInImage } from '../components/FadeInImage';
-import { Loading } from '../components/Loading';
+import { FadeInImage } from '../../components/FadeInImage';
+import { Loading } from '../../components/Loading';
 
 const windowWith = Dimensions.get('window').width
 

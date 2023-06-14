@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginScreen } from '../screens/LoginScreen';
-import { RegisterScreen } from '../screens/RegisterScreen';
+import { LoginScreen } from '../screens/Login/LoginScreen';
+import { RegisterScreen } from '../screens/Login/RegisterScreen';
 import SplashScreen from 'react-native-splash-screen'
 import { useContext, useEffect } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';

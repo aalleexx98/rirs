@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { ProfilePicture } from '../components/home/ProfilePicture'
-import { AuthContext } from '../context/authContext/authContext';
+import { ProfilePicture } from '../../components/home/ProfilePicture'
+import { AuthContext } from '../../context/authContext/authContext';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
-import { getItemStorage } from '../helpers/helperStorage';
-import { ThemeContext } from '../context/themeContext/ThemeContext';
+import { getItemStorage } from '../../helpers/helperStorage';
+import { ThemeContext } from '../../context/themeContext/ThemeContext';
 
 export const ProfileScreen = () => {
     const { user, logOut } = useContext(AuthContext);

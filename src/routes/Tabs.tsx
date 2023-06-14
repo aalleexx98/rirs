@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/HomeScreen';
-import { ExercicesScreen } from '../screens/ExercicesScreen';
+import { ExercicesScreen } from '../screens/Exercices/ExercicesScreen';
 import { RoutineScreen } from '../screens/Routines/RoutineScreen';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/themeContext/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Platform, KeyboardAvoidingView } from 'react-native';
-import { HistorialScreen } from '../screens/HistorialScreen';
-import { ProfileScreen } from '../screens/ProfileScreen';
+import { HistorialScreen } from '../screens/Historial/HistorialScreen';
+import { ProfileScreen } from '../screens/Porfile/ProfileScreen';
 import { ExerciceStack } from './ExerciceStack';
 import { RoutineStack } from './RoutineStack';
 import { HomeStack } from './HomeStack';

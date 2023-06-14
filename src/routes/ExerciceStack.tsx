@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
-import { ExercicesScreen } from '../screens/ExercicesScreen';
-import { ExerciceDetailsScreen } from '../screens/ExerciceDetailsScreen';
+import { ExercicesScreen } from '../screens/Exercices/ExercicesScreen';
+import { ExerciceDetailsScreen } from '../screens/Exercices/ExerciceDetailsScreen';
 
 export type RootStackParams = {
     ExercicesScreen: { add: boolean },

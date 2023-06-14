@@ -4,8 +4,8 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { RoutineStack } from './RoutineStack';
 import { Tabs } from './Tabs';
 import { Routine1DayScreen } from '../screens/Routines/Routine1DayScreen';
-import { ExercicesScreen } from '../screens/ExercicesScreen';
-import { ExerciceDetailsScreen } from '../screens/ExerciceDetailsScreen';
+import { ExercicesScreen } from '../screens/Exercices/ExercicesScreen';
+import { ExerciceDetailsScreen } from '../screens/Exercices/ExerciceDetailsScreen';
 import { ExecuteRoutineScreen } from '../screens/ExecuteRoutineScreen';
 
 export type RootStackParamsHome = {

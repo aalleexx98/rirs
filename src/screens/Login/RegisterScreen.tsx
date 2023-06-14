@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { loginStyles } from '../theme/loginTheme'
-import { LogginLogo } from '../components/login/Logo'
-import { useForm } from '../hooks/global/useForm'
+import { loginStyles } from '../../theme/loginTheme'
+import { LogginLogo } from '../../components/login/Logo'
+import { useForm } from '../../hooks/global/useForm'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StackScreenProps } from '@react-navigation/stack'
-import { AuthContext } from '../context/authContext/authContext'
+import { AuthContext } from '../../context/authContext/authContext'
+import { Checkbox, PaperProvider } from 'react-native-paper'
 
 interface Props extends StackScreenProps<any, any> { }
 
@@ -14,6 +15,9 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [isFocusedName, setIsFocusedName] = useState(false);
     const [isFocusedEmail, setIsFocusedEmail] = useState(false);
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+    const [policityCheck, setPolicityCheck] = useState(false);
+    const [termsCheck, setTermsCheck] = useState(false);
+
 
     const { signUp, errorMessage, removeError } = useContext(AuthContext);
 
@@ -35,16 +39,23 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
     const onRegister = () => {
         //console.log({ email, password, name });
-        Keyboard.dismiss();
-        signUp({
-            name,
-            email,
-            password
-        });
+        if (!policityCheck || !termsCheck) {
+            Alert.alert('Debes de aceptar la politica de privacidad y los terminos y condiciones', errorMessage, [{
+                text: 'Ok',
+                onPress: removeError
+            }]);
+        } else {
+            Keyboard.dismiss();
+            signUp({
+                name,
+                email,
+                password
+            });
+        }
     }
 
     return (
-        <>
+        <PaperProvider>
             <KeyboardAwareScrollView contentContainerStyle={ {
                 flex: 1,
                 backgroundColor: '#8C03FC',
@@ -145,6 +156,30 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         />
                     </View>
 
+                    <View style={ { flexDirection: 'row', alignItems: 'center', marginTop: 15 } }>
+                        <Checkbox
+                            status={ policityCheck ? 'checked' : 'unchecked' }
+                            uncheckedColor='white'
+                            color='white'
+                            onPress={ () => {
+                                setPolicityCheck(!policityCheck);
+                            } }
+                        />
+                        <TouchableOpacity><Text>Acepto los términos y condiciones</Text></TouchableOpacity>
+                    </View>
+
+                    <View style={ { flexDirection: 'row', alignItems: 'center' } }>
+                        <Checkbox
+                            status={ termsCheck ? 'checked' : 'unchecked' }
+                            uncheckedColor='white'
+                            color='white'
+                            onPress={ () => {
+                                setTermsCheck(!termsCheck);
+                            } }
+                        />
+                        <TouchableOpacity><Text>Acepto la política de privacidad</Text></TouchableOpacity>
+                    </View>
+
                     {/* Crear una nueva cuenta */ }
                     <View style={ loginStyles.buttonContainer }>
                         <TouchableOpacity
@@ -171,6 +206,6 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
                 </View>
             </KeyboardAwareScrollView>
-        </>
+        </PaperProvider>
     )
 }

@@ -1,18 +1,18 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { globalStyles } from '../theme/globalTheme'
-import { ThemeContext } from '../context/themeContext/ThemeContext';
-import { Loading } from '../components/Loading';
-import { ExerciceCard } from '../components/exercices/exerciceCard';
-import { SearchInput } from '../components/exercices/searchInput';
+import { globalStyles } from '../../theme/globalTheme'
+import { ThemeContext } from '../../context/themeContext/ThemeContext';
+import { Loading } from '../../components/Loading';
+import { ExerciceCard } from '../../components/exercices/exerciceCard';
+import { SearchInput } from '../../components/exercices/searchInput';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamsRoutine } from '../routes/RoutineStack';
+import { RootStackParamsRoutine } from '../../routes/RoutineStack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LogBox } from 'react-native';
-import { RoutineContext } from '../context/routineContext/routineContext';
-import { RootStackParamsHome } from '../routes/HomeStack';
+import { RoutineContext } from '../../context/routineContext/routineContext';
+import { RootStackParamsHome } from '../../routes/HomeStack';
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
