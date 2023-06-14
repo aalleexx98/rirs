@@ -90,11 +90,6 @@ export const useExecuteRoutine = () => {
                 exerciceHistorialArray.push(formatExerciceHistorial(exerciceHistorial));
             });
 
-
-            // console.log(exerciceHistorialArray.reverse());
-            // exerciceHistorialArray.forEach(obj => {
-            //     console.log(obj.setsData);
-            // });
             return exerciceHistorialArray;
 
         } catch (error) {

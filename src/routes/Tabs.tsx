@@ -11,6 +11,7 @@ import { ProfileScreen } from '../screens/Porfile/ProfileScreen';
 import { ExerciceStack } from './ExerciceStack';
 import { RoutineStack } from './RoutineStack';
 import { HomeStack } from './HomeStack';
+import { HistorialStack } from './HistorialStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,8 +39,8 @@ export const Tabs = () => {
             initialRouteName='HomeStack'
         >
             <Tab.Screen
-                name="HistorialScreen"
-                component={ HistorialScreen }
+                name="HistorialStack"
+                component={ HistorialStack }
                 options={ {
                     tabBarLabel: 'Historial',
                     tabBarIcon: ({ color }) => (
@@ -48,7 +49,8 @@ export const Tabs = () => {
                             size={ 25 }
                             name="stats-chart-outline"
                         />
-                    )
+                    ),
+                    unmountOnBlur: true
                 } }
             />
 

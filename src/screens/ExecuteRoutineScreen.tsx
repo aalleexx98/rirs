@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Button, Dialog, PaperProvider, Portal } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useExecuteRoutine } from '../hooks/routines/useExecuteRoutine';
+import { formatRestTime, formatTime } from '../helpers/formatters';
 
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -181,20 +182,6 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             return () => clearInterval(additionalTimer);
         }
     }, [isRestTimeOver]);
-
-
-    const formatTime = (time: number) => {
-        const hours = Math.floor(time / 3600).toString().padStart(2, '0');
-        const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
-        const seconds = (time % 60).toString().padStart(2, '0');
-        return `${ hours }:${ minutes }:${ seconds }`;
-    };
-
-    const formatRestTime = (time: number) => {
-        const minutes = Math.floor(time / 60).toString().padStart(2, '0');
-        const seconds = (time % 60).toString().padStart(2, '0');
-        return `${ minutes }:${ seconds }`;
-    };
 
 
     return (
