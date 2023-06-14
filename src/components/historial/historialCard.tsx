@@ -23,7 +23,7 @@ export const HistorialCard = ({ name, day, totalTime, exercices }: Props) => {
     return (
         <TouchableOpacity
             activeOpacity={ 0.8 }
-            onPress={ () => navigation.navigate('HistorialInfoScreen', { exercices, name, totalTime, day }) }
+            onPress={ () => navigation.navigate('HistorialInfoScreen', { exercices, name, totalTime, day, finish: false }) }
         >
             <View style={ { ...styles.box, backgroundColor: colors.primary } }>
                 <View style={ { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 } }>

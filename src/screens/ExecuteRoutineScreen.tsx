@@ -73,14 +73,19 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             setCurrentIndex(prevIndex => prevIndex + 1);
         } else {
             setIsLast(true)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'HistorialInfoScreen', params: { exercices: exerciceSetsData, name: 'Resumen de la Rutina', totalTime, finish: true } }]
+            });
         }
-
     };
+
 
     useEffect(() => {
         if (isLast) {
             saveHistorialRoutine(exerciceSetsData, totalTime, route.params.title)
         }
+
     }, [isLast])
 
 

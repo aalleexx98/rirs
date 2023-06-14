@@ -7,8 +7,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { ThemeContext } from '../../context/themeContext/ThemeContext'
 import { globalStyles } from '../../theme/globalTheme'
 import { formatTime } from '../../helpers/formatters'
+import { RootStackParamsHome } from '../../routes/HomeStack'
 
-interface Props extends StackScreenProps<RootStackParamsHistorial, 'HistorialInfoScreen'> { };
+type RootStackParams = RootStackParamsHistorial | RootStackParamsHome;
+
+interface Props extends StackScreenProps<RootStackParams, 'HistorialInfoScreen'> { };
 
 export const HistorialInfoScreen = ({ navigation, route }: Props) => {
 
@@ -22,13 +25,13 @@ export const HistorialInfoScreen = ({ navigation, route }: Props) => {
                     name="arrow-back-outline"
                     color={ colors.text }
                     size={ 30 }
-                    onPress={ () => navigation.pop() }
+                    onPress={ () => route.params.finish ? navigation.navigate('HomeScreen') : navigation.navigate('HistorialScreen') }
                 />
                 <Text style={ { color: colors.text, ...styles.title } }>{ route.params.name }</Text>
             </View>
 
             <View style={ { marginTop: 10 } }>
-                <Text style={ { color: colors.text } }>Dia: { route.params.day.toLocaleDateString() }</Text>
+                { route.params.day && (<Text style={ { color: colors.text } }>Dia: { route.params.day.toLocaleDateString() }</Text>) }
                 <Text style={ { color: colors.text } }>Tiempo: { formatTime(route.params.totalTime) }</Text>
             </View>
 
