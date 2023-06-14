@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { LogBox, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback, TurboModuleRegistry } from 'react-native';
-import { exercicePreview } from '../../interfaces/exerciceInterface'
+import { ExerciceSetsData, exercicePreview } from '../../interfaces/exerciceInterface'
 import { ThemeContext } from '../../context/themeContext/ThemeContext'
 import { FadeInImage } from '../FadeInImage'
 import { useNavigation } from '@react-navigation/native'
@@ -9,28 +9,32 @@ import { RootStackParams } from '../../routes/ExerciceStack'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RoutineContext } from '../../context/routineContext/routineContext';
 import { formatTime } from '../../helpers/formatters';
+import { RootStackParamsHistorial } from '../../routes/HistorialStack';
 
 
 interface Props {
     name: string,
     day: Date,
-    totalTime: number
+    totalTime: number,
+    exercices: ExerciceSetsData[]
 }
 
-export const HistorialCard = ({ name, day, totalTime }: Props) => {
+export const HistorialCard = ({ name, day, totalTime, exercices }: Props) => {
 
-    const { theme: { colors } } = useContext(ThemeContext);
-
-
+    const { theme: { colors, textSecondary } } = useContext(ThemeContext);
+    const navigation = useNavigation<StackNavigationProp<RootStackParamsHistorial>>();
 
     return (
-        <TouchableOpacity>
+        <TouchableOpacity
+            activeOpacity={ 0.8 }
+            onPress={ () => navigation.navigate('HistorialInfoScreen', { exercices }) }
+        >
             <View style={ { ...styles.box, backgroundColor: colors.primary } }>
                 <View style={ { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 } }>
-                    <Text>{ name }</Text>
-                    <Text>Tiempo: { formatTime(totalTime) }</Text>
+                    <Text style={ { color: textSecondary } }>{ name }</Text>
+                    <Text style={ { color: textSecondary } }>Tiempo: { formatTime(totalTime) }</Text>
                 </View>
-                <Text>{ day.toLocaleDateString() }</Text>
+                <Text style={ { color: textSecondary } }>{ day.toLocaleDateString() }</Text>
             </View>
         </TouchableOpacity>
     )

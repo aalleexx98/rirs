@@ -11,7 +11,7 @@ export const HistorialScreen = () => {
 
     const { theme: { colors, backgroundTab } } = useContext(ThemeContext);
 
-    const { isFetching, historialData, loadMoreHistorial } = useHistorial();
+    const { isFetching, historialData, loadMoreHistorial, hasMore } = useHistorial();
 
     useEffect(() => { //TODO ELIMINAR
         console.log(historialData)
@@ -35,14 +35,15 @@ export const HistorialScreen = () => {
                         name={ item.name }
                         totalTime={ item.totalTime }
                         day={ item.date }
+                        exercices={ item.exercices }
                     />
                 ) }
 
-                ListFooterComponent={ (<TouchableOpacity
-                    onPress={ () => { loadMoreHistorial() } }
-                >
-                    <Text>Cargar mas...</Text>
-                </TouchableOpacity>) }
+                ListFooterComponent={ hasMore ? (
+                    <TouchableOpacity onPress={ () => loadMoreHistorial() }>
+                        <Text style={ { textAlign: 'center', color: colors.text } }>Cargar más...</Text>
+                    </TouchableOpacity>
+                ) : (<Text style={ { textAlign: 'center', color: colors.text } }>No tienes más historial</Text>) }
             />
 
         </View>
