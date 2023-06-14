@@ -7,7 +7,7 @@ import { ExerciceSetsData } from '../interfaces/exerciceInterface';
 
 export type RootStackParamsHistorial = {
     HistorialScreen: undefined
-    HistorialInfoScreen: { exercices: ExerciceSetsData[] }
+    HistorialInfoScreen: { exercices: ExerciceSetsData[], name: string, totalTime: number, day: Date }
 }
 
 const HistorialS = createStackNavigator<RootStackParamsHistorial>();

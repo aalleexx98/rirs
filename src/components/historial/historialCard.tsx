@@ -1,13 +1,9 @@
 import React, { useContext } from 'react'
-import { LogBox, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback, TurboModuleRegistry } from 'react-native';
-import { ExerciceSetsData, exercicePreview } from '../../interfaces/exerciceInterface'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ExerciceSetsData } from '../../interfaces/exerciceInterface'
 import { ThemeContext } from '../../context/themeContext/ThemeContext'
-import { FadeInImage } from '../FadeInImage'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParams } from '../../routes/ExerciceStack'
-import Icon from 'react-native-vector-icons/Ionicons';
-import { RoutineContext } from '../../context/routineContext/routineContext';
 import { formatTime } from '../../helpers/formatters';
 import { RootStackParamsHistorial } from '../../routes/HistorialStack';
 
@@ -27,7 +23,7 @@ export const HistorialCard = ({ name, day, totalTime, exercices }: Props) => {
     return (
         <TouchableOpacity
             activeOpacity={ 0.8 }
-            onPress={ () => navigation.navigate('HistorialInfoScreen', { exercices }) }
+            onPress={ () => navigation.navigate('HistorialInfoScreen', { exercices, name, totalTime, day }) }
         >
             <View style={ { ...styles.box, backgroundColor: colors.primary } }>
                 <View style={ { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 } }>
