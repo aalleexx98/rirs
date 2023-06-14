@@ -41,11 +41,11 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     const [exerciceHistorialArray, setExerciceHistorialArray] = useState<ExerciceHistorial[]>([]);
 
     const [isLast, setIsLast] = useState(false);
+    const [loading, setIsLoading] = useState(false);
     const [isRestTimeOver, setIsRestTimeOver] = useState(false);
     const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDialogTime, setVisibleDialogTime] = useState(false);
     const [visibleDialogHistorial, setVisibleDialogHistorial] = useState(false);
-
 
     const nextExercises = routineExercices.slice(currentIndex + 1).map((exercise) => exercise.exercise);
 
@@ -55,7 +55,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
     });
 
     const nextExercice = () => {
-        getHistorial();
+        setIsLoading(false);
         if (currentItem) {
             const newExerciceSetsData: ExerciceSetsData = {
                 exercice_id: currentItem?.exercise.ref.id,
@@ -120,6 +120,7 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
             const result = await getHistorialExerice(name);
             if (result) setExerciceHistorialArray(result);
         }
+        setIsLoading(true);
     }
 
 
@@ -341,27 +342,28 @@ export const ExecuteRoutineScreen = ({ route }: Props) => {
                 <Dialog visible={ visibleDialogHistorial } onDismiss={ () => setVisibleDialogHistorial(false) }>
                     <Dialog.Title>Historial</Dialog.Title>
                     <Dialog.Content>
-
-                        { exerciceHistorialArray.length > 1 ? (
-                            <ScrollView style={ { height: '60%' } }>
-                                { exerciceHistorialArray.map((exerciceHistorial, index) => (
-                                    <View key={ index } style={ { marginBottom: 25 } }>
-                                        <Text style={ { fontSize: 16, fontWeight: '600' } }>Rutina: { exerciceHistorial.rutineName }</Text>
-                                        <Text style={ { fontSize: 16, fontWeight: '600' } }>Dia: { exerciceHistorial.formattedDate }</Text>
-                                        <View style={ { flexDirection: 'column' } }>
-                                            { exerciceHistorial.setsData.map((sets, index) => (
-                                                <View key={ index } style={ { flexDirection: 'row', columnGap: 30 } }>
-                                                    <Text>{ `Serie: ${ sets.set_number }` }</Text>
-                                                    <Text>{ `Reps: ${ sets.reps }` }</Text>
-                                                    <Text style={ { textAlign: 'left' } }>{ `Kg: ${ sets.kg }` }</Text>
-                                                </View>
-                                            )) }
+                        { loading ? (
+                            exerciceHistorialArray.length > 1 ? (
+                                <ScrollView style={ { height: '60%' } }>
+                                    { exerciceHistorialArray.map((exerciceHistorial, index) => (
+                                        <View key={ index } style={ { marginBottom: 25 } }>
+                                            <Text style={ { fontSize: 16, fontWeight: '600' } }>Rutina: { exerciceHistorial.rutineName }</Text>
+                                            <Text style={ { fontSize: 16, fontWeight: '600' } }>Dia: { exerciceHistorial.formattedDate }</Text>
+                                            <View style={ { flexDirection: 'column' } }>
+                                                { exerciceHistorial.setsData.map((sets, index) => (
+                                                    <View key={ index } style={ { flexDirection: 'row', columnGap: 30 } }>
+                                                        <Text>{ `Serie: ${ sets.set_number }` }</Text>
+                                                        <Text>{ `Reps: ${ sets.reps }` }</Text>
+                                                        <Text style={ { textAlign: 'left' } }>{ `Kg: ${ sets.kg }` }</Text>
+                                                    </View>
+                                                )) }
+                                            </View>
                                         </View>
-                                    </View>
-                                )) }
-                            </ScrollView>)
-                            : (<Text>No tienes todabia historial en este ejercicio</Text>)
-                        }
+                                    )) }
+                                </ScrollView>)
+                                : (<Text>No tienes todabia historial en este ejercicio</Text>)
+
+                        ) : (<Text>Cargando...</Text>) }
 
                     </Dialog.Content>
                     <Dialog.Actions>
