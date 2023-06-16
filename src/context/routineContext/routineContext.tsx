@@ -151,6 +151,7 @@ export const RoutineProvider = ({ children }: any) => {
         if (id === '-1') {
             setSelectedRoutine(undefined)
             setRoutineExercices([])
+            setIsGenerating(false);
             console.log("No hay")
             return;
         }
