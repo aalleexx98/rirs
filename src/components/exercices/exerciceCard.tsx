@@ -52,7 +52,7 @@ export const ExerciceCard = ({ exercice, add }: Props) => {
                 >
                     <Icon
                         name="add-circle-outline"
-                        color={ colors.background }
+                        color={ 'white' }
                         size={ 30 }
                     />
                 </TouchableOpacity> }

@@ -22,7 +22,7 @@ export const useHistorial = () => {
             let query = firestore()
                 .collection('historial_routine')
                 .where('userUid', '==', userId)
-                .orderBy('date')
+                .orderBy('date', 'desc')
                 .limit(pageSize);
 
             if (lastDocument) {
